@@ -93,11 +93,12 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 
 <script>
+  
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0, 5);
+  camera.position.set(0, 0, 4.8);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -141,7 +142,7 @@
     model.position.sub(center); // 中心を原点に移動
 
     pivot = new THREE.Object3D();
-    pivot.position.set(0, 0.8, 0); // ちょっと上に持ち上げる（見た目そのまま）
+    pivot.position.set(0, 1, 0); // ちょっと上に持ち上げる（見た目そのまま）
     pivot.add(model);
     scene.add(pivot);
   });
@@ -196,7 +197,7 @@
 
     if (pivot) {
       if (!dragging) {
-        if (Math.abs(velX) > 0.001 || Math.abs(velY) > 0.001) {
+        if (Math.abs(velX) > 0.007 || Math.abs(velY) > 0.007) {
           pivot.rotation.x += velX;
           pivot.rotation.y += velY;
           velX *= DAMP;
@@ -209,7 +210,7 @@
       }
 
       if (autoRotate) {
-        pivot.rotation.y += 0.006; // 自動回転（Y軸）
+        pivot.rotation.y += 0.009; // 自動回転（Y軸）
       }
 
       // X軸の制限入れるなら↓
