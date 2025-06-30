@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>unlock</title>
+  <img src="logo.png" id="logo" />
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    .container {
+      background-color: #1a1a1a;
+      border: 2px solid #00ff99;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 20px #00ff99;
+    }
+    .title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .code {
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: #00ff99;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .code:active {
+      transform: scale(0.95);
+    }
+    .note {
+      margin-top: 50px;
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+    #logo {
+      width: 200px;
+      margin-top: 30px;
+      transition: transform 0.1s ease-out;
+    }
+    .store-link {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #00ff99;
+      text-decoration: none;
+    }
+    .store-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    const logo = document.getElementById('logo');
+    // スマホの傾きに応じてロゴを傾ける
+    window.addEventListener('deviceorientation', (event) => {
+      const tiltX = event.beta / 10;
+      const tiltY = event.gamma / 10;
+      logo.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    }, true);
+
+    function copyCode() {
+      const code = document.querySelector('.code');
+      const textArea = document.createElement('textarea');
+      textArea.value = code.textContent;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('クーポンコードがコピーされました！');
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="title">🔓 unlocked</div>
+    <p>限定クーポンを解除しました。</p>
+    <div class="code" onclick="copyCode()">fvn9f6</div>
+    <div class="note">
+      このコードを購入時に入力してください。<br>
+      (※￥1500相当)<br>
+    </div>
+    <a href="https://fvvyn.stores.jp" class="store-link" target="_blank">FVVYNストアへ</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FVVYN Access</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #0f0;
+      font-family: monospace;
+      overflow: hidden;
+      text-align: center;
+    }
+    #logo {
+      width: 200px;
+      margin-top: 50px;
+      transition: transform 0.1s ease-out;
+    }
+    #text {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-size: 1rem;
+    }
+    #passwordInput {
+      background: black;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 1.2rem;
+      border: 1px solid #0f0;
+      margin-top: 10px;
+      padding: 5px 10px;
+    }
+    @keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+.shake {
+  animation: shake 0.3s;
+}
+  </style>
+</head>
+<body>
+
+  <img src="logo.png" id="logo" />
+  <div id="text">password:</div>
+  <input type="password" id="passwordInput" />
+
+  <audio id="bgm" loop>
+    <source src="background.mp3" type="audio/mpeg" />
+    Your browser does not support audio.
+  </audio>
+
+  <script>
+    const textEl = document.getElementById('text');
+    const input = document.getElementById('passwordInput');
+    const audio = document.getElementById('bgm');
+    const logo = document.getElementById('logo');
+
+    // 初回タップでBGM再生（スマホ対策）
+    let audioStarted = false;
+    document.body.addEventListener('click', () => {
+      if (!audioStarted) {
+        audio.play();
+        audioStarted = true;
+      }
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+if (input.value === 'fv.019') {
+  textEl.innerText = '認証中...';
+  setTimeout(() => {
+    window.location.href = 'secret.html';
+  }, 1500);
+} else if (input.value === 'admin.666') {
+  textEl.innerText = '管理者モードへアクセス中...';
+  setTimeout(() => {
+    window.location.href = 'admin.html';
+  }, 1500);
+} else {
+  textEl.innerText = 'パスワードが違います。';
+textEl.classList.add('shake');
+setTimeout(() => {
+  textEl.classList.remove('shake');
+}, 300);
+}
+
+
+        
+      }
+
+      
+    });
+
+    // スマホの傾きに応じてロゴを傾ける
+    window.addEventListener('deviceorientation', (event) => {
+      const tiltX = event.beta / 10;
+      const tiltY = event.gamma / 10;
+      logo.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+    }, true);
+  </script>
+
+</body>
+</html>

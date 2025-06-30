@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>FVVYN Admin</title>
+  <style>
+    body {
+      background: black;
+      color: lime;
+      font-family: monospace;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>FVVYN 管理ページ</h1>
+  <p>fvvyn アクセスユーザー数確認ページ</p>
+  <p>アクセス数: <span id="count">---</span></p>
+
+  <script>
+    const counterEl = document.getElementById('count');
+    let count = localStorage.getItem('fvvynCounter') || 0;
+    counterEl.innerText = count.toString().padStart(5, '0');
+  </script>
+</body>
+</html>
