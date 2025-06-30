@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome👋</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ====== 基本SEO ====== -->
+  <title>Welcome👋 | fvvyn ‐from 084</title>
+  <meta name="description" content="fvvyn ・　UK/US dripアパレルブランド。3D ロゴと最先端 UIを導入。" />
+  <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション," />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fvvyn.github.io/home" />
+
+  <!-- ====== Open Graph / SNS ====== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="fvvyn" />
+  <meta property="og:title" content="fvvyn | from 084" />
+  <meta property="og:description" content="fvvyn | from 084" />
+  <meta property="og:url" content="https://fvvyn.github.io/home" />
+  <meta property="og:image" content="logo.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@fvvyn_official" />
+  <meta name="twitter:title" content="fvvyn | from 084" />
+  <meta name="twitter:description" content="fvvyn | from 084" />
+  <meta name="twitter:image" content="logo.png" />
+
+  <!-- ====== Favicon & manifest ====== -->
+  <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- ====== フォント最適化 ====== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet" />
+
+  <!-- ====== TailwindCSS ====== -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ====== Font Awesome（アイコン） ====== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-COKT…" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <style>
     html, body {
       margin: 0;
@@ -13,7 +53,7 @@
       background-color: #ffffff;
       overflow: hidden;
       font-family: "Inter", sans-serif;
-      touch-action: none; /* ダブルタップズームやピンチズームを無効化してドラッグ操作を最優先 */
+      touch-action: none;
       -webkit-user-select: none;
       user-select: none;
     }
@@ -22,7 +62,7 @@
       display: block;
       width: 100%;
       height: 100%;
-      touch-action: none; /* Android Chrome で縦スワイプ中に contextmenu が発火するのを防ぐ */
+      touch-action: none;
     }
 
     .overlay-container {
@@ -35,9 +75,8 @@
       gap: 1rem;
       z-index: 10;
       align-items: center;
-      pointer-events: none; /* ← UI を誤タップしてもドラッグが途切れないように */
+      pointer-events: none;
     }
-    .overlay-container a { pointer-events: auto; }
 
     .overlay-container a {
       font-weight: 800;
@@ -45,44 +84,101 @@
       font-size: 1.5rem;
       color: #222;
       transition: all 0.3s ease;
+      pointer-events: auto;
     }
     .overlay-container a:hover { transform: scale(1.05); color: #000; }
+    .enter-link { font-size: 2rem !important; }
 
-    .enter-link {
-      font-size: 2.0rem !important;
-      font-weight: 800;
-      font-style: italic;
-      color: #222;
-      transition: all 0.3s ease;
-    }
-    .enter-link:hover { transform: scale(1.05); color: #000; }
+.ticker-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 2rem;
+  z-index: 20;
+  background-color: #fff; /* ここお好みで */
+}
 
-    .summer-drop-text {
-      color: red;
-      font-weight: 800;
-      font-style: italic;
-      margin-top: 4rem;
-      white-space: nowrap;
-      font-size: clamp(0.75rem, 2vw, 1rem);
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.ticker-track {
+  display: inline-block;
+  white-space: nowrap;
+  animation: tickerLoop 15s linear infinite;
+}
+
+.ticker-track span {
+  display: inline-block;
+  font-weight: 800;
+  font-style: italic;
+  color: red;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  padding-right: 4rem;
+}
+
+@keyframes tickerLoop {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+
+    #loadingScreen.fade-out { opacity: 0; transition: opacity 0.5s ease-out; pointer-events: none; }
   </style>
 </head>
+
 <body class="relative">
-  <!-- ===================== UI ===================== -->
-  <div class="overlay-container select-none">
-    <a id="enterButton" href="https://fvvyn.stores.jp/" class="enter-link">ENTER</a>
-    <a href="https://instagram.com/fvvyn_official" target="_blank">Instagram</a>
-    <a href="https://fvvyn.github.io/secret/" target="_blank">Password</a>
-    <div class="summer-drop-text">2025 Summer Drop – Now Live</div>
+
+  <!-- ===== アクセシビリティ用 H1（画面非表示） ===== -->
+  <h1 class="sr-only">fvvyn 公式サイト - from 086</h1>
+
+  <!-- ===== ローディングUI ===== -->
+  <div id="loadingScreen" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50" role="status" aria-label="ページを読み込み中">
+    <div class="text-xl font-bold animate-pulse text-gray-700">Now Loading...</div>
   </div>
 
-  <footer class="absolute bottom-4 w-full text-center text-xs text-gray-500 font-light select-none">
+  <!-- ==============  UI本体  ============== -->
+  <main id="main-content">
+    <div class="overlay-container select-none">
+      <a id="enterButton" href="https://fvvyn.stores.jp/" rel="noopener" class="enter-link" aria-label="オンラインストアへ">ENTER</a>
+      <a href="scan.html" target="_blank" rel="noopener" aria-label="NFC スキャンページへ">NFC‑SCAN</a>
+      <a href="access.html" target="_blank" rel="noopener" aria-label="パスワード入力ページへ">Password</a>
+      <a href="qr.html" target="_blank" rel="noopener" aria-label="QR コードページへ">QR‑C0DE</a>
+
+      <!-- SNSアイコン -->
+      <div class="flex gap-4 mt-8">
+        <a href="https://instagram.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="Instagram">
+          <i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span>
+        </a>
+        <a href="https://x.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="X (旧Twitter)">
+          <i class="fab fa-x-twitter" aria-hidden="true"></i><span class="sr-only">Twitter</span>
+        </a>
+        <a href="https://tiktok.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="TikTok">
+          <i class="fab fa-tiktok" aria-hidden="true"></i><span class="sr-only">TikTok</span>
+        </a>
+        <a href="https://youtube.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="YouTube">
+          <i class="fab fa-youtube" aria-hidden="true"></i><span class="sr-only">YouTube</span>
+        </a>
+      </div>
+
+<div class="ticker-container">
+  <div class="ticker-track" id="tickerTrack">
+    <span id="seasonText">2025 Summer Drop – Now Live</span>
+    <span id="seasonTextClone">2025 Summer Drop – Now Live</span>
+  </div>
+</div>
+
+
+  </main>
+
+  <!-- ===== フッター ===== -->
+  <footer class="absolute bottom-4 w-full text-center text-xs text-gray-500 font-light select-none" role="contentinfo">
     <div class="flex justify-center gap-4 flex-wrap">
-      <a href="/privacy-policy" class="hover:underline">プライバシーポリシー</a>
-      <a href="/terms" class="hover:underline">利用規約</a>
-      <a href="mailto:fvvyn.brand@gmail.com" class="hover:underline">お問い合わせ</a>
+      <a href="/privacy.html" class="hover:underline" aria-label="プライバシーポリシー">プライバシーポリシー</a>
+      <a href="/terms.html" class="hover:underline" aria-label="利用規約">利用規約</a>
+      <a href="mailto:fvvyn.brand@gmail.com" class="hover:underline" aria-label="メールでお問い合わせ">お問い合わせ</a>
     </div>
     <div class="mt-1">&copy; 2025 fvvyn</div>
   </footer>
@@ -92,141 +188,195 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 
-<script>
-  
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff);
+  <script>
+    /* --- Three.js ロゴ回転ロジック（UI変更なし） --- */
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0, 4.8);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 4.8);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  document.body.appendChild(renderer.domElement);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    document.body.appendChild(renderer.domElement);
 
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  pmrem.compileEquirectangularShader();
-  new THREE.RGBELoader()
-    .setPath('https://rawcdn.githack.com/mrdoob/three.js/dev/examples/textures/equirectangular/')
-    .load('royal_esplanade_1k.hdr', tex => {
-      scene.environment = pmrem.fromEquirectangular(tex).texture;
-      tex.dispose(); pmrem.dispose();
-    });
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    new THREE.RGBELoader()
+      .setPath('https://rawcdn.githack.com/mrdoob/three.js/dev/examples/textures/equirectangular/')
+      .load('royal_esplanade_1k.hdr', tex => {
+        scene.environment = pmrem.fromEquirectangular(tex).texture;
+        tex.dispose(); pmrem.dispose();
+      });
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
-  dir.position.set(5, 10, 7.5);
-  scene.add(dir);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+    dir.position.set(5, 10, 7.5);
+    scene.add(dir);
 
-  let pivot;
-  const loader = new THREE.GLTFLoader();
-  loader.load('fvvynmetal.glb', gltf => {
-    const model = gltf.scene;
-    model.traverse(c => {
-      if (c.isMesh) {
-        c.material.metalness = 1;
-        c.material.roughness = 0.1;
-        c.material.side = THREE.DoubleSide;
-        c.material.color = new THREE.Color(0xffffff);
-      }
-    });
-
-    model.scale.setScalar(1.1);
-
-    // ── 中心を回転軸にするための処理 ──
-    model.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(model);
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    model.position.sub(center); // 中心を原点に移動
-
-    pivot = new THREE.Object3D();
-    pivot.position.set(0, 1, 0); // ちょっと上に持ち上げる（見た目そのまま）
-    pivot.add(model);
-    scene.add(pivot);
-  });
-
-  // ── 入力処理 ──
-  const dom = renderer.domElement;
-  let dragging = false;
-  let lastX = 0, lastY = 0;
-  let velX = 0, velY = 0;
-  const SPEED = 0.005;
-  const DAMP = 0.95;
-  let autoRotate = true;
-
-  function getXY(ev) {
-    return ev.touches ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY } :
-                        { x: ev.clientX, y: ev.clientY };
-  }
-
-  dom.addEventListener('pointerdown', e => {
-    const p = getXY(e);
-    dragging = true;
-    lastX = p.x;
-    lastY = p.y;
-    velX = velY = 0;
-  });
-
-  dom.addEventListener('pointermove', e => {
-    if (!dragging || !pivot) return;
-    const p = getXY(e);
-    const dx = p.x - lastX;
-    const dy = p.y - lastY;
-    lastX = p.x;
-    lastY = p.y;
-
-    const rotY = dx * SPEED;
-    const rotX = dy * SPEED;
-
-    pivot.rotation.y += rotY; // 横ドラッグ → Y軸回転
-    pivot.rotation.x += rotX; // 縦ドラッグ → X軸回転
-
-    velY = rotY;
-    velX = rotX;
-    autoRotate = false;
-  });
-
-  dom.addEventListener('pointerup', () => dragging = false);
-  dom.addEventListener('pointercancel', () => dragging = false);
-
-  // ── アニメーション ──
-  function animate() {
-    requestAnimationFrame(animate);
-
-    if (pivot) {
-      if (!dragging) {
-        if (Math.abs(velX) > 0.007 || Math.abs(velY) > 0.007) {
-          pivot.rotation.x += velX;
-          pivot.rotation.y += velY;
-          velX *= DAMP;
-          velY *= DAMP;
-          autoRotate = false;
-        } else {
-          velX = velY = 0;
-          if (!autoRotate) autoRotate = true;
+    let pivot;
+    const loader = new THREE.GLTFLoader();
+    loader.load('fvvynmetal.glb', gltf => {
+      const model = gltf.scene;
+      model.traverse(c => {
+        if (c.isMesh) {
+          c.material.metalness = 1;
+          c.material.roughness = 0.1;
+          c.material.side = THREE.DoubleSide;
+          c.material.color = new THREE.Color(0xffffff);
         }
-      }
+      });
 
-      if (autoRotate) {
-        pivot.rotation.y += 0.009; // 自動回転（Y軸）
-      }
+      model.scale.setScalar(1.1);
+      model.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(model);
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      model.position.sub(center);
 
-      // X軸の制限入れるなら↓
-      // pivot.rotation.x = THREE.MathUtils.clamp(pivot.rotation.x, -Math.PI/2, Math.PI/2);
+      pivot = new THREE.Object3D();
+      pivot.position.set(0, 1, 0);
+      pivot.add(model);
+      scene.add(pivot);
+    });
+
+    const dom = renderer.domElement;
+    let dragging = false;
+    let lastX = 0, lastY = 0;
+    let velX = 0, velY = 0;
+    const SPEED = 0.005;
+    const DAMP = 0.95;
+    let autoRotate = true;
+
+    function getXY(ev) {
+      return ev.touches ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY } :
+        { x: ev.clientX, y: ev.clientY };
     }
 
-    renderer.render(scene, camera);
-  }
-  animate();
+    dom.addEventListener('pointerdown', e => {
+      const p = getXY(e);
+      dragging = true;
+      lastX = p.x;
+      lastY = p.y;
+      velX = velY = 0;
+    });
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
+    dom.addEventListener('pointermove', e => {
+      if (!dragging || !pivot) return;
+      const p = getXY(e);
+      const dx = p.x - lastX;
+      const dy = p.y - lastY;
+      lastX = p.x;
+      lastY = p.y;
+
+      const rotY = dx * SPEED;
+      const rotX = dy * SPEED;
+
+      pivot.rotation.y += rotY;
+      pivot.rotation.x += rotX;
+
+      velY = rotY;
+      velX = rotX;
+      autoRotate = false;
+    });
+
+    dom.addEventListener('pointerup', () => dragging = false);
+    dom.addEventListener('pointercancel', () => dragging = false);
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (pivot) {
+        if (!dragging) {
+          if (Math.abs(velX) > 0.007 || Math.abs(velY) > 0.007) {
+            pivot.rotation.x += velX;
+            pivot.rotation.y += velY;
+            velX *= DAMP;
+            velY *= DAMP;
+            autoRotate = false;
+          } else {
+            velX = velY = 0;
+            if (!autoRotate) autoRotate = true;
+          }
+        }
+        if (autoRotate) pivot.rotation.y += 0.009;
+      }
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const loadingDiv = document.getElementById('loadingScreen');
+    if (loadingDiv) {
+      loadingDiv.classList.add('fade-out');
+      setTimeout(() => loadingDiv.remove(), 500);
+    }
+
+
+  const text = document.getElementById('seasonText');
+  const clone = document.getElementById('seasonTextClone');
+
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  let season = '';
+
+  if (month >= 3 && month <= 5) {
+    season = 'Spring';
+  } else if (month >= 6 && month <= 8) {
+    season = 'Summer';
+  } else if (month >= 9 && month <= 11) {
+    season = 'Autumn';
+  } else {
+    season = 'Winter';
+  }
+
+  const message = `${year} ${season} Drop – Now Live`;
+  text.textContent = message;
+  clone.textContent = message;
+
+
+
+
+  </script>
+
+  <!-- ======= 構造化データ（JSON-LD） ======= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "fvvyn",
+        "url": "https://fvvyn.github.io/home",
+        "logo": "https://fvvyn.github.io/logo.png",
+        "sameAs": [
+          "https://instagram.com/fvvyn_official",
+          "https://x.com/fvvyn_official",
+          "https://tiktok.com/@fvvyn_official",
+          "https://youtube.com/@fvvyn_official"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "url": "https://fvvyn.github.io/home",
+        "name": "fvvyn",
+        "description": "from 084",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://fvvyn.github.io/home/?s={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 
 </body>
 </html>
