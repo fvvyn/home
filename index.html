@@ -7,15 +7,15 @@
 
   <!-- ====== 基本SEO ====== -->
   <title>fvvyn | official ‐from 084</title>
-  <meta name="description" content="fvvyn ・　UK/US dripアパレルブランド。3D ロゴと最先端 UIを導入。" />
-  <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション," />
+  <meta name="description" content="fvvyn ・ UK/US dripアパレルブランド。3D ロゴと最先端 UIを導入。" />
+  <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://fvvyn.github.io/home" />
 
   <!-- ====== Open Graph / SNS ====== -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="fvvyn" />
-  <meta property="og:title" content="fvvyn　公式" />
+  <meta property="og:title" content="fvvyn 公式" />
   <meta property="og:description" content="fvvyn | from 084" />
   <meta property="og:url" content="https://fvvyn.github.io/home" />
   <meta property="og:image" content="logo.png" />
@@ -65,9 +65,10 @@
       touch-action: none;
     }
 
+    /* ▼ リンク＆GLB 全体を少し上に配置 */
     .overlay-container {
       position: absolute;
-      top: 52%;
+      top: 40%; /* 52% → 40% */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -86,45 +87,24 @@
       transition: all 0.3s ease;
       pointer-events: auto;
     }
+    .overlay-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 10;
+  align-items: center;
+  pointer-events: none;
+  margin-top: 3rem; /* ← ここ追加！2remとかでもOK */
+}
+
     .overlay-container a:hover { transform: scale(1.05); color: #000; }
     .enter-link { font-size: 2rem !important; }
 
-.ticker-container {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  position: absolute;
-  bottom: 2rem;
-  z-index: 20;
-  background-color: #fff; /* ここお好みで */
-}
-
-.ticker-track {
-  display: inline-block;
-  white-space: nowrap;
-  animation: tickerLoop 15s linear infinite;
-}
-
-.ticker-track span {
-  display: inline-block;
-  font-weight: 800;
-  font-style: italic;
-  color: red;
-  font-size: clamp(0.75rem, 2vw, 1rem);
-  padding-right: 4rem;
-}
-
-@keyframes tickerLoop {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-
-
+    /* Loading */
     #loadingScreen.fade-out { opacity: 0; transition: opacity 0.5s ease-out; pointer-events: none; }
   </style>
 </head>
@@ -148,7 +128,7 @@
       <a href="qr.html" target="_blank" rel="noopener" aria-label="QR コードページへ">QR‑C0DE</a>
 
       <!-- SNSアイコン -->
-      <div class="flex gap-4 mt-8">
+      <div class="flex gap-4 mt-4"> <!-- mt-8 → mt-4 -->
         <a href="https://instagram.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="Instagram">
           <i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span>
         </a>
@@ -162,19 +142,12 @@
           <i class="fab fa-youtube" aria-hidden="true"></i><span class="sr-only">YouTube</span>
         </a>
       </div>
-
-<div class="ticker-container">
-  <div class="ticker-track" id="tickerTrack">
-    <span id="seasonText">2025 Summer Drop – Now Live</span>
-    <span id="seasonTextClone">2025 Summer Drop – Now Live</span>
-  </div>
-</div>
-
+    </div>
 
   </main>
 
   <!-- ===== フッター ===== -->
-  <footer class="absolute bottom-4 w-full text-center text-xs text-gray-500 font-light select-none" role="contentinfo">
+  <footer class="absolute bottom-2 w-full text-center text-xs text-gray-500 font-light select-none" role="contentinfo"> <!-- bottom-4 → bottom-2 -->
     <div class="flex justify-center gap-4 flex-wrap">
       <a href="privacy.html" class="hover:underline" aria-label="プライバシーポリシー">プライバシーポリシー</a>
       <a href="terms.html" class="hover:underline" aria-label="利用規約">利用規約</a>
@@ -189,6 +162,7 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
+    
     /* --- Three.js ロゴ回転ロジック（UI変更なし） --- */
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
@@ -236,7 +210,7 @@
       model.position.sub(center);
 
       pivot = new THREE.Object3D();
-      pivot.position.set(0, 1, 0);
+      pivot.position.set(0, 1.5, 0); // Y位置を少し上げた
       pivot.add(model);
       scene.add(pivot);
     });
@@ -317,33 +291,6 @@
       loadingDiv.classList.add('fade-out');
       setTimeout(() => loadingDiv.remove(), 500);
     }
-
-
-  const text = document.getElementById('seasonText');
-  const clone = document.getElementById('seasonTextClone');
-
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  const year = now.getFullYear();
-  let season = '';
-
-  if (month >= 3 && month <= 5) {
-    season = 'Spring';
-  } else if (month >= 6 && month <= 8) {
-    season = 'Summer';
-  } else if (month >= 9 && month <= 11) {
-    season = 'Autumn';
-  } else {
-    season = 'Winter';
-  }
-
-  const message = `${year} ${season} Drop – Now Live`;
-  text.textContent = message;
-  clone.textContent = message;
-
-
-
-
   </script>
 
   <!-- ======= 構造化データ（JSON-LD） ======= -->
@@ -380,4 +327,5 @@
 
 </body>
 </html>
+
 
