@@ -65,6 +65,182 @@
     </button>
   </div>
 </div>
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+
+
+<!-- チャットボットコンテナ -->
+<div
+  id="chatContainer"
+  class="w-64 rounded-lg bg-white shadow-lg fixed bottom-24 right-5 z-40 hidden flex flex-col"
+>
+  <div class="relative flex w-full items-center justify-between px-3 py-2 border-b border-gray-200">
+    <div class="flex items-center gap-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+        ></path>
+      </svg>
+      <div class="font-semibold">FVVYN　STAFF</div>
+    </div>
+<button
+  id="closeBtn"
+  class="group cursor-pointer rounded-full p-2 text-red-600 hover:text-red-800"
+  aria-label="閉じる"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="2"
+    stroke="currentColor"
+    class="w-5 h-5"
+  >
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+</button>
+
+  </div>
+
+  <ul id="chatMessages" class="border-t border-gray-200 p-3 pb-6 max-h-72 overflow-y-auto flex flex-col gap-3">
+    <!-- メッセージはここに追加 -->
+  </ul>
+
+  <div class="relative">
+    <input
+      id="chatInput"
+      type="text"
+      placeholder="Reply"
+      class="h-10 w-full rounded-b-lg border-t border-gray-200 bg-gray-100 pl-3 text-sm focus:outline-blue-600/50"
+      autocomplete="off"
+    />
+    <button
+      id="sendButton"
+      class="absolute top-0 right-1 bottom-0 my-auto cursor-pointer rounded-full p-2 text-blue-600 hover:bg-gray-200 focus:bg-gray-200"
+      aria-label="送信"
+    >
+      <svg
+        class="w-4 h-4"
+        stroke="currentColor"
+        stroke-width="1.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const responses = {
+    "発送": "📦 商品の発送は、ご注文から通常6〜7営業日以内に行っております。",
+    "支払い": "💳 お支払い方法は、PayPay、クレジットカード・Apple Pay・コンビニ決済などに対応しております。",
+    "サイズ": "📏 サイズ感はジャストサイズで、ストリートスタイルに適したシルエットとなっております。",
+    "返品": "🔁 未使用品に限り、商品到着後7日以内であれば返品を承っております。",
+    "nfc": "📱 商品に内蔵されたNFCタグを読み取ることで、限定ページや特別なコンテンツにアクセスいただけます。",
+    "qr": "📷 QRコードを読み取っていただくと、関連ページへ簡単にアクセス可能です。",
+    "クーポン": "Passwordからクーポンコードをご入力ください。",
+  };
+
+  const chatContainer = document.getElementById('chatContainer');
+  const chatToggle = document.getElementById('chatToggle');
+  const closeBtn = document.getElementById('closeBtn');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const sendButton = document.getElementById('sendButton');
+
+  // メッセージ追加関数
+  function addMessage(text, fromUser = false) {
+    const li = document.createElement('li');
+    li.classList.add('flex', 'flex-col', fromUser ? 'items-end' : 'items-start');
+
+    const timeDiv = document.createElement('div');
+    timeDiv.classList.add('text-right', 'text-xs');
+    const now = new Date();
+    timeDiv.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('rounded-lg', 'px-2', 'py-1', 'text-sm', 'max-w-[10rem]', 'break-words');
+    if (fromUser) {
+      msgDiv.classList.add('bg-blue-600', 'bg-opacity-70', 'text-white', 'text-right', 'w-fit');
+    } else {
+      msgDiv.classList.add('bg-gray-100', 'w-fit');
+    }
+    msgDiv.textContent = text;
+
+    li.appendChild(timeDiv);
+    li.appendChild(msgDiv);
+    chatMessages.appendChild(li);
+
+    // スクロールを一番下へ
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // ユーザー入力処理
+  function handleUserInput() {
+    const input = chatInput.value.trim();
+    if (!input) return;
+    addMessage(input, true);
+
+    // 応答判定
+    let replied = false;
+    for (const key in responses) {
+      if (input.includes(key)) {
+        addMessage(responses[key], false);
+        replied = true;
+        break;
+      }
+    }
+    if (!replied) {
+      addMessage("申し訳ございませんが、その内容については現在お答えできません。", false);
+    }
+    chatInput.value = '';
+  }
+
+  sendButton.addEventListener('click', handleUserInput);
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      handleUserInput();
+    }
+  });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const chatToggle = document.getElementById('chatToggle');
+  const chatContainer = document.getElementById('chatContainer');
+  const closeBtn = document.getElementById('closeBtn');
+
+  chatToggle.addEventListener('click', () => {
+    chatContainer.classList.remove('hidden');
+    chatToggle.classList.add('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    chatContainer.classList.add('hidden');
+    chatToggle.classList.remove('hidden');
+  });
+});
+
+
+</script>
+
+
 
   <style>
     html, body {
@@ -293,21 +469,34 @@
       <a href="qr.html" target="_blank" rel="noopener" aria-label="QR コードページへ">QR‑C0DE</a>
 
       <!-- SNSアイコン -->
-      <div class="flex gap-4 mt-4"> <!-- mt-8 → mt-4 -->
-        <a href="https://instagram.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="Instagram">
-          <i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span>
-        </a>
-        <a href="https://x.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="X (旧Twitter)">
-          <i class="fab fa-x-twitter" aria-hidden="true"></i><span class="sr-only">Twitter</span>
-        </a>
-        <a href="https://tiktok.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="TikTok">
-          <i class="fab fa-tiktok" aria-hidden="true"></i><span class="sr-only">TikTok</span>
-        </a>
-        <a href="https://youtube.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-black" aria-label="YouTube">
-          <i class="fab fa-youtube" aria-hidden="true"></i><span class="sr-only">YouTube</span>
-        </a>
-      </div>
-    </div>
+<!-- SNSアイコン -->
+<div class="flex gap-4 mt-4">
+  <a href="https://instagram.com/fvvyn_official"   target="_blank" rel="noopener"
+     class="text-2xl text-gray-700 hover:text-black" aria-label="Instagram">
+    <i class="fab fa-instagram"></i><span class="sr-only">Instagram</span>
+  </a>
+  <a href="https://x.com/fvvyn_official"            target="_blank" rel="noopener"
+     class="text-2xl text-gray-700 hover:text-black" aria-label="X">
+    <i class="fab fa-x-twitter"></i><span class="sr-only">X</span>
+  </a>
+  <a href="https://tiktok.com/@fvvyn_official"       target="_blank" rel="noopener"
+     class="text-2xl text-gray-700 hover:text-black" aria-label="TikTok">
+    <i class="fab fa-tiktok"></i><span class="sr-only">TikTok</span>
+  </a>
+
+  <!-- 👇ここが NEW！ -->
+  <button id="chatToggle"
+    class="text-2xl text-gray-700 hover:text-black focus:outline-none pointer-events-auto"
+    aria-label="チャットを開く">
+    <img src="chat.svg" alt="チャット開閉" class="w-6 h-6" />
+  </button>
+</div>
+<button
+  id="closeBtn"
+  class="group cursor-pointer rounded-full p-2 text-red-600 hover:text-red-800"
+  aria-label="閉じる"
+>
+
 
   </main>
 
