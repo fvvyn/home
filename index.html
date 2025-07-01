@@ -25,6 +25,9 @@
   <meta name="twitter:title" content="fvvyn | from 084" />
   <meta name="twitter:description" content="fvvyn | from 084" />
   <meta name="twitter:image" content="logo.png" />
+  <!-- iPhone X以降でステータスバーとの間に余白をつける -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 
   <!-- ====== Favicon & manifest ====== -->
   <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
@@ -69,6 +72,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 
+<div id="pwaAnnounce" class="hidden fixed top-4 right-4 ...">
 
 
 <!-- チャットボットコンテナ -->
@@ -437,6 +441,18 @@ document.addEventListener('DOMContentLoaded', () => {
   0%, 50%, 100% { transform: rotate(10deg) scale(1); }
   40% { transform: rotate(50deg) scale(1); }
 }
+@media (max-width: 640px) {
+  #chatContainer {
+    width: 100% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 
   </style>
 </head>
@@ -653,6 +669,32 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
   el.style.opacity = '0';
   setTimeout(() => el.remove(), 300);
 });
+document.addEventListener('DOMContentLoaded', () => {
+  const pwaAnnounce = document.getElementById('pwaAnnounce');
+  const closeBtn = document.getElementById('closePwaAnnounce');
+
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000; // 1週間（ミリ秒）
+
+  const lastClosed = localStorage.getItem('pwaAnnounceClosedAt');
+
+  // 初回または7日経過したら表示
+  if (!lastClosed || (Date.now() - parseInt(lastClosed, 10)) > SEVEN_DAYS) {
+    pwaAnnounce.classList.remove('hidden');
+  } else {
+    pwaAnnounce.remove();
+  }
+
+  // 閉じるボタン処理
+  closeBtn.addEventListener('click', () => {
+    pwaAnnounce.style.transition = 'opacity 0.3s ease';
+    pwaAnnounce.style.opacity = '0';
+    setTimeout(() => {
+      pwaAnnounce.remove();
+      localStorage.setItem('pwaAnnounceClosedAt', Date.now().toString());
+    }, 300);
+  });
+});
+
   </script>
 
   <!-- ======= 構造化データ（JSON-LD） ======= -->
@@ -689,4 +731,3 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
 
 </body>
 </html>
-
