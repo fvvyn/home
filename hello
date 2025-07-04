@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>hello | fvvyn</title>
+  <link rel="icon" href="favicon-96x96.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0; 
+      font-family: 'Inter', sans-serif;
+      background: #222;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      user-select: none;
+      gap: 1.5rem;
+    }
+    h1 {
+      font-size: 4rem;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      margin: 0;
+      text-transform: uppercase;
+      color: #d65563;
+      text-shadow: 0 0 10px #d65563;
+    }
+    p {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #eee;
+    }
+    a, button {
+      color: #d65563;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid #d65563;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    a:hover, button:hover {
+      background-color: #d65563;
+      color: #222;
+    }
+    img {
+      max-width: 80vw;
+      max-height: 40vh;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #d65563;
+    }
+  </style>
+</head>
+<body>
+  <h1>HELLO</h1>
+  <p>Welcome to the exclusive page of fvvyn.</p>
+
+  <!-- 画像表示 -->
+  <img src="kabegami.png" alt="fvvyn 壁紙" id="wallpaper" />
+
+  <!-- 保存ボタン -->
+  <button id="saveBtn" aria-label="壁紙を保存する">壁紙をダウンロード</button>
+
+  <a href="https://fvvyn.com" aria-label="ホームに戻る">ホームに戻る</a>
+
+  <script>
+    const saveBtn = document.getElementById('saveBtn');
+    const img = document.getElementById('wallpaper');
+
+    saveBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = img.src;
+      link.download = 'kabegami.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
+</body>
+</html>
