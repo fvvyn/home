@@ -687,6 +687,42 @@ const DAMP = 0.92;
       loadingDiv.classList.add('fade-out');
       setTimeout(() => loadingDiv.remove(), 500);
     }
+    let startX = 0, startY = 0;
+const swipeCode = ["right", "left"];
+let swipeSequence = [];
+
+function getSwipeDirection(dx, dy) {
+  if (Math.abs(dx) > Math.abs(dy)) {
+    return dx > 0 ? "right" : "left";
+  }
+  return null; // 上下は無視
+}
+
+dom.addEventListener('pointerdown', e => {
+  const p = getXY(e);
+  startX = p.x;
+  startY = p.y;
+});
+
+dom.addEventListener('pointerup', e => {
+  const p = getXY(e);
+  const dx = p.x - startX;
+  const dy = p.y - startY;
+
+  const direction = getSwipeDirection(dx, dy);
+  if (direction) {
+    swipeSequence.push(direction);
+    if (swipeSequence.length > swipeCode.length) swipeSequence.shift();
+
+    if (JSON.stringify(swipeSequence) === JSON.stringify(swipeCode)) {
+      document.body.classList.add("transition-blurzoom");
+      setTimeout(() => {
+        window.location.href = "hello.html";
+      }, 600);
+      swipeSequence = []; // 発動後はリセットしとこ
+    }
+  }
+});
     // 閉じるボタン押したら非表示に
 document.getElementById('closePwaAnnounce').addEventListener('click', () => {
   const el = document.getElementById('pwaAnnounce');
@@ -705,8 +741,8 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
       {
         "@type": "Organization",
         "name": "fvvyn",
-        "url": "https://fvvyn.github.io/home",
-        "logo": "https://fvvyn.github.io/logo.png",
+        "url": "https://fvvyn.com",
+        "logo": "https://fvvyn.compng",
         "sameAs": [
           "https://instagram.com/fvvyn_official",
           "https://x.com/fvvyn_official",
@@ -716,12 +752,12 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
       },
       {
         "@type": "WebSite",
-        "url": "https://fvvyn.github.io/home",
+        "url": "https://fvvyn.com",
         "name": "fvvyn",
         "description": "from 084",
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://fvvyn.github.io/home/?s={search_term_string}",
+          "target": "https://fvvyn.com?s={search_term_string}",
           "query-input": "required name=search_term_string"
         }
       }
