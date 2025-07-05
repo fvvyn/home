@@ -197,6 +197,15 @@ body:not(.transition-blurzoom) {
   transition: all 0.6s ease;
 }
 
+  footer a {
+    color: #b8b8b8; /* ← ここ好きな色に変えてOK */
+  }
+
+  footer a:hover {
+    color: #999898; /* hover時に色変えるとカッコいい！ */
+  }
+</style>
+
 
   </style>
 </head>
@@ -206,18 +215,6 @@ body:not(.transition-blurzoom) {
   <!-- ===== アクセシビリティ用 H1（画面非表示） ===== -->
   <h1 class="sr-only">fvvyn 公式サイト - from 086</h1>
 
-  <!-- ===== ローディングUI ===== -->
-<!-- ローディングUI -->
-<div id="loadingScreen" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50" role="status" aria-label="ページを読み込み中">
-  <div class="🤚">
-    <div class="👉"></div>
-    <div class="👉"></div>
-    <div class="👉"></div>
-    <div class="👉"></div>
-    <div class="🌴"></div>
-    <div class="👍"></div>
-  </div>
-</div>
 
 
   <!-- ==============  UI本体  ============== -->
@@ -255,7 +252,8 @@ body:not(.transition-blurzoom) {
       <a href="terms.html" class="hover:underline" aria-label="利用規約">利用規約</a>
       <a href="mailto:fvvyn.brand@gmail.com" class="hover:underline" aria-label="メールでお問い合わせ">お問い合わせ</a>
     </div>
-    <div class="mt-1">&copy; 2025 fvvyn</div>
+    <div class="mt-1 text-gray">&copy; 2025 fvvyn</div>
+
   </footer>
 
   <!-- =============== Three.js core =============== -->
@@ -275,9 +273,6 @@ document.querySelectorAll('a[href]').forEach(link => {
       }, 600); // CSSと同じ秒数
     }
   });
-});
-window.addEventListener('load', () => {
-  // A-Frameモデル表示とかThree.js起動
 });
 
     
@@ -568,6 +563,9 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
   el.style.transition = 'opacity 0.3s ease';
   el.style.opacity = '0';
   setTimeout(() => el.remove(), 300);
+});
+window.addEventListener('load', () => {
+  // A-Frameモデル表示とかThree.js起動
 });
 
   </script>
