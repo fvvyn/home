@@ -10,14 +10,14 @@
   <meta name="description" content="fvvyn ・ UK/US dripアパレルブランド。3D ロゴと最先端 UIを導入。" />
   <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://fvvyn.github.io/home" />
+  <link rel="canonical" href="https://fvvyn.com" />
 
   <!-- ====== Open Graph / SNS ====== -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="fvvyn" />
   <meta property="og:title" content="fvvyn 公式" />
   <meta property="og:description" content="fvvyn | from 084" />
-  <meta property="og:url" content="https://fvvyn.github.io/home" />
+  <meta property="og:url" content="https://fvvyn.com" />
   <meta property="og:image" content="logo.png" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -58,7 +58,7 @@
       </div>
       <div>
         <p class="text-white font-semibold">ホーム画面に追加</p>
-        <p class="text-gray-500">瞬時にアクセス。ブラウザのツールバーから</p>
+        <p class="text-gray-500">ブラウザのツールバーから</p>
       </div>
     </div>
     <button id="closePwaAnnounce" class="text-gray-600 hover:bg-white/10 p-1 rounded-md transition-colors ease-linear">
@@ -74,197 +74,71 @@
 
 
 
-<!-- チャットボットコンテナ -->
-<div
-  id="chatContainer"
-  class="w-64 rounded-lg bg-white shadow-lg fixed bottom-24 right-5 z-40 hidden flex flex-col"
->
-  <div class="relative flex w-full items-center justify-between px-3 py-2 border-b border-gray-200">
-    <div class="flex items-center gap-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-6 h-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-        ></path>
-      </svg>
-      <div class="font-semibold">FVVYN　STAFF</div>
-    </div>
-<button
-  id="closeBtn"
-  class="group cursor-pointer rounded-full p-2 text-red-600 hover:text-red-800"
-  aria-label="閉じる"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="2"
-    stroke="currentColor"
-    class="w-5 h-5"
-  >
-    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-  </svg>
-</button>
-
-  </div>
-
-  <ul id="chatMessages" class="border-t border-gray-200 p-3 pb-6 max-h-72 overflow-y-auto flex flex-col gap-3">
-    <!-- メッセージはここに追加 -->
-  </ul>
-
-  <div class="relative">
-    <input
-      id="chatInput"
-      type="text"
-      placeholder="Reply"
-      class="h-10 w-full rounded-b-lg border-t border-gray-200 bg-gray-100 pl-3 text-sm focus:outline-blue-600/50"
-      autocomplete="off"
-    />
-    <button
-      id="sendButton"
-      class="absolute top-0 right-1 bottom-0 my-auto cursor-pointer rounded-full p-2 text-blue-600 hover:bg-gray-200 focus:bg-gray-200"
-      aria-label="送信"
-    >
-      <svg
-        class="w-4 h-4"
-        stroke="currentColor"
-        stroke-width="1.5"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-          stroke-linejoin="round"
-          stroke-linecap="round"
-        ></path>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<script>
-  const responses = {
-    "発送": "📦 商品の発送は、ご注文から通常6〜7営業日以内に行っております。",
-    "支払い": "💳 お支払い方法は、PayPay、クレジットカード・Apple Pay・コンビニ決済などに対応しております。",
-    "サイズ": "📏 サイズ感はジャストサイズで、ストリートスタイルに適したシルエットとなっております。",
-    "返品": "🔁 未使用品に限り、商品到着後7日以内であれば返品を承っております。",
-    "nfc": "📱 商品に内蔵されたNFCタグを読み取ることで、限定ページや特別なコンテンツにアクセスいただけます。",
-    "qr": "📷 QRコードを読み取っていただくと、関連ページへ簡単にアクセス可能です。",
-    "クーポン": "Passwordからクーポンコードをご入力ください。",
-  };
-
-  const chatContainer = document.getElementById('chatContainer');
-  const chatToggle = document.getElementById('chatToggle');
-  const closeBtn = document.getElementById('closeBtn');
-  const chatMessages = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const sendButton = document.getElementById('sendButton');
-
-  // メッセージ追加関数
-  function addMessage(text, fromUser = false) {
-    const li = document.createElement('li');
-    li.classList.add('flex', 'flex-col', fromUser ? 'items-end' : 'items-start');
-
-    const timeDiv = document.createElement('div');
-    timeDiv.classList.add('text-right', 'text-xs');
-    const now = new Date();
-    timeDiv.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('rounded-lg', 'px-2', 'py-1', 'text-sm', 'max-w-[10rem]', 'break-words');
-    if (fromUser) {
-      msgDiv.classList.add('bg-blue-600', 'bg-opacity-70', 'text-white', 'text-right', 'w-fit');
-    } else {
-      msgDiv.classList.add('bg-gray-100', 'w-fit');
-    }
-    msgDiv.textContent = text;
-
-    li.appendChild(timeDiv);
-    li.appendChild(msgDiv);
-    chatMessages.appendChild(li);
-
-    // スクロールを一番下へ
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  // ユーザー入力処理
-  function handleUserInput() {
-    const input = chatInput.value.trim();
-    if (!input) return;
-    addMessage(input, true);
-
-    // 応答判定
-    let replied = false;
-    for (const key in responses) {
-      if (input.includes(key)) {
-        addMessage(responses[key], false);
-        replied = true;
-        break;
-      }
-    }
-    if (!replied) {
-      addMessage("申し訳ございませんが、その内容については現在お答えできません。", false);
-    }
-    chatInput.value = '';
-  }
-
-  sendButton.addEventListener('click', handleUserInput);
-  chatInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      handleUserInput();
-    }
-  });
-
-document.addEventListener('DOMContentLoaded', () => {
-  const chatToggle = document.getElementById('chatToggle');
-  const chatContainer = document.getElementById('chatContainer');
-  const closeBtn = document.getElementById('closeBtn');
-
-  chatToggle.addEventListener('click', () => {
-    chatContainer.classList.remove('hidden');
-    chatToggle.classList.add('hidden');
-  });
-
-  closeBtn.addEventListener('click', () => {
-    chatContainer.classList.add('hidden');
-    chatToggle.classList.remove('hidden');
-  });
-});
-
-
-</script>
-
-
-
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #ffffff;
-      overflow: hidden;
-      font-family: "Inter", sans-serif;
-      touch-action: none;
-      -webkit-user-select: none;
-      user-select: none;
-    }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #000;
+    overflow: hidden;
+    font-family: "Inter", sans-serif;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-    }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
 
+  /* 宇宙背景 */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: blink 1.5s infinite ease-in-out;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 1; }
+  }
+
+   .meteor {
+    position: absolute;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 60%, #fff 100%);
+    opacity: 0.9;
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
+  @keyframes meteor-fall {
+    0% {
+      transform: translate(0, 0) rotate(45deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-400px, 400px) rotate(45deg);
+      opacity: 0;
+    }
+  }
     /* ▼ リンク＆GLB 全体を少し上に配置 */
     .overlay-container {
       position: absolute;
@@ -283,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
       font-weight: 800;
       font-style: italic;
       font-size: 1.5rem;
-      color: #222;
+      color: #ffffff;
       transition: all 0.3s ease;
       pointer-events: auto;
     }
@@ -301,153 +175,11 @@ document.addEventListener('DOMContentLoaded', () => {
   margin-top: 3rem; /* ← ここ追加！2remとかでもOK */
 }
 
-    .overlay-container a:hover { transform: scale(1.05); color: #000; }
+    .overlay-container a:hover { transform: scale(1.05); color: #ffffff; }
     .enter-link { font-size: 2rem !important; }
 
-    /* Loading */
-    #loadingScreen.fade-out { opacity: 0; transition: opacity 0.5s ease-out; pointer-events: none; }
-    @keyframes slide-in {
-  from {opacity: 0; transform: translateX(100%);}
-  to {opacity: 1; transform: translateX(0);}
-}
-.animate-slide-in {
-  animation: slide-in 0.5s ease forwards;
-}
-/* 👍 Loading Hand Animation - fvvyn style */
-.🤚 {
-  --skin-color: #E4C560;
-  --tap-speed: 0.6s;
-  --tap-stagger: 0.1s;
-  position: relative;
-  width: 80px;
-  height: 60px;
-}
 
-.🤚:before {
-  content: '';
-  display: block;
-  width: 180%;
-  height: 75%;
-  position: absolute;
-  top: 70%;
-  right: 20%;
-  background-color: black;
-  border-radius: 40px 10px;
-  filter: blur(10px);
-  opacity: 0.3;
-}
 
-.🌴 {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: var(--skin-color);
-  border-radius: 10px 40px;
-}
-
-.👍 {
-  position: absolute;
-  width: 120%;
-  height: 38px;
-  background-color: var(--skin-color);
-  bottom: -18%;
-  right: 1%;
-  transform-origin: calc(100% - 20px) 20px;
-  transform: rotate(-20deg);
-  border-radius: 30px 20px 20px 10px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-  border-left: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.👍:after {
-  width: 20%;
-  height: 60%;
-  content: '';
-  background-color: rgba(255, 255, 255, 0.3);
-  position: absolute;
-  bottom: -8%;
-  left: 5px;
-  border-radius: 60% 10% 10% 30%;
-  border-right: 2px solid rgba(0, 0, 0, 0.05);
-}
-
-.👉 {
-  position: absolute;
-  width: 80%;
-  height: 35px;
-  background-color: var(--skin-color);
-  bottom: 32%;
-  right: 64%;
-  transform-origin: 100% 20px;
-  animation-duration: calc(var(--tap-speed) * 2);
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  transform: rotate(10deg);
-}
-
-.👉:before {
-  content: '';
-  position: absolute;
-  width: 140%;
-  height: 30px;
-  background-color: var(--skin-color);
-  bottom: 8%;
-  right: 65%;
-  transform-origin: calc(100% - 20px) 20px;
-  transform: rotate(-60deg);
-  border-radius: 20px;
-}
-
-.👉:nth-child(1) {
-  animation-delay: 0;
-  filter: brightness(70%);
-  animation-name: tap-upper-1;
-}
-
-.👉:nth-child(2) {
-  animation-delay: var(--tap-stagger);
-  filter: brightness(80%);
-  animation-name: tap-upper-2;
-}
-
-.👉:nth-child(3) {
-  animation-delay: calc(var(--tap-stagger) * 2);
-  filter: brightness(90%);
-  animation-name: tap-upper-3;
-}
-
-.👉:nth-child(4) {
-  animation-delay: calc(var(--tap-stagger) * 3);
-  filter: brightness(100%);
-  animation-name: tap-upper-4;
-}
-
-@keyframes tap-upper-1 {
-  0%, 50%, 100% { transform: rotate(10deg) scale(0.4); }
-  40% { transform: rotate(50deg) scale(0.4); }
-}
-@keyframes tap-upper-2 {
-  0%, 50%, 100% { transform: rotate(10deg) scale(0.6); }
-  40% { transform: rotate(50deg) scale(0.6); }
-}
-@keyframes tap-upper-3 {
-  0%, 50%, 100% { transform: rotate(10deg) scale(0.8); }
-  40% { transform: rotate(50deg) scale(0.8); }
-}
-@keyframes tap-upper-4 {
-  0%, 50%, 100% { transform: rotate(10deg) scale(1); }
-  40% { transform: rotate(50deg) scale(1); }
-}
-@media (max-width: 640px) {
-  #chatContainer {
-    width: 100% !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    border-radius: 0 !important;
-  }
-}
 body {
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -512,18 +244,6 @@ body:not(.transition-blurzoom) {
     <i class="fab fa-tiktok"></i><span class="sr-only">TikTok</span>
   </a>
 
-  <!-- 👇ここが NEW！ -->
-  <button id="chatToggle"
-    class="text-2xl text-gray-700 hover:text-black focus:outline-none pointer-events-auto"
-    aria-label="チャットを開く">
-    <img src="chat.svg" alt="チャット開閉" class="w-6 h-6" />
-  </button>
-</div>
-<button
-  id="closeBtn"
-  class="group cursor-pointer rounded-full p-2 text-red-600 hover:text-red-800"
-  aria-label="閉じる"
->
 
 
   </main>
@@ -560,7 +280,8 @@ document.querySelectorAll('a[href]').forEach(link => {
     
     /* --- Three.js ロゴ回転ロジック（UI変更なし） --- */
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
+    scene.background = new THREE.Color(0x000000);
+
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 4.8);
@@ -697,7 +418,122 @@ function getSwipeDirection(dx, dy) {
   }
   return null; // 上下は無視
 }
+  // ランダムな位置に点滅する星を生成
+  document.addEventListener('DOMContentLoaded', () => {
+    const count = 50; // 星の数
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.top = `${Math.random() * 100}vh`;
+      star.style.left = `${Math.random() * 100}vw`;
+      star.style.animationDelay = `${Math.random() * 3}s`;
+      document.body.appendChild(star);
+    }for (let i = 0; i < count; i++) {
+  const star = document.createElement('div');
+  star.classList.add('star');
+  star.style.top = `${Math.random() * 100}vh`;
+  star.style.left = `${Math.random() * 100}vw`;
+  star.style.animationDelay = `${Math.random() * 3}s`;
 
+  // 100個に1個の割合で赤色にする
+  if (i % 100 === 0) {
+    star.style.backgroundColor = 'red';
+  }
+
+  document.body.appendChild(star);
+}
+
+
+    // 流れ星追加（一定間隔で1つ流す）
+    setInterval(() => {
+      const meteor = document.createElement('div');
+      meteor.classList.add('meteor');
+      meteor.style.top = `${Math.random() * 80}vh`;
+      meteor.style.left = `${Math.random() * 100}vw`;
+      document.body.appendChild(meteor);
+      setTimeout(() => meteor.remove(), 2000); // アニメ後に削除
+    }, 3000); // 3秒ごとに流れ星
+  });
+    document.addEventListener('DOMContentLoaded', () => {
+    const maxMeteors = 1; // 同時に流れる数（任意調整）
+    const meteorDurationRange = [1500, 3000]; // アニメ時間の範囲(ms)
+    const meteorLengthRange = [50, 150];      // 尾の長さ(px)
+    const meteorWidth = 2;                    // 流れ星の幅(px)
+
+    function createMeteor() {
+      const meteor = document.createElement('div');
+      meteor.classList.add('meteor');
+
+      // ランダムな流れる角度（45度以内くらいに制限すると自然）
+      const angle = Math.random() * 360; // 0〜360度にしてみる（全方向）
+
+      // 流れる距離
+      const distance = 600 + Math.random() * 300; // 600〜900pxくらい
+
+      // 尾の長さと幅
+      const length = meteorLengthRange[0] + Math.random() * (meteorLengthRange[1] - meteorLengthRange[0]);
+      meteor.style.width = length + 'px';
+      meteor.style.height = meteorWidth + 'px';
+
+      // スタート位置は画面の外（四辺のどこか）からランダムに決める
+      // 0: top, 1: right, 2: bottom, 3: left
+      const side = Math.floor(Math.random() * 4);
+      let startX, startY;
+
+      switch(side) {
+        case 0: // top
+          startX = Math.random() * window.innerWidth;
+          startY = -length; // 画面外上
+          break;
+        case 1: // right
+          startX = window.innerWidth + length;
+          startY = Math.random() * window.innerHeight;
+          break;
+        case 2: // bottom
+          startX = Math.random() * window.innerWidth;
+          startY = window.innerHeight + length;
+          break;
+        case 3: // left
+          startX = -length;
+          startY = Math.random() * window.innerHeight;
+          break;
+      }
+
+      meteor.style.left = startX + 'px';
+      meteor.style.top = startY + 'px';
+
+      // 尾の角度を流れの向きに合わせる
+      meteor.style.transform = `rotate(${angle}deg)`;
+
+      // アニメーション用のキーを動的に作る
+      const duration = meteorDurationRange[0] + Math.random() * (meteorDurationRange[1] - meteorDurationRange[0]);
+
+      // 進む先の座標を計算（距離 * 角度から）
+      const rad = angle * Math.PI / 180;
+      const deltaX = Math.cos(rad) * distance;
+      const deltaY = Math.sin(rad) * distance;
+
+      // CSSアニメーションを動的に作る（@keyframesを使わず JSで動かす）
+      meteor.animate([
+        { transform: `translate(0, 0) rotate(${angle}deg)`, opacity: 1 },
+        { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angle}deg)`, opacity: 0 }
+      ], {
+        duration: duration,
+        easing: 'linear',
+        fill: 'forwards'
+      });
+
+      document.body.appendChild(meteor);
+
+      // アニメーション終わったら削除
+      setTimeout(() => meteor.remove(), duration);
+    }
+
+    // 一定間隔で流れ星を出す
+    setInterval(() => {
+      createMeteor();
+    }, 1000); // 1秒ごと（好きな間隔に変えてOK）
+  });
 dom.addEventListener('pointerdown', e => {
   const p = getXY(e);
   startX = p.x;
@@ -742,7 +578,7 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
         "@type": "Organization",
         "name": "fvvyn",
         "url": "https://fvvyn.com",
-        "logo": "https://fvvyn.compng",
+        "logo": "logo.png",
         "sameAs": [
           "https://instagram.com/fvvyn_official",
           "https://x.com/fvvyn_official",
