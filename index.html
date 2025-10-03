@@ -113,12 +113,19 @@
     height: 2px;
     background: white;
     border-radius: 50%;
-    animation: blink 1.5s infinite ease-in-out;
+    animation: blink 2s infinite ease-in-out;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 0.1; }
-    50% { opacity: 1; }
+    0%, 100% { 
+      opacity: 0.2; 
+      transform: scale(0.8);
+    }
+    50% { 
+      opacity: 1; 
+      transform: scale(1.2);
+    }
   }
 
    .meteor {
@@ -160,6 +167,8 @@
       color: #ffffff;
       transition: all 0.3s ease;
       pointer-events: auto;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      letter-spacing: 2px;
     }
     .overlay-container {
   position: absolute;
@@ -175,7 +184,12 @@
   margin-top: 3rem; /* ← ここ追加！2remとかでもOK */
 }
 
-    .overlay-container a:hover { transform: scale(1.05); color: #ffffff; }
+    .overlay-container a:hover { 
+      transform: scale(1.05); 
+      color: #ffffff; 
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      filter: brightness(1.2);
+    }
     .enter-link { font-size: 2rem !important; }
 
 
@@ -278,7 +292,22 @@ document.querySelectorAll('a[href]').forEach(link => {
     
     /* --- Three.js ロゴ回転ロジック（UI変更なし） --- */
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
+    // グラデーション背景を作成
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    
+    const gradient = ctx.createRadialGradient(256, 256, 0, 256, 256, 256);
+    gradient.addColorStop(0, '#000020');
+    gradient.addColorStop(0.5, '#000010');
+    gradient.addColorStop(1, '#000000');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 512, 512);
+    
+    const bgTexture = new THREE.CanvasTexture(canvas);
+    scene.background = bgTexture;
 
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -316,15 +345,42 @@ document.querySelectorAll('a[href]').forEach(link => {
         }
       });
 
-      model.scale.setScalar(1.1);
+      model.scale.setScalar(1.3);
       model.updateMatrixWorld(true);
       const box = new THREE.Box3().setFromObject(model);
       const center = new THREE.Vector3();
       box.getCenter(center);
       model.position.sub(center);
 
+      // パーティクルライトエフェクトを追加
+      const particleGeometry = new THREE.SphereGeometry(0.005, 8, 8);
+      const particleMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff, 
+        transparent: true, 
+        opacity: 0.8 
+      });
+      
+      for(let i = 0; i < 30; i++) {
+        const particle = new THREE.Mesh(particleGeometry, particleMaterial);
+        particle.position.set(
+          (Math.random() - 0.5) * 4,
+          (Math.random() - 0.5) * 4 + 1.5,
+          (Math.random() - 0.5) * 4
+        );
+        scene.add(particle);
+        
+        // パーティクルのアニメーション
+        const animate = () => {
+          particle.rotation.x += 0.01;
+          particle.rotation.y += 0.01;
+          particle.position.y += Math.sin(Date.now() * 0.001 + i) * 0.002;
+          requestAnimationFrame(animate);
+        };
+        animate();
+      }
+
       pivot = new THREE.Object3D();
-      pivot.position.set(0, 1.5, 0); // Y位置を少し上げた
+      pivot.position.set(0, 1.5, 0);
       pivot.add(model);
       scene.add(pivot);
     });
@@ -389,7 +445,10 @@ const DAMP = 0.92;
             if (!autoRotate) autoRotate = true;
           }
         }
-        if (autoRotate) pivot.rotation.y += 0.009;
+        if (autoRotate) {
+          pivot.rotation.y += 0.01;
+          pivot.rotation.x = Math.sin(Date.now() * 0.0005) * 0.1;
+        }
       }
       renderer.render(scene, camera);
     }
@@ -418,28 +477,27 @@ function getSwipeDirection(dx, dy) {
 }
   // ランダムな位置に点滅する星を生成
   document.addEventListener('DOMContentLoaded', () => {
-    const count = 50; // 星の数
+    const count = 80; // 星の数を増やす
     for (let i = 0; i < count; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
       star.style.top = `${Math.random() * 100}vh`;
       star.style.left = `${Math.random() * 100}vw`;
-      star.style.animationDelay = `${Math.random() * 3}s`;
+      star.style.animationDelay = `${Math.random() * 4}s`;
+      
+      // サイズのバリエーションを追加
+      const size = Math.random() * 2 + 1; // 1px-3px
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      
+      // 稀に色付きの星を追加（青、赤、金色）
+      if (i % 20 === 0) {
+        const colors = ['#00ffff', '#ff6b6b', '#ffd700'];
+        star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      }
+
       document.body.appendChild(star);
-    }for (let i = 0; i < count; i++) {
-  const star = document.createElement('div');
-  star.classList.add('star');
-  star.style.top = `${Math.random() * 100}vh`;
-  star.style.left = `${Math.random() * 100}vw`;
-  star.style.animationDelay = `${Math.random() * 3}s`;
-
-  // 100個に1個の割合で赤色にする
-  if (i % 100 === 0) {
-    star.style.backgroundColor = 'red';
-  }
-
-  document.body.appendChild(star);
-}
+    }
 
 
     // 流れ星追加（一定間隔で1つ流す）
@@ -530,7 +588,7 @@ function getSwipeDirection(dx, dy) {
     // 一定間隔で流れ星を出す
     setInterval(() => {
       createMeteor();
-    }, 1000); // 1秒ごと（好きな間隔に変えてOK）
+    }, 2000); // 2秒ごとに変更して少し控えめに
   });
 dom.addEventListener('pointerdown', e => {
   const p = getXY(e);
