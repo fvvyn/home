@@ -550,8 +550,7 @@ dom.addEventListener('pointerdown', e => {
   // 長押し開始
   holdTimer = setTimeout(() => {
     gestureStage = 1; // 長押し成功
-    console.log("長押し完了！");
-  }, 600); // 600ms押し続けたら「長押し」
+  }, 500); // 500ms押し続けたら「長押し」
 });
 
 dom.addEventListener('pointerup', e => {
@@ -570,13 +569,13 @@ dom.addEventListener('pointerup', e => {
 
       if (JSON.stringify(swipeSequence) === JSON.stringify(swipeCode)) {
         gestureStage = 2; // スワイプ成功
-        console.log("スワイプ完了！");
+        
       }
     }
   }
   // ステージ2（スワイプ済み）の場合 → タップで発動
   else if (gestureStage === 2) {
-    console.log("タップ完了！遷移します");
+
     document.body.classList.add("transition-blurzoom");
     setTimeout(() => {
       window.location.href = "hello.html";
