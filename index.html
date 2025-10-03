@@ -434,7 +434,7 @@ function getSwipeDirection(dx, dy) {
   star.style.animationDelay = `${Math.random() * 3}s`;
 
   // 100個に1個の割合で赤色にする
-  if (i % 1000 === 0) {
+  if (i % 100 === 0) {
     star.style.backgroundColor = 'red';
   }
 
@@ -538,50 +538,23 @@ dom.addEventListener('pointerdown', e => {
   startY = p.y;
 });
 
-let gestureStage = 0; // 0=まだ, 1=長押し完了, 2=スワイプ完了
-let holdTimer = null;
-let startX = 0, startY = 0;
-
-dom.addEventListener('pointerdown', e => {
-  const p = getXY(e);
-  startX = p.x;
-  startY = p.y;
-
-  // 長押し開始
-  holdTimer = setTimeout(() => {
-    gestureStage = 1; // 長押し成功
-  }, 500); // 500ms押し続けたら「長押し」
-});
-
 dom.addEventListener('pointerup', e => {
-  clearTimeout(holdTimer);
+  const p = getXY(e);
+  const dx = p.x - startX;
+  const dy = p.y - startY;
 
-  // ステージ1（長押し済み）の場合 → スワイプ判定
-  if (gestureStage === 1) {
-    const p = getXY(e);
-    const dx = p.x - startX;
-    const dy = p.y - startY;
-    const direction = getSwipeDirection(dx, dy);
+  const direction = getSwipeDirection(dx, dy);
+  if (direction) {
+    swipeSequence.push(direction);
+    if (swipeSequence.length > swipeCode.length) swipeSequence.shift();
 
-    if (direction) {
-      swipeSequence.push(direction);
-      if (swipeSequence.length > swipeCode.length) swipeSequence.shift();
-
-      if (JSON.stringify(swipeSequence) === JSON.stringify(swipeCode)) {
-        gestureStage = 2; // スワイプ成功
-        
-      }
+    if (JSON.stringify(swipeSequence) === JSON.stringify(swipeCode)) {
+      document.body.classList.add("transition-blurzoom");
+      setTimeout(() => {
+        window.location.href = "hello.html";
+      }, 600);
+      swipeSequence = []; // 発動後はリセットしとこ
     }
-  }
-  // ステージ2（スワイプ済み）の場合 → タップで発動
-  else if (gestureStage === 2) {
-
-    document.body.classList.add("transition-blurzoom");
-    setTimeout(() => {
-      window.location.href = "hello.html";
-    }, 600);
-    gestureStage = 0; // リセット
-    swipeSequence = [];
   }
 });
     // 閉じるボタン押したら非表示に
