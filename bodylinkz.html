@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fvvyn - Bodylinkz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+
+    .progress-container {
+      height: 8px;
+      width: 100%;
+      background-color: #e5e7eb;
+      border-radius: 4px;
+      margin-bottom: 30px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: #8707ff;
+      border-radius: 4px;
+      transition: width 0.3s ease-in-out;
+    }
+
+    .form_main {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .heading {
+      font-size: 1.44em;
+      color: #2e2e2e;
+      font-weight: 700;
+      margin: 0 0 30px 0;
+      text-align: center;
+    }
+
+    .inputContainer { width: 100%; margin-bottom: 24px; }
+    .inputContainer label {
+      font-size: 0.8em; color: rgb(80,80,80); font-weight: 500;
+      margin-bottom: 5px; padding-left: 5px;
+    }
+
+    .select-field {
+      width: 100%; height: 40px; border: none;
+      border-bottom: 2px solid rgb(173,173,173);
+      background: transparent; font-size: 1em; font-weight: 500;
+      transition: border-bottom 0.3s;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor'%3E%3Cpath d='M7 7l3 3 3-3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 5px center;
+      background-size: 1.2em 1.2em;
+      padding-right: 25px;
+    }
+    .select-field:focus { outline: none; border-bottom: 2px solid #8000ff; }
+
+    .custom-input {
+      color: #2e2e2e; border: 2px solid #8707ff;
+      border-radius: 10px; padding: 10px 15px;
+      background: transparent; width: 100%;
+      transition: box-shadow 0.3s, border-color 0.3s;
+      font-size: 1em; font-weight: 500;
+    }
+    .custom-input:focus {
+      outline: none;
+      box-shadow: 2px 2px 15px #8707ff inset;
+      border-color: #8707ff;
+    }
+    .custom-input::placeholder { color: #a0a0a0; }
+    .custom-input.input-error { border: 2px solid red !important; }
+
+    .nav-button {
+      position: relative; width: 100%; height: 48px;
+      font-size: 1em; font-weight: 500;
+      border-radius: 30px; margin-top: 10px;
+      cursor: pointer; overflow: hidden;
+      transition: background-color 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #next-button { border: 2px solid #8000ff; background-color: #8000ff; color: white; }
+    #next-button:hover { background-color: #6a00cd; }
+    #back-button { border: 2px solid #6b7280; background-color: #6b7280; color: white; }
+    #back-button:hover { background-color: #4b5563; }
+
+    /* 結果の見やすさ改善 */
+    #recommendation-result {
+      border-radius: 1rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    /* 強調スタイル */
+    #recommended-size {
+      font-size: 3rem; /* 非常に大きく */
+      font-weight: 900; /* 極太 */
+      color: #8000ff; /* メインカラー */
+      background: #f3e8ff; /* 薄い背景色 */
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+    #result-message-container {
+      font-size: 1.125rem; /* text-lg */
+      font-weight: 600;
+      color: #374151; /* gray-700 */
+      margin-bottom: 0.5rem;
+    }
+
+
+    .official-link {
+      background-color: #8000ff;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: background-color 0.3s;
+    }
+    .official-link:hover { background-color: #6a00cd; }
+
+  </style>
+</head>
+<body class="p-4">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8 my-8">
+      <header class="text-center mb-8">
+        <p class="heading">fvvynを理想のサイズ感で</p>
+        <p class="text-sm text-gray-500 mt-[-20px]" id="step-title">ステップ 1: 商品とフィット感の選択</p>
+      </header>
+
+      <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+
+      <div id="step-container" class="form_main">
+
+        <div data-step="1" class="step-content">
+          <div class="inputContainer">
+            <label for="product">商品を選択</label>
+            <select id="product" class="select-field">
+              <option value="">選択してください</option>
+              <option value="slash-tshirt">Slash Tshirts</option>
+              <option value="logo-tshirt">Logo Tshirts</option>
+              <option value="lamp-zip-hoodie">Lamp Zip Hoodie</option>
+              <option value="beg-zip-hoodie">Beg Zip Hoodie</option>
+            </select>
+          </div>
+
+          <div class="inputContainer">
+            <label for="fit">好みのフィット感</label>
+            <select id="fit" class="select-field">
+              <option value="">選択してください</option>
+              <option value="oversized">オーバーサイズ (ゆったり)</option>
+              <option value="standard">標準 (ジャストサイズ)</option>
+              <option value="slim">タイト (ぴったり)</option>
+            </select>
+          </div>
+        </div>
+
+        <div data-step="2" class="step-content hidden">
+          <div class="inputContainer">
+            <label for="height">身長 (cm)</label>
+            <input id="height" type="number" class="custom-input" placeholder="例: 170" min="100" max="250">
+          </div>
+          <div class="inputContainer">
+            <label for="weight">体重 (kg)</label>
+            <input id="weight" type="number" class="custom-input" placeholder="例: 60" min="20" max="200">
+          </div>
+        </div>
+
+        <div data-step="3" class="step-content hidden">
+          <div id="recommendation-result" class="p-6 bg-gray-50 border border-gray-200">
+            <h3 class="text-xl font-bold mb-3" id="result-title"></h3>
+            
+            <p id="result-message-container">あなたにおすすめのサイズは</p>
+            <span id="recommended-size" class="text-5xl font-extrabold text-indigo-700">--</span>
+            <p id="result-detail" class="text-gray-600 mt-4"></p>
+            
+            <div id="size-details" class="text-left mt-6 p-4 bg-white rounded-lg border">
+                <p class="font-semibold text-gray-700">推奨サイズの目安 (実寸):</p>
+                <ul id="size-spec" class="text-sm text-gray-500 mt-2">
+                    </ul>
+            </div>
+
+
+            <a id="official-site-link" href="https://fvvyn.com" target="_blank" class="official-link">公式サイトへ</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="nav-buttons" class="flex justify-between gap-4 mt-8">
+        <button id="back-button" class="nav-button hidden w-1/2">戻る</button>
+        <button id="next-button" class="nav-button w-full">次へ</button>
+      </div>
+
+      <footer class="mt-10 text-xs text-gray-400 text-center">
+        <p>この技術はfvvyn©︎により保護されています</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll('.step-content');
+    const nextBtn = document.getElementById('next-button');
+    const backBtn = document.getElementById('back-button');
+    const progressBar = document.getElementById('progress-bar');
+    const stepTitle = document.getElementById('step-title');
+    let currentStep = 1;
+
+    // --- 商品別サイズデータ ---
+    const PRODUCT_SIZES = {
+      // Tshirts
+      'slash-tshirt': {
+        name: "Slash Tshirts",
+        S: { height:[150,160], weight:[40,55], length:66, chest:49*2, shoulder:44, sleeve:19 },
+        M: { height:[160,170], weight:[50,65], length:70, chest:52*2, shoulder:47, sleeve:20 },
+        L: { height:[170,180], weight:[60,75], length:74, chest:55*2, shoulder:50, sleeve:22 },
+        XL: { height:[180,190], weight:[70,85], length:78, chest:58*2, shoulder:53, sleeve:24 },
+        XXL: { height:[185,195], weight:[80,95], length:82, chest:61*2, shoulder:56, sleeve:26 },
+        XXXL: { height:[190,200], weight:[90,105], length:84, chest:64*2, shoulder:59, sleeve:26 }
+      },
+      // Logo Tshirts
+      'logo-tshirt': {
+        name: "Logo Tshirts",
+        S: { height:[150,160], weight:[40,55], length:66, chest:49*2, shoulder:44, sleeve:19 },
+        M: { height:[160,170], weight:[50,65], length:70, chest:52*2, shoulder:47, sleeve:20 },
+        L: { height:[170,180], weight:[60,75], length:74, chest:55*2, shoulder:50, sleeve:22 },
+        XL: { height:[180,190], weight:[70,85], length:78, chest:58*2, shoulder:53, sleeve:24 },
+        XXL: { height:[185,195], weight:[80,95], length:82, chest:61*2, shoulder:56, sleeve:26 },
+        XXXL: { height:[190,200], weight:[90,105], length:84, chest:64*2, shoulder:59, sleeve:26 }
+      },
+      // Beg Zip Hoodie
+      'beg-zip-hoodie': {
+        name: "Beg Zip Hoodie",
+        S: { height:[155,165], weight:[45,60], length:55, chest:51*2, shoulder:60, sleeve:56.5 },
+        M: { height:[165,175], weight:[55,70], length:57.5, chest:53.5*2, shoulder:62.5, sleeve:59 },
+        L: { height:[175,185], weight:[65,80], length:60, chest:56*2, shoulder:65, sleeve:61.5 }
+      },
+      // Lamp Zip Hoodie
+      'lamp-zip-hoodie': {
+        name: "Lamp Zip Hoodie",
+        XS: { height:[150,160], weight:[40,55], length:52.5, chest:45.5*2, shoulder:70, sleeve:51 },
+        S: { height:[160,170], weight:[50,65], length:55.5, chest:47*2, shoulder:72, sleeve:52 },
+        M: { height:[170,180], weight:[60,75], length:58.5, chest:48.5*2, shoulder:74, sleeve:53 },
+        L: { height:[180,190], weight:[70,85], length:61.5, chest:50*2, shoulder:76, sleeve:54 },
+        XL: { height:[185,195], weight:[80,95], length:64.5, chest:51.5*2, shoulder:78, sleeve:55 }
+      }
+    };
+
+    // --- フィット感に基づく調整係数 ---
+    const FIT_ADJUSTMENTS = {
+        'slim': { sizeOffset: -1, message: 'タイトな着心地を考慮し、基準サイズより1サイズ小さめをお勧めします。' },
+        'standard': { sizeOffset: 0, message: '標準的なジャストサイズで、基準サイズをお勧めします。' },
+        'oversized': { sizeOffset: 1, message: 'ゆったりとした着心地を考慮し、基準サイズより1サイズ大きめをお勧めします。' }
+    };
+
+    function showStep(step) {
+      steps.forEach(s => s.classList.add('hidden'));
+      document.querySelector(`[data-step="${step}"]`).classList.remove('hidden');
+      progressBar.style.width = ((step - 1) / (steps.length - 1)) * 100 + '%';
+      stepTitle.textContent = `ステップ ${step}: ` + (step === 1 ? "商品とフィット感の選択" : step === 2 ? "身長と体重を入力" : "結果");
+      backBtn.classList.toggle('hidden', step === 1);
+      nextBtn.textContent = step === steps.length ? '再スタート' : '次へ';
+
+      // ボタンの幅を調整
+      if (step === 1) nextBtn.classList.replace('w-1/2', 'w-full');
+      else nextBtn.classList.replace('w-full', 'w-1/2');
+    }
+
+    nextBtn.addEventListener('click', () => {
+      // バリデーション (必須入力チェック)
+      if (currentStep === 1) {
+        const product = document.getElementById('product').value;
+        const fit = document.getElementById('fit').value;
+        if (!product || !fit) {
+          alert("商品とフィット感を両方選択してください。");
+          return;
+        }
+      } else if (currentStep === 2) {
+        const height = parseInt(document.getElementById('height').value);
+        const weight = parseInt(document.getElementById('weight').value);
+        if (!height || !weight || height < 100 || weight < 20) {
+          alert("身長と体重を正しく入力してください。(例: 身長170cm, 体重60kg)");
+          return;
+        }
+      }
+
+      if (currentStep < steps.length) {
+        currentStep++;
+        if (currentStep === 3) updateResult();
+      } else {
+        currentStep = 1;
+      }
+      showStep(currentStep);
+    });
+
+    backBtn.addEventListener('click', () => {
+      if (currentStep > 1) currentStep--;
+      showStep(currentStep);
+    });
+
+
+    // ★ サイズ提案ロジックの修正
+    function updateResult() {
+        const productId = document.getElementById('product').value;
+        const fit = document.getElementById('fit').value;
+        const height = parseInt(document.getElementById('height').value);
+        const weight = parseInt(document.getElementById('weight').value);
+
+        const productData = PRODUCT_SIZES[productId];
+        const displayName = productData.name;
+        // name以外のキー(サイズ名)を抽出
+        const sizeKeys = Object.keys(productData).filter(k => k !== 'name'); 
+        const adjustment = FIT_ADJUSTMENTS[fit];
+
+        const resultTitle = document.getElementById('result-title');
+        const recommendedSizeDisplay = document.getElementById('recommended-size');
+        const resultMessageContainer = document.getElementById('result-message-container');
+        const resultDetail = document.getElementById('result-detail');
+        const sizeSpecList = document.getElementById('size-spec');
+        
+        resultTitle.textContent = `${displayName} の最適なサイズ`;
+        sizeSpecList.innerHTML = ''; // 詳細スペックをクリア
+
+        if (!productData || sizeKeys.length === 0) {
+            recommendedSizeDisplay.textContent = "N/A";
+            resultMessageContainer.textContent = "データが登録されていません";
+            resultDetail.textContent = "商品を選択し直してください。";
+            return;
+        }
+
+        // 1. 身長/体重から「標準」のベースサイズインデックスを決定 (最も誤差が少ないサイズ)
+        let minDifference = Infinity;
+        let baseIndex = -1;
+
+        for (let i = 0; i < sizeKeys.length; i++) {
+            const sizeKey = sizeKeys[i];
+            const sizeData = productData[sizeKey];
+            
+            // サイズデータの身長/体重の中央値を計算
+            const avgHeight = (sizeData.height[0] + sizeData.height[1]) / 2;
+            const avgWeight = (sizeData.weight[0] + sizeData.weight[1]) / 2;
+
+            // 入力値と中央値の差を計算 (簡易的な差分合計を使用)
+            // 許容範囲を広くするため、身長と体重の差の絶対値の合計を使用
+            const diff = Math.abs(height - avgHeight) + Math.abs(weight - avgWeight);
+
+            if (diff < minDifference) {
+                minDifference = diff;
+                baseIndex = i;
+            }
+        }
+
+        // 2. フィット感の調整を適用
+        let finalIndex = baseIndex + adjustment.sizeOffset;
+        
+        // 範囲外のサイズにならないように調整
+        finalIndex = Math.max(0, Math.min(finalIndex, sizeKeys.length - 1));
+
+        let recommended = sizeKeys[finalIndex];
+        let recommendedSizeData = productData[recommended];
+
+
+        if (recommended) {
+            recommendedSizeDisplay.textContent = recommended;
+            resultMessageContainer.textContent = "あなたにおすすめのサイズは";
+            resultDetail.textContent = adjustment.message;
+
+            // 推奨サイズの詳細スペックを表示
+            sizeSpecList.innerHTML = `
+                <li>着丈: ${recommendedSizeData.length} cm</li>
+                <li>身幅 (胸囲): ${recommendedSizeData.chest} cm</li>
+                <li>肩幅: ${recommendedSizeData.shoulder} cm</li>
+                <li>袖丈: ${recommendedSizeData.sleeve} cm</li>
+                <li class="mt-2 text-xs">※これは服の実寸です。お手持ちの服と比較してご確認ください。</li>
+            `;
+
+        } else {
+            recommendedSizeDisplay.textContent = "N/A";
+            resultMessageContainer.textContent = "データ範囲外です";
+            resultDetail.textContent = "入力された身長・体重に適合するサイズ範囲がありませんでした。最も近いサイズを目安にご検討ください。";
+            sizeSpecList.innerHTML = '';
+        }
+    }
+
+    showStep(currentStep);
+  </script>
+</body>
+</html>
