@@ -1,7 +1,7 @@
 // fvvyn-drip-gallery.js (最終版 - GAS URL埋め込み済み)
 
 // 📌 あなたの新しいGASのJSON API URL
-const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwDIqZtv7phHdkWYJgyt5UCGpnQv4QYCHuZXeo2YajtKhq80pRoZfzHMwAkZLfarBXx-Q/exec"; 
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzdLbdQ_lmmi8wIAvK8rAMPQe0qK-Im6-cBCzPHK2b4yBAhxeRoj2wc4e4yWgOEYQOv5Q/exec"; 
 
 // ギャラリーを表示するコンテナのID
 const CONTAINER_ID = "user-drip-container";
