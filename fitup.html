@@ -1,134 +1,114 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FIT UP - FVVYN</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FVVYN Drip - Fit Up</title>
+
+  <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Masonry + imagesLoaded -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #0f0f0f;
+      background-color: #0a0a0a;
       color: white;
-      overflow-x: hidden;
     }
-
-    header {
-      text-align: center;
-      padding: 3rem 1rem 2rem;
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-
-    /* Masonryレイアウト */
-    .grid {
-      column-count: 3;
-      column-gap: 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-
-    @media (max-width: 1024px) {
-      .grid {
-        column-count: 2;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid {
-        column-count: 1;
-      }
-    }
-
-    .item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
+    .card {
+      border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 1rem;
-      display: inline-block;
-      width: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      transition: transform 0.2s ease;
     }
-
-    .item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    .card:hover {
+      transform: scale(1.03);
     }
-
-    .item img {
-      width: 100%;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .caption {
-      padding: 0.8rem 1rem;
+    .share-btn {
+      background: #ff2b6d;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
       font-size: 0.9rem;
-      opacity: 0.85;
-    }
-
-    .caption span {
-      color: #a0a0a0;
-    }
-
-    footer {
+      font-weight: 600;
       text-align: center;
-      font-size: 0.8rem;
-      opacity: 0.6;
-      padding: 2rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .share-btn:hover {
+      background: #ff5c8a;
     }
   </style>
 </head>
 
-<body>
-  <header>
-    FIT UP GALLERY
-  </header>
+<body class="min-h-screen px-4 py-8">
+  <h1 class="text-3xl font-bold text-center mb-8 tracking-wide">FVVYN Drip 🔥</h1>
 
-  <section id="gallery" class="grid"></section>
-
-  <footer>
-    © FVVYN Official
-  </footer>
+  <div id="user-drip-container" class="mx-auto max-w-6xl" style="column-count: 3; column-gap: 1rem;"></div>
 
   <script>
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz5PbOQNH2Gh2XTgnEMJ7gkWdLPg9HFa3tnEo-m2xVnoqCXwqIgptolz9giykzop76Ucw/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzPoZxtKirDYDOhj_EVLQ7UINiNBktp_6GC3HxmEoj4f_0x_-GFpdHBVoXn-wNV0S4nPg/exec";
+    const container = document.getElementById("user-drip-container");
 
-    async function loadGallery() {
+    async function loadImages() {
       try {
-        const res = await fetch(GAS_API_URL);
+        const res = await fetch(GAS_URL);
         const data = await res.json();
 
-        const gallery = document.getElementById("gallery");
-        gallery.innerHTML = "";
-
-        if (data.length === 0) {
-          gallery.innerHTML = "<p class='text-center text-gray-400 mt-10'>まだ投稿がありません。</p>";
-          return;
-        }
-
+        container.innerHTML = "";
         data.forEach(item => {
-          const el = document.createElement("div");
-          el.className = "item";
+          const card = document.createElement("div");
+          card.className = "card mb-4 break-inside-avoid p-2";
 
-          el.innerHTML = `
-            <img src="${item.imageUrl}" alt="FVVYN wear">
-            <div class="caption">
-              <span>@${item.username || "unknown"}</span>
-            </div>
-          `;
+          const img = document.createElement("img");
+          img.src = item.imageUrl;
+          img.alt = item.username;
+          img.className = "w-full rounded-md mb-2";
+          img.loading = "lazy";
 
-          gallery.appendChild(el);
+          const username = document.createElement("p");
+          username.textContent = `@${item.username}`;
+          username.className = "text-sm text-gray-300 mb-2";
+
+          const shareBtn = document.createElement("button");
+          shareBtn.textContent = "ストーリーでシェア 📲";
+          shareBtn.className = "share-btn w-full";
+          shareBtn.addEventListener("click", () => shareToInstagram(item.imageUrl));
+
+          card.appendChild(img);
+          card.appendChild(username);
+          card.appendChild(shareBtn);
+          container.appendChild(card);
         });
-      } catch (err) {
-        console.error(err);
-        document.getElementById("gallery").innerHTML = "<p class='text-center text-red-500 mt-10'>データの読み込みに失敗しました。</p>";
+
+        imagesLoaded(container, () => {
+          new Masonry(container, {
+            itemSelector: ".card",
+            columnWidth: ".card",
+            percentPosition: true,
+            gutter: 16
+          });
+        });
+
+      } catch (error) {
+        console.error("Error loading images:", error);
+        container.innerHTML = `<p class='text-center text-gray-400'>投稿を読み込めませんでした。</p>`;
       }
     }
 
-    loadGallery();
+    // Instagram ストーリーシェア（Intent対応版）
+    function shareToInstagram(imageUrl) {
+      const encoded = encodeURIComponent(imageUrl);
+      const caption = encodeURIComponent("fvvyn fitup #FVVYN #FitUp");
+      const igUrl = `https://www.instagram.com/create/story/?media=${encoded}&caption=${caption}`;
+      window.open(igUrl, "_blank");
+    }
+
+    loadImages();
   </script>
 </body>
 </html>
