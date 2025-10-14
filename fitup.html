@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fitup - fitup.html</title>
-
+    <title>FVVYN Drip コーデ集</title>
     <style>
-        /* 全体のリセットと基本設定 */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #eee; /* 背景色 */
+            color: #333;
+            line-height: 1.6;
         }
 
-        /* ギャラリーコンテナとヘッダー */
+        /* ヘッダーセクションのスタイル */
         .page-header {
             text-align: center;
             padding: 40px 20px 20px;
@@ -26,22 +26,31 @@
             margin: 0;
             font-size: 2.5em;
             color: #111;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.1em;
         }
         
         /* 投稿ボタンのスタイル */
         .post-link {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #e1306c; /* Instagramカラー */
+            padding: 12px 25px;
+            background-color: #e1306c; /* Instagramブランドカラーを意識 */
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             margin-top: 15px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         .post-link:hover {
             background-color: #c1285c;
+            transform: translateY(-2px); /* ホバーで少し浮き上がる効果 */
         }
 
         /* ギャラリーコンテナ */
@@ -51,52 +60,70 @@
             padding: 0 10px; /* 画面端の余白 */
         }
         
-        /* Masonryアイテムのスタイル */
+        /* Masonryアイテム（各投稿）のスタイル */
         .drip-item {
             /* デスクトップで3列表示の場合 */
-            width: calc(33.33% - 10px); 
+            width: calc(33.33% - 10px); /* 10pxはgutterの幅 */
             margin-bottom: 10px; /* 下方向のgutter */
-            padding: 5px;
-            box-sizing: border-box;
-            border-radius: 8px;
+            padding: 8px; /* アイテム内部の余白 */
+            box-sizing: border-box; /* パディングを幅に含める */
+            border-radius: 10px;
             overflow: hidden;
             background: #fff; /* アイテム背景色 */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 軽い影 */
+            transition: transform 0.2s ease-in-out;
+        }
+        .drip-item:hover {
+            transform: translateY(-5px); /* ホバーで少し浮き上がる効果 */
         }
         .drip-item img {
             display: block;
             width: 100%;
             height: auto;
-            border-radius: 4px;
-            margin-bottom: 5px;
+            border-radius: 8px; /* 画像の角を丸く */
+            margin-bottom: 10px;
+            background-color: #f0f0f0; /* 画像読み込み中のプレースホルダー色 */
         }
         .drip-username {
             font-weight: bold;
-            color: #333;
-            font-size: 14px;
-            margin-bottom: 5px;
+            color: #222;
+            font-size: 1.1em;
+            margin-bottom: 8px;
             padding: 0 5px;
+            word-break: break-all; /* 長いユーザー名で改行 */
         }
         .drip-share-button {
             width: 100%;
-            padding: 8px;
-            background-color: #e1306c; 
+            padding: 10px;
+            background-color: #007bff; /* 青系のボタン色 */
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .drip-share-button:hover {
+            background-color: #0056b3;
         }
 
-        /* 🚨 レスポンシブ対応 (スマートフォンでは2列表示) */
+        /* 🚨 レスポンシブ対応 */
         @media (max-width: 768px) {
             .drip-item {
-                width: calc(50% - 10px); 
+                width: calc(50% - 10px); /* タブレットでは2列 */
             }
         }
         @media (max-width: 480px) {
             .drip-item {
-                width: calc(100% - 10px); /* スマホで1列 */
+                width: calc(100% - 10px); /* スマートフォンでは1列 */
+            }
+            .page-header h2 {
+                font-size: 2em;
+            }
+            .post-link {
+                padding: 10px 20px;
+                font-size: 1em;
             }
         }
     </style>
@@ -104,18 +131,18 @@
 <body>
 
     <div class="page-header">
-        <h2> 投稿されたfvvynfit</h2>
-        <p style="color: #666;">
-            公式ハッシュタグ #fvvyn をつけてみんなのコーデをシェアしよう！
+        <h2>FVVYN Drip コーデ集 📸</h2>
+        <p>
+            公式ハッシュタグ #FVVYN_Drip をつけてみんなのコーデをシェアしよう！<br>
+            クールなFvvynコーデを投稿して、このギャラリーに載ろう！
         </p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0GM2X_4JMsEz9c7eiyo9cIFBk1Q-6YZmOC6YPOihd6MZ3mQ/viewform?usp=header" target="_blank" class="post-link">
-            fvvynfitを投稿する
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdzkskj9p8eUoNyb1gUuzRsf757JjH0B9hFkL051uQoFp-4gA/viewform" target="_blank" class="post-link">
+            Dripコーデを投稿する！
         </a>
     </div>
 
     <div id="user-drip-container">
         </div>
-
 
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
