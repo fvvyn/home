@@ -286,7 +286,8 @@ body:not(.transition-blurzoom) {
     <!-- 画面中央のローディングコンテンツ -->
     <div class="flex flex-col items-center">
       <!-- アクセス中テキスト -->
-      <p class="text-xl font-bold mb-4">fvvynへアクセス中…</p>
+      <!-- ▼ 修正点: font-bold を font-light に変更し、Tipと同じフォントウェイトにする -->
+      <p class="text-xl font-light mb-4">fvvynへアクセス中…</p>
       
       <!-- 進捗バーコンテナ -->
       <div class="progress-bar-container w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -303,7 +304,7 @@ body:not(.transition-blurzoom) {
   <!-- ★★★ ローディング画面のDOM更新ここまで ★★★ -->
 
   <!-- ===== アクセシビリティ用 H1（画面非表示）(更新) ===== -->
-  <h1 class="sr-only">fvvyn - フヴィン |公式オフィシャルサイト。ブランドを体感しましょう。</h1>
+  <h1 class="sr-only">fvvyn - フヴィン |公式オフィシャルサイト。ブランドの世界観を体感しましょう。</h1>
 
 
   <!-- ==============  UI本体  ============== -->
@@ -351,11 +352,12 @@ body:not(.transition-blurzoom) {
     
 // Tipのリスト
 const TIPS = [
-  "Tip: ロゴはドラッグで回転させることができます。",
-  "Tip: スワイプコードで隠されたページへアクセスできるかも？",
-  "Tip: Night Visionの世界観を体験せよ。",
-  "Tip: SNSアイコンから最新情報をチェック！",
-  "Tip: fvvynは'from 086'、岡山のブランドです。"
+  "Tip: 3Dロゴはスワイプで回転させることができます。",
+  "Tip: スワイプコードで隠されたページへ飛べる？",
+  "Tip: サンプルの作成は複数回行われます",
+  "Tip: "fvvyn"は最初、タイプミスから生まれました",
+  "Tip: instagramのストーリーの作成に1時間かけています。"
+  "Tip: fvvyn.comは世界観を最大に表現するため、星一つからコードで作成しています"
 ];
 
 let tipInterval;
@@ -396,7 +398,7 @@ function startTipRotation() {
   tipInterval = setInterval(showNextTip, 4000);
 }
 
-// ★★★ 修正: DOMContentLoadedでTip表示を開始 ★★★
+// DOMContentLoadedでTip表示を開始
 document.addEventListener('DOMContentLoaded', startTipRotation);
 
     
@@ -415,91 +417,105 @@ document.addEventListener('DOMContentLoaded', startTipRotation);
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     pmrem.compileEquirectangularShader();
-    new THREE.RGBELoader()
-      .setPath('https://rawcdn.githack.com/mrdoob/three.js/dev/examples/textures/equirectangular/')
-      .load('royal_esplanade_1k.hdr', tex => {
-        scene.environment = pmrem.fromEquirectangular(tex).texture;
-        tex.dispose(); pmrem.dispose();
-      });
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-    const dir = new THREE.DirectionalLight(0xffffff, 1.2);
-    dir.position.set(5, 10, 7.5);
-    scene.add(dir);
-
+    
     let pivot;
     const loader = new THREE.GLTFLoader();
 
-    // GLTFモデルのロード時の onProgress コールバックを更新
-    loader.load('fvvynmetal.glb', gltf => {
-      // ロード完了時 (onLoad)
-      const model = gltf.scene;
-      model.traverse(c => {
-        if (c.isMesh) {
-          c.material.metalness = 1;
-          c.material.roughness = 0.1;
-          c.material.side = THREE.DoubleSide;
-          c.material.color = new THREE.Color(0xffffff);
-        }
-      });
-
-      model.scale.setScalar(1.1);
-      model.updateMatrixWorld(true);
-      const box = new THREE.Box3().setFromObject(model);
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-      model.position.sub(center);
-
-      pivot = new THREE.Object3D();
-      pivot.position.set(0, 1.5, 0); // Y位置を少し上げた
-      pivot.add(model);
-      scene.add(pivot);
-
-      // モデルロード完了時処理: Tipの切り替えを停止し、ローディング画面を非表示にする
-      clearInterval(tipInterval); 
-
-      const loadingDiv = document.getElementById('loadingScreen');
-      if (loadingDiv) {
-        // 最後に100%を表示して完了
-        const progressBarFill = document.getElementById('progressBarFill');
-        const progressPercentage = document.getElementById('progressPercentage');
-        if (progressBarFill) progressBarFill.style.width = '100%';
-        if (progressPercentage) progressPercentage.textContent = '100%';
-
-        loadingDiv.classList.add('fade-out');
-        // アニメーション後にDOMから削除
-        setTimeout(() => loadingDiv.remove(), 500); 
-      }
-      
-    }, 
-    // ロード進捗中 (onProgress)
-    (xhr) => {
-        const percent = (xhr.loaded / xhr.total) * 100;
-        const progressBarFill = document.getElementById('progressBarFill');
-        const progressPercentage = document.getElementById('progressPercentage'); // 新しい要素を取得
+    // ★★★ 修正箇所: HDRロード後にGLTFロードを開始する ★★★
+    new THREE.RGBELoader()
+      .setPath('https://rawcdn.githack.com/mrdoob/three.js/dev/examples/textures/equirectangular/')
+      .load('royal_esplanade_1k.hdr', tex => {
+        // HDRロード完了、環境設定
+        scene.environment = pmrem.fromEquirectangular(tex).texture;
+        tex.dispose(); 
+        pmrem.dispose();
         
-        // 進捗バーの幅を更新
-        if (progressBarFill) {
-            progressBarFill.style.width = percent.toFixed(0) + '%'; // 小数点以下を丸めて表示
-        }
+        // 環境設定後、GLTF ロード開始
+        loadGltfModel();
+      },
+      // HDRロードエラー処理
+      (xhr) => { 
+        // onProgress: HDRはファイルサイズが小さいため、進捗バー更新はGLTFに任せる
+      },
+      (error) => {
+        console.error('HDR loading error:', error); 
+        // HDRがロードできなかった場合でもGLTFロードへ進む
+        loadGltfModel();
+      }
+      );
 
-        // 進捗率の数字を更新
-        if (progressPercentage) {
-            progressPercentage.textContent = percent.toFixed(0) + '%';
-        }
-    }, 
-    // ロードエラー時 (onError)
-    (error) => {
-        console.error('An error happened while loading the model', error);
-        // エラー時もローディング画面を消す
-        clearInterval(tipInterval);
-        const loadingDiv = document.getElementById('loadingScreen');
-        if (loadingDiv) {
-          loadingDiv.classList.add('fade-out');
-          setTimeout(() => loadingDiv.remove(), 500);
-        }
-    });
-    // GLTFモデルのロード時の onProgress コールバック更新ここまで
+    // GLTFモデルのロード処理を関数化
+    function loadGltfModel() {
+        loader.load('fvvynmetal.glb', gltf => {
+            // ロード完了時 (onLoad)
+            const model = gltf.scene;
+            model.traverse(c => {
+              if (c.isMesh) {
+                c.material.metalness = 1;
+                c.material.roughness = 0.1;
+                c.material.side = THREE.DoubleSide;
+                c.material.color = new THREE.Color(0xffffff);
+              }
+            });
+
+            model.scale.setScalar(1.1);
+            model.updateMatrixWorld(true);
+            const box = new THREE.Box3().setFromObject(model);
+            const center = new THREE.Vector3();
+            box.getCenter(center);
+            model.position.sub(center);
+
+            pivot = new THREE.Object3D();
+            pivot.position.set(0, 1.5, 0); // Y位置を少し上げた
+            pivot.add(model);
+            scene.add(pivot);
+
+            // モデルロード完了時処理: Tipの切り替えを停止し、ローディング画面を非表示にする
+            clearInterval(tipInterval); 
+
+            const loadingDiv = document.getElementById('loadingScreen');
+            if (loadingDiv) {
+              // 最後に100%を表示して完了
+              const progressBarFill = document.getElementById('progressBarFill');
+              const progressPercentage = document.getElementById('progressPercentage');
+              if (progressBarFill) progressBarFill.style.width = '100%';
+              if (progressPercentage) progressPercentage.textContent = '100%';
+
+              loadingDiv.classList.add('fade-out');
+              // アニメーション後にDOMから削除
+              setTimeout(() => loadingDiv.remove(), 500); 
+            }
+            
+          }, 
+          // ロード進捗中 (onProgress)
+          (xhr) => {
+              const percent = (xhr.loaded / xhr.total) * 100;
+              const progressBarFill = document.getElementById('progressBarFill');
+              const progressPercentage = document.getElementById('progressPercentage'); 
+              
+              // 進捗バーの幅を更新
+              if (progressBarFill) {
+                  progressBarFill.style.width = percent.toFixed(0) + '%'; // 小数点以下を丸めて表示
+              }
+
+              // 進捗率の数字を更新
+              if (progressPercentage) {
+                  progressPercentage.textContent = percent.toFixed(0) + '%';
+              }
+          }, 
+          // ロードエラー時 (onError)
+          (error) => {
+              console.error('An error happened while loading the model', error);
+              // エラー時もローディング画面を消す
+              clearInterval(tipInterval);
+              const loadingDiv = document.getElementById('loadingScreen');
+              if (loadingDiv) {
+                loadingDiv.classList.add('fade-out');
+                setTimeout(() => loadingDiv.remove(), 500);
+              }
+          });
+    }
+    // ★★★ 修正箇所ここまで ★★★
 
 
     const dom = renderer.domElement;
@@ -746,7 +762,7 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
         "@type": "WebSite",
         "url": "https://fvvyn.com",
         "name": "fvvyn",
-        "description": "fvvyn - フヴィン |公式オフィシャルサイト。ブランドの世界観を体感しましょう。",
+        "description": "fvvyn - フヴィン |公式オフィシャルサイト。ブランドを体感しましょう。",
         "potentialAction": {
           "@type": "SearchAction",
           "target": "https://fvvyn.com?s={search_term_string}",
