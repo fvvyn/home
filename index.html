@@ -14,9 +14,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ====== 基本SEO ====== -->
-  <title>fvvyn | official page</title>
-  <meta name="description" content="海外ストリートから着想を得たアパレルブランド。Night Visionの世界観を融合させた、唯一無二のコレクションを展開。" />
+  <!-- ====== 基本SEO (更新) ====== -->
+  <title>fvvyn - フヴィン |公式オフィシャルサイト。</title>
+  <meta name="description" content="fvvyn - フヴィン |公式オフィシャルサイト。ブランドを体感しましょう。Night Visionの世界観を融合させた、唯一無二のコレクションを展開。" />
   <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://fvvyn.com" />
@@ -55,7 +55,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- ====== Font Awesome（アイコン） ====== -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-COKT…" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" xintegrity="sha512-COKT…" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- 右上のホーム画面追加アナウンス -->
 <div id="pwaAnnounce" class="fixed top-4 right-4 flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs z-50 animate-slide-in rounded-lg bg-[#232531] px-[10px] shadow-lg">
   <div class="cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg">
@@ -81,8 +81,6 @@
 <div class="snow2nd"><i class="far fa-snowflake"></i></div>
 <!-- Tailwind CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-
-
 
 
   <style>
@@ -257,7 +255,25 @@ body:not(.transition-blurzoom) {
 @keyframes anim {
   100% {color:transparent;top:150%;}
 }
-</style>
+
+/* ★★★ ローディング画面用のCSS追加 ★★★ */
+.fade-out {
+  opacity: 0 !important;
+  pointer-events: none; /* クリックを無効化 */
+}
+/* Tipのフェードアニメーション（JavaScriptで操作する） */
+.tip-fade {
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* 進捗バーの発光スタイル */
+.progress-bar-fill {
+  /* Tailwind green-400 (約 #34d399) を使用 */
+  background: #34d399; 
+  /* 発光効果 */
+  box-shadow: 0 0 5px #34d399, 0 0 10px #34d399, 0 0 15px #34d399;
+}
+/* ★★★ ローディング画面用のCSS追加ここまで ★★★ */
 
 
   </style>
@@ -265,9 +281,29 @@ body:not(.transition-blurzoom) {
 
 <body class="relative">
 
-  <!-- ===== アクセシビリティ用 H1（画面非表示） ===== -->
-  <h1 class="sr-only">fvvyn 公式サイト - from 086</h1>
+  <!-- ★★★ ローディング画面のDOMを更新：スピナー削除、アクセス中テキスト、進捗率表示を追加 ★★★ -->
+  <div id="loadingScreen" class="fixed inset-0 flex flex-col items-center justify-center bg-black text-white z-[100] transition-opacity duration-500 opacity-100">
+    <!-- 画面中央のローディングコンテンツ -->
+    <div class="flex flex-col items-center">
+      <!-- アクセス中テキスト -->
+      <p class="text-xl font-bold mb-4">fvvynへアクセス中…</p>
+      
+      <!-- 進捗バーコンテナ -->
+      <div class="progress-bar-container w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
+        <div id="progressBarFill" class="progress-bar-fill h-full rounded-full transition-all duration-100 ease-linear" style="width: 0%;"></div>
+      </div>
+      
+      <!-- 進捗率の数字 -->
+      <p id="progressPercentage" class="text-sm mt-2 text-gray-400">0%</p>
+    </div>
 
+    <!-- Tip表示エリア (画面下部に絶対配置) - 初期 opacity-0 を削除し、JSで制御 -->
+    <p id="loadingTip" class="text-sm text-gray-400 max-w-xs text-center px-4 tip-fade absolute bottom-12" style="opacity: 0;"></p>
+  </div>
+  <!-- ★★★ ローディング画面のDOM更新ここまで ★★★ -->
+
+  <!-- ===== アクセシビリティ用 H1（画面非表示）(更新) ===== -->
+  <h1 class="sr-only">fvvyn - フヴィン |公式オフィシャルサイト。ブランドを体感しましょう。</h1>
 
 
   <!-- ==============  UI本体  ============== -->
@@ -279,7 +315,6 @@ body:not(.transition-blurzoom) {
       <a href="bodylinkz.html" target="_blank" rel="noopener" aria-label="Bodylinkz">Bodylinkz</a>
 
       <!-- SNSアイコン -->
-<!-- SNSアイコン -->
 <div class="flex gap-4 mt-4">
   <a href="https://instagram.com/fvvyn_official"   target="_blank" rel="noopener"
      class="text-2xl text-gray-700 hover:text-black" aria-label="Instagram">
@@ -293,9 +328,7 @@ body:not(.transition-blurzoom) {
      class="text-2xl text-gray-700 hover:text-black" aria-label="TikTok">
     <i class="fab fa-tiktok"></i><span class="sr-only">TikTok</span>
   </a>
-
-
-
+</div>
   </main>
 
   <!-- ===== フッター ===== -->
@@ -314,22 +347,60 @@ body:not(.transition-blurzoom) {
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 
-  <script>// aタグのクリック時に blurzoomクラスをつけてから遷移
-document.querySelectorAll('a[href]').forEach(link => {
-  link.addEventListener('click', e => {
-    const url = link.getAttribute('href');
-    if (!url.startsWith('http') && !url.startsWith('#')) {
-      e.preventDefault();
-      document.body.classList.add('transition-blurzoom');
-      setTimeout(() => {
-        window.location.href = url;
-      }, 600); // CSSと同じ秒数
-    }
-  });
-});
+  <script>
+    
+// Tipのリスト
+const TIPS = [
+  "Tip: ロゴはドラッグで回転させることができます。",
+  "Tip: スワイプコードで隠されたページへアクセスできるかも？",
+  "Tip: Night Visionの世界観を体験せよ。",
+  "Tip: SNSアイコンから最新情報をチェック！",
+  "Tip: fvvynは'from 086'、岡山のブランドです。"
+];
+
+let tipInterval;
+
+// Tipをランダムに表示し、一定時間で切り替える関数
+function startTipRotation() {
+  const loadingTipElement = document.getElementById('loadingTip');
+  if (!loadingTipElement) return;
+
+  let currentTipIndex = -1;
+
+  // 初期化: フェードイン・アウト用のクラスを追加
+  loadingTipElement.classList.add('tip-fade');
+
+  function showNextTip() {
+    // 古いTipをフェードアウト
+    loadingTipElement.style.opacity = '0';
+
+    setTimeout(() => {
+      // 新しいTipを選択
+      let newTipIndex;
+      do {
+        newTipIndex = Math.floor(Math.random() * TIPS.length);
+      } while (newTipIndex === currentTipIndex);
+      currentTipIndex = newTipIndex;
+
+      loadingTipElement.textContent = TIPS[currentTipIndex];
+
+      // 新しいTipをフェードイン
+      loadingTipElement.style.opacity = '1';
+    }, 500); // フェードアウトの時間に合わせる (CSSのtip-fadeと連動)
+  }
+
+  // 初めてTipを表示
+  showNextTip();
+
+  // 4秒ごとにTipを切り替え
+  tipInterval = setInterval(showNextTip, 4000);
+}
+
+// ★★★ 修正: DOMContentLoadedでTip表示を開始 ★★★
+document.addEventListener('DOMContentLoaded', startTipRotation);
 
     
-    /* --- Three.js ロゴ回転ロジック（UI変更なし） --- */
+    /* --- Three.js ロゴ回転ロジック --- */
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
@@ -358,7 +429,10 @@ document.querySelectorAll('a[href]').forEach(link => {
 
     let pivot;
     const loader = new THREE.GLTFLoader();
+
+    // GLTFモデルのロード時の onProgress コールバックを更新
     loader.load('fvvynmetal.glb', gltf => {
+      // ロード完了時 (onLoad)
       const model = gltf.scene;
       model.traverse(c => {
         if (c.isMesh) {
@@ -380,7 +454,53 @@ document.querySelectorAll('a[href]').forEach(link => {
       pivot.position.set(0, 1.5, 0); // Y位置を少し上げた
       pivot.add(model);
       scene.add(pivot);
+
+      // モデルロード完了時処理: Tipの切り替えを停止し、ローディング画面を非表示にする
+      clearInterval(tipInterval); 
+
+      const loadingDiv = document.getElementById('loadingScreen');
+      if (loadingDiv) {
+        // 最後に100%を表示して完了
+        const progressBarFill = document.getElementById('progressBarFill');
+        const progressPercentage = document.getElementById('progressPercentage');
+        if (progressBarFill) progressBarFill.style.width = '100%';
+        if (progressPercentage) progressPercentage.textContent = '100%';
+
+        loadingDiv.classList.add('fade-out');
+        // アニメーション後にDOMから削除
+        setTimeout(() => loadingDiv.remove(), 500); 
+      }
+      
+    }, 
+    // ロード進捗中 (onProgress)
+    (xhr) => {
+        const percent = (xhr.loaded / xhr.total) * 100;
+        const progressBarFill = document.getElementById('progressBarFill');
+        const progressPercentage = document.getElementById('progressPercentage'); // 新しい要素を取得
+        
+        // 進捗バーの幅を更新
+        if (progressBarFill) {
+            progressBarFill.style.width = percent.toFixed(0) + '%'; // 小数点以下を丸めて表示
+        }
+
+        // 進捗率の数字を更新
+        if (progressPercentage) {
+            progressPercentage.textContent = percent.toFixed(0) + '%';
+        }
+    }, 
+    // ロードエラー時 (onError)
+    (error) => {
+        console.error('An error happened while loading the model', error);
+        // エラー時もローディング画面を消す
+        clearInterval(tipInterval);
+        const loadingDiv = document.getElementById('loadingScreen');
+        if (loadingDiv) {
+          loadingDiv.classList.add('fade-out');
+          setTimeout(() => loadingDiv.remove(), 500);
+        }
     });
+    // GLTFモデルのロード時の onProgress コールバック更新ここまで
+
 
     const dom = renderer.domElement;
     let dragging = false;
@@ -454,11 +574,7 @@ const DAMP = 0.92;
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    const loadingDiv = document.getElementById('loadingScreen');
-    if (loadingDiv) {
-      loadingDiv.classList.add('fade-out');
-      setTimeout(() => loadingDiv.remove(), 500);
-    }
+    
     let startX = 0, startY = 0;
 const swipeCode = ["right", "left"];
 let swipeSequence = [];
@@ -496,16 +612,6 @@ function getSwipeDirection(dx, dy) {
 
 
     // 流れ星追加（一定間隔で1つ流す）
-    setInterval(() => {
-      const meteor = document.createElement('div');
-      meteor.classList.add('meteor');
-      meteor.style.top = `${Math.random() * 80}vh`;
-      meteor.style.left = `${Math.random() * 100}vw`;
-      document.body.appendChild(meteor);
-      setTimeout(() => meteor.remove(), 2000); // アニメ後に削除
-    }, 3000); // 3秒ごとに流れ星
-  });
-    document.addEventListener('DOMContentLoaded', () => {
     const maxMeteors = 1; // 同時に流れる数（任意調整）
     const meteorDurationRange = [1500, 3000]; // アニメ時間の範囲(ms)
     const meteorLengthRange = [50, 150];      // 尾の長さ(px)
@@ -617,10 +723,6 @@ document.getElementById('closePwaAnnounce').addEventListener('click', () => {
   el.style.opacity = '0';
   setTimeout(() => el.remove(), 300);
 });
-window.addEventListener('load', () => {
-  // A-Frameモデル表示とかThree.js起動
-});
-
   </script>
 
   <!-- ======= 構造化データ（JSON-LD） ======= -->
@@ -644,7 +746,7 @@ window.addEventListener('load', () => {
         "@type": "WebSite",
         "url": "https://fvvyn.com",
         "name": "fvvyn",
-        "description": "from 084",
+        "description": "fvvyn - フヴィン |公式オフィシャルサイト。ブランドの世界観を体感しましょう。",
         "potentialAction": {
           "@type": "SearchAction",
           "target": "https://fvvyn.com?s={search_term_string}",
@@ -657,3 +759,4 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
