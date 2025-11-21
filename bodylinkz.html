@@ -2,407 +2,558 @@
 <html lang="ja">
 <head>
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MF598BWN4M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MF598BWN4M');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MF598BWN4M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MF598BWN4M');
+  </script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>fvvyn - Bodylinkz</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>fvvyn - Bodylinkz | Size Recommender</title>
   <meta name="description" content="fvvyn - フヴィン | Bodylinkz -アイテムのサイズによる不安を解消しましょう。" />
-  <meta name="keywords" content="fvvyn, フヴィン, ストリートブランド, Drip, UK Drip, US Drip, NFC, QR, ストリートファッション" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
-
-    .progress-container {
-      height: 8px;
-      width: 100%;
-      background-color: #e5e7eb;
-      border-radius: 4px;
-      margin-bottom: 30px;
+    :root {
+      --primary: #8707ff;
+      --primary-dark: #6a00cd;
+      --bg-color: #f8fafc;
+      --text-main: #1e293b;
     }
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: #8707ff;
-      border-radius: 4px;
-      transition: width 0.3s ease-in-out;
-    }
+    body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    .form_main {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+
+    @keyframes pulse-purple {
+      0% { box-shadow: 0 0 0 0 rgba(135, 7, 255, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(135, 7, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(135, 7, 255, 0); }
     }
 
-    .heading {
-      font-size: 1.44em;
-      color: #2e2e2e;
-      font-weight: 700;
-      margin: 0 0 30px 0;
-      text-align: center;
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translate(-50%, 20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
-    .inputContainer { width: 100%; margin-bottom: 24px; }
-    .inputContainer label {
-      font-size: 0.8em; color: rgb(80,80,80); font-weight: 500;
-      margin-bottom: 5px; padding-left: 5px;
+    /* UI Components */
+    .card-select {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .card-select:hover { transform: translateY(-2px); }
+    .card-select.selected {
+      border-color: var(--primary);
+      background-color: #f3e8ff;
+      color: var(--primary-dark);
+      box-shadow: 0 4px 12px rgba(135, 7, 255, 0.15);
+    }
+    .card-select.selected i { color: var(--primary); }
+
+    /* Range Slider Customization */
+    input[type=range] {
+      -webkit-appearance: none; width: 100%; background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; height: 24px; width: 24px;
+      border-radius: 50%; background: var(--primary);
+      cursor: pointer; margin-top: -10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border: 2px solid white;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 6px; cursor: pointer;
+      background: #e2e8f0; border-radius: 3px;
     }
 
-    .select-field {
-      width: 100%; height: 40px; border: none;
-      border-bottom: 2px solid rgb(173,173,173);
-      background: transparent; font-size: 1em; font-weight: 500;
-      transition: border-bottom 0.3s;
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor'%3E%3Cpath d='M7 7l3 3 3-3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 5px center;
-      background-size: 1.2em 1.2em;
-      padding-right: 25px;
+    /* Loader */
+    .loader {
+      border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+      border-radius: 50%; width: 40px; height: 40px;
+      animation: spin 1s linear infinite; margin: 20px auto;
     }
-    .select-field:focus { outline: none; border-bottom: 2px solid #8000ff; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    .custom-input {
-      color: #2e2e2e; border: 2px solid #8707ff;
-      border-radius: 10px; padding: 10px 15px;
-      background: transparent; width: 100%;
-      transition: box-shadow 0.3s, border-color 0.3s;
-      font-size: 1em; font-weight: 500;
+    /* Fit Meter */
+    .meter-container {
+      position: relative; height: 8px; background: #334155; border-radius: 4px; margin-top: 10px; overflow: hidden;
     }
-    .custom-input:focus {
-      outline: none;
-      box-shadow: 2px 2px 15px #8707ff inset;
-      border-color: #8707ff;
+    .meter-bar {
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: #94a3b8; transform: translateX(-50%);
     }
-    .custom-input::placeholder { color: #a0a0a0; }
-    .custom-input.input-error { border: 2px solid red !important; }
-
-    .nav-button {
-      position: relative; width: 100%; height: 48px;
-      font-size: 1em; font-weight: 500;
-      border-radius: 30px; margin-top: 10px;
-      cursor: pointer; overflow: hidden;
-      transition: background-color 0.3s;
-      display: flex; align-items: center; justify-content: center;
+    .meter-fill {
+      height: 100%; background: linear-gradient(90deg, #3b82f6 0%, #8707ff 50%, #ef4444 100%);
+      width: 100%; opacity: 0.8;
     }
-    #next-button { border: 2px solid #8000ff; background-color: #8000ff; color: white; }
-    #next-button:hover { background-color: #6a00cd; }
-    #back-button { border: 2px solid #6b7280; background-color: #6b7280; color: white; }
-    #back-button:hover { background-color: #4b5563; }
-
-    /* 結果の見やすさ改善 */
-    #recommendation-result {
-      border-radius: 1rem;
-      text-align: center;
-      overflow: hidden;
-    }
-    /* 強調スタイル */
-    #recommended-size {
-      font-size: 3rem; /* 非常に大きく */
-      font-weight: 900; /* 極太 */
-      color: #8000ff; /* メインカラー */
-      background: #f3e8ff; /* 薄い背景色 */
-      display: inline-block;
-      padding: 0.5rem 1.5rem;
-      border-radius: 10px;
-      margin-top: 10px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-    #result-message-container {
-      font-size: 1.125rem; /* text-lg */
-      font-weight: 600;
-      color: #374151; /* gray-700 */
-      margin-bottom: 0.5rem;
+    .meter-marker {
+      position: absolute; top: -4px; width: 16px; height: 16px; 
+      background: #fff; border: 3px solid var(--primary); border-radius: 50%;
+      transform: translateX(-50%); transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      z-index: 10;
     }
 
+    /* Glassmorphism for Main Container */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
 
-    .official-link {
-      background-color: #8000ff;
+    /* Toast Notification */
+    .toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #333;
       color: #fff;
-      padding: 12px 20px;
-      border-radius: 30px;
-      font-weight: 600;
-      display: inline-block;
-      text-decoration: none;
-      margin-top: 1.5rem;
-      transition: background-color 0.3s;
+      text-align: center;
+      border-radius: 8px;
+      padding: 12px;
+      position: fixed;
+      z-index: 50;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .official-link:hover { background-color: #6a00cd; }
-
+    .toast.show {
+      visibility: visible;
+      animation: slideUpFade 0.5s, fadeOut 0.5s 2.5s;
+    }
+    @keyframes fadeOut { from {opacity: 1;} to {opacity: 0;} }
   </style>
 </head>
-<body class="p-4">
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8 my-8">
-      <header class="text-center mb-8">
-        <p class="heading">fvvynを理想のサイズ感で</p>
-        <p class="text-sm text-gray-500 mt-[-20px]" id="step-title">ステップ 1: 商品とフィット感の選択</p>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 to-slate-200">
+
+  <div class="w-full max-w-md glass-panel shadow-2xl rounded-3xl overflow-hidden relative min-h-[600px] flex flex-col">
+    
+    <!-- Progress Header -->
+    <div class="absolute top-0 left-0 w-full h-1 bg-gray-100 z-10">
+      <div id="progress-bar" class="h-full bg-[#8707ff] transition-all duration-500 ease-out" style="width: 33%"></div>
+    </div>
+
+    <div class="p-6 md:p-8 flex-1 flex flex-col">
+      <!-- Header -->
+      <header class="text-center mb-6 relative flex-shrink-0">
+        <h1 class="text-2xl font-black tracking-tight text-slate-800">FVVYN <span class="text-[#8707ff] font-light">SIZE GUIDE</span></h1>
+        <p class="text-xs text-gray-400 mt-1 tracking-wider uppercase" id="step-indicator">Step 1 / 3</p>
       </header>
 
-      <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+      <!-- Main Form Area -->
+      <div id="step-container" class="relative flex-1">
 
-      <div id="step-container" class="form_main">
+        <!-- STEP 1: ITEM SELECT -->
+        <div data-step="1" class="step-content fade-in h-full flex flex-col">
+          <h2 class="text-lg font-bold text-gray-700 mb-4 text-center">どのアイテムをお探しですか？</h2>
+          <div class="grid grid-cols-2 gap-3 flex-1 content-start" id="product-grid">
+            <!-- Cards generated by JS -->
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('slash-tshirt', this)">
+              <i class="fa-solid fa-shirt text-2xl text-gray-300 mb-1"></i>
+              <span class="text-sm font-bold text-center">Slash Tshirts</span>
+            </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('logo-tshirt', this)">
+              <i class="fa-solid fa-t" style="font-family: serif;" class="text-2xl text-gray-300 mb-1"></i>
+              <span class="text-sm font-bold text-center">Logo Tshirts</span>
+            </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('lamp-zip-hoodie', this)">
+              <i class="fa-solid fa-vest text-2xl text-gray-300 mb-1"></i>
+              <span class="text-sm font-bold text-center">Lamp Zip Hoodie</span>
+            </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('beg-zip-hoodie', this)">
+              <i class="fa-solid fa-user-astronaut text-2xl text-gray-300 mb-1"></i>
+              <span class="text-sm font-bold text-center">Beg Zip Hoodie</span>
+            </div>
+          </div>
+          <input type="hidden" id="product">
+        </div>
 
-        <div data-step="1" class="step-content">
-          <div class="inputContainer">
-            <label for="product">商品を選択</label>
-            <select id="product" class="select-field">
-              <option value="">選択してください</option>
-              <option value="slash-tshirt">Slash Tshirts</option>
-              <option value="logo-tshirt">Logo Tshirts</option>
-              <option value="lamp-zip-hoodie">Lamp Zip Hoodie</option>
-              <option value="beg-zip-hoodie">Beg Zip Hoodie</option>
-            </select>
+        <!-- STEP 2: FIT SELECT -->
+        <div data-step="2" class="step-content hidden fade-in h-full flex flex-col">
+          <h2 class="text-lg font-bold text-gray-700 mb-4 text-center">好みのフィット感は？</h2>
+          <div class="flex flex-col gap-3 flex-1" id="fit-grid">
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4" onclick="selectFit('slim', this)">
+              <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400"><i class="fa-solid fa-child-reaching"></i></div>
+              <div class="text-left">
+                <p class="font-bold text-sm">Slim Fit</p>
+                <p class="text-xs text-gray-500">タイトめ / すっきり</p>
+              </div>
+            </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4" onclick="selectFit('standard', this)">
+              <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400"><i class="fa-solid fa-child"></i></div>
+              <div class="text-left">
+                <p class="font-bold text-sm">Standard Fit</p>
+                <p class="text-xs text-gray-500">標準 / ジャストサイズ</p>
+              </div>
+            </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4" onclick="selectFit('oversized', this)">
+              <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400"><i class="fa-solid fa-person-rays"></i></div>
+              <div class="text-left">
+                <p class="font-bold text-sm">Oversized</p>
+                <p class="text-xs text-gray-500">ゆったり / ストリート</p>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="fit">
+        </div>
+
+        <!-- STEP 3: MEASUREMENTS -->
+        <div data-step="3" class="step-content hidden fade-in h-full flex flex-col">
+          <h2 class="text-lg font-bold text-gray-700 mb-8 text-center">あなたの体型について</h2>
+          
+          <!-- Height Input -->
+          <div class="mb-10">
+            <div class="flex justify-between items-end mb-4">
+              <label class="text-sm font-bold text-gray-500">身長</label>
+              <span class="text-3xl font-bold text-[#8707ff]"><span id="height-val">170</span> <span class="text-sm text-gray-400">cm</span></span>
+            </div>
+            <input type="range" id="height-range" min="140" max="210" value="170" class="w-full accent-[#8707ff]" oninput="syncInput('height', this.value)">
+            <div class="flex justify-between text-xs text-gray-300 mt-1">
+                <span>140cm</span>
+                <span>210cm</span>
+            </div>
+            <input type="number" id="height" class="hidden" value="170"> <!-- Hidden logic input -->
           </div>
 
-          <div class="inputContainer">
-            <label for="fit">好みのフィット感</label>
-            <select id="fit" class="select-field">
-              <option value="">選択してください</option>
-              <option value="oversized">オーバーサイズ (ゆったり)</option>
-              <option value="standard">標準 (ジャストサイズ)</option>
-              <option value="slim">タイト (ぴったり)</option>
-            </select>
+          <!-- Weight Input -->
+          <div class="mb-4">
+            <div class="flex justify-between items-end mb-4">
+              <label class="text-sm font-bold text-gray-500">体重</label>
+              <span class="text-3xl font-bold text-[#8707ff]"><span id="weight-val">60</span> <span class="text-sm text-gray-400">kg</span></span>
+            </div>
+            <input type="range" id="weight-range" min="30" max="130" value="60" class="w-full accent-[#8707ff]" oninput="syncInput('weight', this.value)">
+             <div class="flex justify-between text-xs text-gray-300 mt-1">
+                <span>30kg</span>
+                <span>130kg</span>
+            </div>
+            <input type="number" id="weight" class="hidden" value="60"> <!-- Hidden logic input -->
           </div>
         </div>
 
-        <div data-step="2" class="step-content hidden">
-          <div class="inputContainer">
-            <label for="height">身長 (cm)</label>
-            <input id="height" type="number" class="custom-input" placeholder="例: 170" min="100" max="250">
+        <!-- STEP 4: RESULT -->
+        <div data-step="4" class="step-content hidden h-full">
+          <!-- Loading State -->
+          <div id="loading-view" class="text-center py-20 hidden h-full flex flex-col justify-center">
+            <div class="loader"></div>
+            <p class="text-sm text-gray-500 font-medium animate-pulse mt-4">AI Analyzing...</p>
           </div>
-          <div class="inputContainer">
-            <label for="weight">体重 (kg)</label>
-            <input id="weight" type="number" class="custom-input" placeholder="例: 60" min="20" max="200">
-          </div>
-        </div>
 
-        <div data-step="3" class="step-content hidden">
-          <div id="recommendation-result" class="p-6 bg-gray-50 border border-gray-200">
-            <h3 class="text-xl font-bold mb-3" id="result-title"></h3>
-            
-            <p id="result-message-container">あなたにおすすめのサイズは</p>
-            <span id="recommended-size" class="text-5xl font-extrabold text-indigo-700">--</span>
-            <p id="result-detail" class="text-gray-600 mt-4"></p>
-            
-            <div id="size-details" class="text-left mt-6 p-4 bg-white rounded-lg border">
-                <p class="font-semibold text-gray-700">推奨サイズの目安 (実寸):</p>
-                <ul id="size-spec" class="text-sm text-gray-500 mt-2">
-                    </ul>
+          <!-- Result View -->
+          <div id="result-view" class="hidden fade-in h-full flex flex-col">
+            <div class="bg-slate-900 text-white rounded-2xl p-6 text-center shadow-xl relative overflow-hidden flex-shrink-0">
+              <!-- Background Decor -->
+              <div class="absolute -top-10 -right-10 w-32 h-32 bg-[#8707ff] rounded-full blur-3xl opacity-30"></div>
+              <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
+
+              <p class="text-gray-400 text-xs font-medium mb-2 uppercase tracking-widest">Recommended Size</p>
+              <h3 class="text-xl font-bold mb-1" id="result-product-name">Product Name</h3>
+              
+              <div class="my-4 relative z-10">
+                <span id="recommended-size" class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#d8b4fe] to-[#8707ff] drop-shadow-lg">L</span>
+              </div>
+
+              <!-- Fit Meter -->
+              <div class="mt-4 mb-4 px-2">
+                <div class="flex justify-between text-[10px] text-gray-400 mb-1 font-medium">
+                  <span>Tight</span>
+                  <span>Regular</span>
+                  <span>Loose</span>
+                </div>
+                <div class="meter-container bg-slate-800 ring-1 ring-white/10">
+                  <div class="meter-fill bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-70"></div>
+                  <div id="fit-marker" class="meter-marker" style="left: 50%"></div>
+                </div>
+              </div>
+
+              <p id="result-message" class="text-sm text-gray-300 font-light mt-4 leading-relaxed"></p>
             </div>
 
-
-            <a id="official-site-link" href="https://fvvyn.com" target="_blank" class="official-link">公式サイトへ</a>
+            <!-- Specs -->
+            <div class="mt-4 bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex-1 overflow-y-auto">
+              <p class="text-xs font-bold text-gray-400 uppercase mb-3 border-b pb-2">Size Specs (cm)</p>
+              <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
+                <!-- Filled by JS -->
+              </ul>
+            </div>
+            
+            <div class="mt-4 text-center">
+                 <a href="https://fvvyn.com" target="_blank" class="inline-block w-full bg-black text-white text-center py-3 rounded-xl font-bold text-sm hover:bg-gray-800 transition-colors shadow-lg">
+                公式サイトで購入する <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                </a>
+            </div>
           </div>
         </div>
+
       </div>
 
-      <div id="nav-buttons" class="flex justify-between gap-4 mt-8">
-        <button id="back-button" class="nav-button hidden w-1/2">戻る</button>
-        <button id="next-button" class="nav-button w-full">次へ</button>
+      <!-- Navigation -->
+      <div class="flex gap-3 mt-6 flex-shrink-0">
+        <button id="back-button" class="flex-1 py-3 rounded-full border border-gray-300 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors hidden focus:outline-none focus:ring-2 focus:ring-gray-200">戻る</button>
+        <button id="next-button" class="flex-1 py-3 rounded-full bg-[#8707ff] text-white font-bold text-sm shadow-lg shadow-purple-200 hover:bg-[#6a00cd] hover:shadow-purple-300 transition-all transform active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2">次へ</button>
       </div>
 
-      <footer class="mt-10 text-xs text-gray-400 text-center">
-        <p>この技術はfvvyn©︎により保護されています</p>
+      <footer class="mt-6 text-[10px] text-gray-300 text-center flex-shrink-0">
+        <p>Powered by FVVYN Technology</p>
       </footer>
     </div>
   </div>
 
+  <!-- Toast Container -->
+  <div id="toast" class="toast">Message Here</div>
+
   <script>
+    // --- Logic & Data ---
+    const PRODUCT_SIZES = {
+      'slash-tshirt': {
+        name: "Slash Tshirts",
+        S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19 },
+        M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20 },
+        L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22 },
+        XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24 },
+        XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26 },
+        XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26 }
+      },
+      'logo-tshirt': {
+        name: "Logo Tshirts",
+        S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19 },
+        M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20 },
+        L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22 },
+        XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24 },
+        XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26 },
+        XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26 }
+      },
+      'beg-zip-hoodie': {
+        name: "Beg Zip Hoodie",
+        S: { height:[155,165], weight:[45,60], length:55, chest:102, shoulder:60, sleeve:56.5 },
+        M: { height:[165,175], weight:[55,70], length:57.5, chest:107, shoulder:62.5, sleeve:59 },
+        L: { height:[175,185], weight:[65,80], length:60, chest:112, shoulder:65, sleeve:61.5 }
+      },
+      'lamp-zip-hoodie': {
+        name: "Lamp Zip Hoodie",
+        XS: { height:[150,160], weight:[40,55], length:52.5, chest:91, shoulder:70, sleeve:51 },
+        S: { height:[160,170], weight:[50,65], length:55.5, chest:94, shoulder:72, sleeve:52 },
+        M: { height:[170,180], weight:[60,75], length:58.5, chest:97, shoulder:74, sleeve:53 },
+        L: { height:[180,190], weight:[70,85], length:61.5, chest:100, shoulder:76, sleeve:54 },
+        XL: { height:[185,195], weight:[80,95], length:64.5, chest:103, shoulder:78, sleeve:55 }
+      }
+    };
+
+    const FIT_ADJUSTMENTS = {
+        'slim': { offset: -1, text: 'タイトなシルエットをご提案します。' },
+        'standard': { offset: 0, text: 'スタンダードなサイズ感です。' },
+        'oversized': { offset: 1, text: 'ゆとりのあるサイズ感をご提案します。' }
+    };
+
+    // --- UI Logic ---
     const steps = document.querySelectorAll('.step-content');
     const nextBtn = document.getElementById('next-button');
     const backBtn = document.getElementById('back-button');
     const progressBar = document.getElementById('progress-bar');
-    const stepTitle = document.getElementById('step-title');
+    const stepIndicator = document.getElementById('step-indicator');
     let currentStep = 1;
 
-    // --- 商品別サイズデータ ---
-    const PRODUCT_SIZES = {
-      // Tshirts
-      'slash-tshirt': {
-        name: "Slash Tshirts",
-        S: { height:[150,160], weight:[40,55], length:66, chest:49*2, shoulder:44, sleeve:19 },
-        M: { height:[160,170], weight:[50,65], length:70, chest:52*2, shoulder:47, sleeve:20 },
-        L: { height:[170,180], weight:[60,75], length:74, chest:55*2, shoulder:50, sleeve:22 },
-        XL: { height:[180,190], weight:[70,85], length:78, chest:58*2, shoulder:53, sleeve:24 },
-        XXL: { height:[185,195], weight:[80,95], length:82, chest:61*2, shoulder:56, sleeve:26 },
-        XXXL: { height:[190,200], weight:[90,105], length:84, chest:64*2, shoulder:59, sleeve:26 }
-      },
-      // Logo Tshirts
-      'logo-tshirt': {
-        name: "Logo Tshirts",
-        S: { height:[150,160], weight:[40,55], length:66, chest:49*2, shoulder:44, sleeve:19 },
-        M: { height:[160,170], weight:[50,65], length:70, chest:52*2, shoulder:47, sleeve:20 },
-        L: { height:[170,180], weight:[60,75], length:74, chest:55*2, shoulder:50, sleeve:22 },
-        XL: { height:[180,190], weight:[70,85], length:78, chest:58*2, shoulder:53, sleeve:24 },
-        XXL: { height:[185,195], weight:[80,95], length:82, chest:61*2, shoulder:56, sleeve:26 },
-        XXXL: { height:[190,200], weight:[90,105], length:84, chest:64*2, shoulder:59, sleeve:26 }
-      },
-      // Beg Zip Hoodie
-      'beg-zip-hoodie': {
-        name: "Beg Zip Hoodie",
-        S: { height:[155,165], weight:[45,60], length:55, chest:51*2, shoulder:60, sleeve:56.5 },
-        M: { height:[165,175], weight:[55,70], length:57.5, chest:53.5*2, shoulder:62.5, sleeve:59 },
-        L: { height:[175,185], weight:[65,80], length:60, chest:56*2, shoulder:65, sleeve:61.5 }
-      },
-      // Lamp Zip Hoodie
-      'lamp-zip-hoodie': {
-        name: "Lamp Zip Hoodie",
-        XS: { height:[150,160], weight:[40,55], length:52.5, chest:45.5*2, shoulder:70, sleeve:51 },
-        S: { height:[160,170], weight:[50,65], length:55.5, chest:47*2, shoulder:72, sleeve:52 },
-        M: { height:[170,180], weight:[60,75], length:58.5, chest:48.5*2, shoulder:74, sleeve:53 },
-        L: { height:[180,190], weight:[70,85], length:61.5, chest:50*2, shoulder:76, sleeve:54 },
-        XL: { height:[185,195], weight:[80,95], length:64.5, chest:51.5*2, shoulder:78, sleeve:55 }
+    function updateUI(step) {
+      steps.forEach(s => {
+        s.classList.add('hidden');
+        s.classList.remove('fade-in');
+      });
+      
+      const targetStep = document.querySelector(`[data-step="${step}"]`);
+      targetStep.classList.remove('hidden');
+      // Trigger reflow to restart animation
+      void targetStep.offsetWidth;
+      targetStep.classList.add('fade-in');
+
+      const percentage = ((step - 1) / 3) * 100;
+      progressBar.style.width = (step === 4 ? 100 : percentage) + '%';
+      
+      stepIndicator.textContent = step === 4 ? "Complete" : `Step ${step} / 3`;
+
+      // Button States
+      backBtn.classList.toggle('hidden', step === 1 || step === 4);
+      
+      if (step === 4) {
+        nextBtn.textContent = '再診断する';
+        nextBtn.onclick = () => resetForm();
+      } else {
+        nextBtn.textContent = '次へ';
+        nextBtn.onclick = () => nextStep();
       }
-    };
-
-    // --- フィット感に基づく調整係数 ---
-    const FIT_ADJUSTMENTS = {
-        'slim': { sizeOffset: -1, message: 'タイトな着心地を考慮し、基準サイズより1サイズ小さめをお勧めします。' },
-        'standard': { sizeOffset: 0, message: '標準的なジャストサイズで、基準サイズをお勧めします。' },
-        'oversized': { sizeOffset: 1, message: 'ゆったりとした着心地を考慮し、基準サイズより1サイズ大きめをお勧めします。' }
-    };
-
-    function showStep(step) {
-      steps.forEach(s => s.classList.add('hidden'));
-      document.querySelector(`[data-step="${step}"]`).classList.remove('hidden');
-      progressBar.style.width = ((step - 1) / (steps.length - 1)) * 100 + '%';
-      stepTitle.textContent = `ステップ ${step}: ` + (step === 1 ? "商品とフィット感の選択" : step === 2 ? "身長と体重を入力" : "結果");
-      backBtn.classList.toggle('hidden', step === 1);
-      nextBtn.textContent = step === steps.length ? '再スタート' : '次へ';
-
-      // ボタンの幅を調整
-      if (step === 1) nextBtn.classList.replace('w-1/2', 'w-full');
-      else nextBtn.classList.replace('w-full', 'w-1/2');
     }
 
-    nextBtn.addEventListener('click', () => {
-      // バリデーション (必須入力チェック)
-      if (currentStep === 1) {
-        const product = document.getElementById('product').value;
-        const fit = document.getElementById('fit').value;
-        if (!product || !fit) {
-          alert("商品とフィット感を両方選択してください。");
-          return;
-        }
-      } else if (currentStep === 2) {
-        const height = parseInt(document.getElementById('height').value);
-        const weight = parseInt(document.getElementById('weight').value);
-        if (!height || !weight || height < 100 || weight < 20) {
-          alert("身長と体重を正しく入力してください。(例: 身長170cm, 体重60kg)");
-          return;
-        }
-      }
+    function nextStep() {
+      if (!validateCurrentStep()) return;
 
-      if (currentStep < steps.length) {
+      if (currentStep < 4) {
         currentStep++;
-        if (currentStep === 3) updateResult();
-      } else {
-        currentStep = 1;
+        updateUI(currentStep);
+        if (currentStep === 4) calculateAndShowResult();
       }
-      showStep(currentStep);
-    });
+    }
 
     backBtn.addEventListener('click', () => {
-      if (currentStep > 1) currentStep--;
-      showStep(currentStep);
+      if (currentStep > 1) {
+        currentStep--;
+        updateUI(currentStep);
+      }
     });
 
-
-    // ★ サイズ提案ロジックの修正
-    function updateResult() {
-        const productId = document.getElementById('product').value;
-        const fit = document.getElementById('fit').value;
-        const height = parseInt(document.getElementById('height').value);
-        const weight = parseInt(document.getElementById('weight').value);
-
-        const productData = PRODUCT_SIZES[productId];
-        const displayName = productData.name;
-        // name以外のキー(サイズ名)を抽出
-        const sizeKeys = Object.keys(productData).filter(k => k !== 'name'); 
-        const adjustment = FIT_ADJUSTMENTS[fit];
-
-        const resultTitle = document.getElementById('result-title');
-        const recommendedSizeDisplay = document.getElementById('recommended-size');
-        const resultMessageContainer = document.getElementById('result-message-container');
-        const resultDetail = document.getElementById('result-detail');
-        const sizeSpecList = document.getElementById('size-spec');
-        
-        resultTitle.textContent = `${displayName} の最適なサイズ`;
-        sizeSpecList.innerHTML = ''; // 詳細スペックをクリア
-
-        if (!productData || sizeKeys.length === 0) {
-            recommendedSizeDisplay.textContent = "N/A";
-            resultMessageContainer.textContent = "データが登録されていません";
-            resultDetail.textContent = "商品を選択し直してください。";
-            return;
-        }
-
-        // 1. 身長/体重から「標準」のベースサイズインデックスを決定 (最も誤差が少ないサイズ)
-        let minDifference = Infinity;
-        let baseIndex = -1;
-
-        for (let i = 0; i < sizeKeys.length; i++) {
-            const sizeKey = sizeKeys[i];
-            const sizeData = productData[sizeKey];
-            
-            // サイズデータの身長/体重の中央値を計算
-            const avgHeight = (sizeData.height[0] + sizeData.height[1]) / 2;
-            const avgWeight = (sizeData.weight[0] + sizeData.weight[1]) / 2;
-
-            // 入力値と中央値の差を計算 (簡易的な差分合計を使用)
-            // 許容範囲を広くするため、身長と体重の差の絶対値の合計を使用
-            const diff = Math.abs(height - avgHeight) + Math.abs(weight - avgWeight);
-
-            if (diff < minDifference) {
-                minDifference = diff;
-                baseIndex = i;
-            }
-        }
-
-        // 2. フィット感の調整を適用
-        let finalIndex = baseIndex + adjustment.sizeOffset;
-        
-        // 範囲外のサイズにならないように調整
-        finalIndex = Math.max(0, Math.min(finalIndex, sizeKeys.length - 1));
-
-        let recommended = sizeKeys[finalIndex];
-        let recommendedSizeData = productData[recommended];
-
-
-        if (recommended) {
-            recommendedSizeDisplay.textContent = recommended;
-            resultMessageContainer.textContent = "あなたにおすすめのサイズは";
-            resultDetail.textContent = adjustment.message;
-
-            // 推奨サイズの詳細スペックを表示
-            sizeSpecList.innerHTML = `
-                <li>着丈: ${recommendedSizeData.length} cm</li>
-                <li>身幅 (胸囲): ${recommendedSizeData.chest} cm</li>
-                <li>肩幅: ${recommendedSizeData.shoulder} cm</li>
-                <li>袖丈: ${recommendedSizeData.sleeve} cm</li>
-                <li class="mt-2 text-xs">※これは服の実寸です。お手持ちの服と比較してご確認ください。</li>
-            `;
-
-        } else {
-            recommendedSizeDisplay.textContent = "N/A";
-            resultMessageContainer.textContent = "データ範囲外です";
-            resultDetail.textContent = "入力された身長・体重に適合するサイズ範囲がありませんでした。最も近いサイズを目安にご検討ください。";
-            sizeSpecList.innerHTML = '';
-        }
+    function resetForm() {
+      currentStep = 1;
+      document.getElementById('product').value = '';
+      document.getElementById('fit').value = '';
+      document.querySelectorAll('.card-select').forEach(el => el.classList.remove('selected'));
+      updateUI(1);
     }
 
-    showStep(currentStep);
+    // Selection Helpers
+    window.selectProduct = function(value, el) {
+      document.getElementById('product').value = value;
+      document.querySelectorAll('#product-grid .card-select').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    window.selectFit = function(value, el) {
+      document.getElementById('fit').value = value;
+      document.querySelectorAll('#fit-grid .card-select').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    window.syncInput = function(id, val) {
+      document.getElementById(id).value = val;
+      document.getElementById(id + '-val').textContent = val;
+    }
+
+    // Toast Notification Function
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.className = "toast show";
+        toast.innerText = message;
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2900);
+    }
+
+    function validateCurrentStep() {
+      if (currentStep === 1 && !document.getElementById('product').value) {
+        showToast('商品を選択してください'); return false;
+      }
+      if (currentStep === 2 && !document.getElementById('fit').value) {
+        showToast('フィット感を選択してください'); return false;
+      }
+      return true;
+    }
+
+    // --- Calculation Logic ---
+    function calculateAndShowResult() {
+      const loadingView = document.getElementById('loading-view');
+      const resultView = document.getElementById('result-view');
+      const nextBtn = document.getElementById('next-button');
+
+      // Show loading
+      resultView.classList.add('hidden');
+      loadingView.classList.remove('hidden');
+      nextBtn.classList.add('invisible'); // Hide button during load
+
+      setTimeout(() => {
+        loadingView.classList.add('hidden');
+        resultView.classList.remove('hidden');
+        nextBtn.classList.remove('invisible');
+        
+        performCalculation();
+      }, 1500); // Fake loading delay for UX
+    }
+
+    function performCalculation() {
+      const pid = document.getElementById('product').value;
+      const fit = document.getElementById('fit').value;
+      const h = parseInt(document.getElementById('height').value);
+      const w = parseInt(document.getElementById('weight').value);
+
+      const data = PRODUCT_SIZES[pid];
+      const adjustment = FIT_ADJUSTMENTS[fit];
+      const sizeKeys = Object.keys(data).filter(k => k !== 'name');
+
+      // 1. Find Base Size (Closest Distance)
+      let bestDist = Infinity;
+      let baseIdx = 0;
+
+      sizeKeys.forEach((size, idx) => {
+        const sData = data[size];
+        const avgH = (sData.height[0] + sData.height[1]) / 2;
+        const avgW = (sData.weight[0] + sData.weight[1]) / 2;
+        
+        // Simple distance metric. Weight is weighted slightly higher as it affects width more.
+        const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 1.5);
+        
+        if (dist < bestDist) {
+          bestDist = dist;
+          baseIdx = idx;
+        }
+      });
+
+      // 2. Apply Fit Adjustment
+      let finalIdx = baseIdx + adjustment.offset;
+      finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
+      
+      const recSize = sizeKeys[finalIdx];
+      const recData = data[recSize];
+
+      // 3. Render Data
+      document.getElementById('result-product-name').textContent = data.name;
+      document.getElementById('recommended-size').textContent = recSize;
+      document.getElementById('result-message').textContent = adjustment.text;
+
+      const specList = document.getElementById('size-spec');
+      specList.innerHTML = `
+        <li class="flex justify-between border-b border-gray-100 pb-1"><span>着丈</span> <span class="font-bold text-slate-700">${recData.length}</span></li>
+        <li class="flex justify-between border-b border-gray-100 pb-1"><span>身幅</span> <span class="font-bold text-slate-700">${recData.chest}</span></li>
+        <li class="flex justify-between border-b border-gray-100 pb-1"><span>肩幅</span> <span class="font-bold text-slate-700">${recData.shoulder}</span></li>
+        <li class="flex justify-between border-b border-gray-100 pb-1"><span>袖丈</span> <span class="font-bold text-slate-700">${recData.sleeve}</span></li>
+      `;
+
+      // 4. Visual Meter Calculation
+      // Calculate where the user falls relative to the chosen size's range
+      // 0% = Tight side, 50% = Perfect, 100% = Loose side
+      // Simple logic: If selected fit is "Oversized", push marker to Right. "Slim" to Left.
+      let meterPos = 50;
+      if (fit === 'slim') meterPos = 20; 
+      else if (fit === 'oversized') meterPos = 80;
+      else meterPos = 50;
+
+      // Add slight variation based on exact measurements vs size avg
+      // If user is heavier than size avg -> tighter (move left)
+      const sData = data[recSize];
+      const avgW = (sData.weight[0] + sData.weight[1]) / 2;
+      if (w > avgW + 3) meterPos -= 15; // Heavier -> Tighter
+      if (w < avgW - 3) meterPos += 15; // Lighter -> Looser
+      
+      meterPos = Math.max(5, Math.min(95, meterPos)); // Clamp
+      
+      // Reset first
+      document.getElementById('fit-marker').style.left = '50%';
+      
+      // Animate after short delay
+      setTimeout(() => {
+        document.getElementById('fit-marker').style.left = meterPos + '%';
+      }, 300);
+    }
+
+    // Init
+    updateUI(1);
   </script>
 </body>
 </html>
+
