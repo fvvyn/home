@@ -1,35 +1,95 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MF598BWN4M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MF598BWN4M');
-</script>
-  <meta charset="UTF-8" />
-  <title>FVVYN Admin</title>
-  <style>
-    body {
-      background: black;
-      color: lime;
-      font-family: monospace;
-      padding: 2rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>診断ログ管理ビュー</title>
+    <style>
+        /* スタイルはそのまま維持 */
+        body { font-family: 'Inter', sans-serif; margin: 40px; background-color: #f8fafc; color: #1e293b; }
+        h1 { color: #8707ff; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); background-color: white; }
+        th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #f1f5f9; color: #475569; font-weight: 700; text-transform: uppercase; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+        #data-container { overflow-x: auto; }
+        .loading { color: #8707ff; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+    </style>
 </head>
 <body>
-  <h1>FVVYN 管理ページ</h1>
-  <p>fvvyn アクセスユーザー数確認ページ</p>
-  <p>アクセス数: <span id="count">---</span></p>
+    <h1>Bodylinkz 診断ログ一覧</h1>
+    
+    <p>このページはスプレッドシートの最新データを表示しています。</p>
+    
+    <div id="data-container">
+        <p class="loading">データを読み込み中...</p>
+    </div>
 
-  <script>
-    const counterEl = document.getElementById('count');
-    let count = localStorage.getItem('fvvynCounter') || 0;
-    counterEl.innerText = count.toString().padStart(5, '0');
-  </script>
+    <script>
+        // ★★★ あなたが取得した JSON API の URL を設定済みです ★★★
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbweqQT5qnsUwSw_y5j23avW4K2bfVt_4TL8KJlFZYpqtyhS8PlOre6yE6LtpYMsn8vbGQ/exec"; 
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLogData();
+        });
+
+        function fetchLogData() {
+            // WebサイトからGASのAPIにアクセスしてデータを取得
+            fetch(GAS_API_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP Error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.error) {
+                        document.getElementById('data-container').innerHTML = `<p class="error">エラー: ${result.error}</p>`;
+                        return;
+                    }
+                    
+                    if (result.data && result.data.length > 0) {
+                        renderTable(result.data);
+                    } else {
+                        document.getElementById('data-container').innerHTML = '<p>ログデータはまだありません。</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('データの取得に失敗しました:', error);
+                    document.getElementById('data-container').innerHTML = `<p class="error">データの取得中にエラーが発生しました: ${error.message}</p>`;
+                });
+        }
+
+        function renderTable(logs) {
+            const container = document.getElementById('data-container');
+            container.innerHTML = ''; 
+
+            const table = document.createElement('table');
+            const thead = table.createTHead();
+            const tbody = table.createTBody();
+
+            // ヘッダー行の生成
+            const headers = Object.keys(logs[0]);
+            const headerRow = thead.insertRow();
+            headers.forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+
+            // データ行の生成
+            logs.forEach(log => {
+                const row = tbody.insertRow();
+                headers.forEach(key => {
+                    const cell = row.insertCell();
+                    cell.textContent = log[key];
+                });
+            });
+
+            table.appendChild(tbody);
+            container.appendChild(table);
+        }
+    </script>
 </body>
 </html>
+
