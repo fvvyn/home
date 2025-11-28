@@ -458,7 +458,7 @@
       }, 1500); // Fake loading delay for UX
     }
 
-    function performCalculation() {
+        function performCalculation() {
       const pid = document.getElementById('product').value;
       const fit = document.getElementById('fit').value;
       const h = parseInt(document.getElementById('height').value);
@@ -468,19 +468,9 @@
       const adjustment = FIT_ADJUSTMENTS[fit];
       const sizeKeys = Object.keys(data).filter(k => k !== 'name');
 
-      // ▼▼▼▼▼ Send Data to GAS ▼▼▼▼▼
-      // 計算が行われたタイミングでデータを送信します
-      const trackingData = {
-        productId: pid,
-        productName: data.name,
-        height: h,
-        weight: w,
-        fitPreference: fit
-      };
-      sendDataToGAS(trackingData);
-      // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
-      // 1. Find Base Size (Closest Distance)
+      // --- 計算ロジック ---
+      
+      // 1. 最適なベースサイズを探す
       let bestDist = Infinity;
       let baseIdx = 0;
 
@@ -489,7 +479,6 @@
         const avgH = (sData.height[0] + sData.height[1]) / 2;
         const avgW = (sData.weight[0] + sData.weight[1]) / 2;
         
-        // Simple distance metric. Weight is weighted slightly higher as it affects width more.
         const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 1.5);
         
         if (dist < bestDist) {
@@ -498,14 +487,26 @@
         }
       });
 
-      // 2. Apply Fit Adjustment
+      // 2. フィット感の補正を適用
       let finalIdx = baseIdx + adjustment.offset;
       finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
       
-      const recSize = sizeKeys[finalIdx];
+      const recSize = sizeKeys[finalIdx]; // ★ これが計算された推奨サイズ
       const recData = data[recSize];
 
-      // 3. Render Data
+      // ▼▼▼ データ送信 (メール機能削除・サイズ追加) ▼▼▼
+      const trackingData = {
+        productId: pid,
+        productName: data.name,
+        height: h,
+        weight: w,
+        fitPreference: fit,
+        recommendedSize: recSize // ★★★ ここでサイズ結果を送ります ★★★
+      };
+      sendDataToGAS(trackingData);
+      // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+      // 3. 結果の表示 (以下変更なし)
       document.getElementById('result-product-name').textContent = data.name;
       document.getElementById('recommended-size').textContent = recSize;
       document.getElementById('result-message').textContent = adjustment.text;
@@ -518,7 +519,7 @@
         <li class="flex justify-between border-b border-gray-100 pb-1"><span>袖丈</span> <span class="font-bold text-slate-700">${recData.sleeve}</span></li>
       `;
 
-      // 4. Visual Meter Calculation
+      // 4. メーター表示 (以下変更なし)
       let meterPos = 50;
       if (fit === 'slim') meterPos = 20; 
       else if (fit === 'oversized') meterPos = 80;
@@ -526,15 +527,12 @@
 
       const sData = data[recSize];
       const avgW = (sData.weight[0] + sData.weight[1]) / 2;
-      if (w > avgW + 3) meterPos -= 15; // Heavier -> Tighter
-      if (w < avgW - 3) meterPos += 15; // Lighter -> Looser
+      if (w > avgW + 3) meterPos -= 15;
+      if (w < avgW - 3) meterPos += 15;
       
-      meterPos = Math.max(5, Math.min(95, meterPos)); // Clamp
+      meterPos = Math.max(5, Math.min(95, meterPos));
       
-      // Reset first
       document.getElementById('fit-marker').style.left = '50%';
-      
-      // Animate after short delay
       setTimeout(() => {
         document.getElementById('fit-marker').style.left = meterPos + '%';
       }, 300);
