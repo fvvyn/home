@@ -171,7 +171,11 @@
               <i class="fa-solid fa-user-astronaut text-2xl text-gray-300 mb-1"></i>
               <span class="text-sm font-bold text-center">Beg Zip Hoodie</span>
             </div>
-          </div>
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('cloudy-zip-hoodie', this)">
+                <i class="fa-solid fa-hoodie text-2xl text-gray-300 mb-1"></i> 
+                <span class="text-sm font-bold text-center">CLOUDY ZIP HOODIE</span>
+            </div>
+            </div>
           <input type="hidden" id="product">
         </div>
 
@@ -331,7 +335,16 @@
         M: { height:[170,180], weight:[60,75], length:58.5, chest:97, shoulder:74, sleeve:53 },
         L: { height:[180,190], weight:[70,85], length:61.5, chest:100, shoulder:76, sleeve:54 },
         XL: { height:[185,195], weight:[80,95], length:64.5, chest:103, shoulder:78, sleeve:55 }
+      },
+      // ▼▼▼ CLOUDY ZIP HOODIE series の追加 ▼▼▼
+      'cloudy-zip-hoodie': {
+        name: "CLOUDY ZIP HOODIE",
+        XS: { height:[145,155], weight:[35,45], length:52.5, chest:48.5, shoulder:57.5, sleeve:54.0 },
+        S: { height:[155,165], weight:[45,55], length:55.0, chest:51.0, shoulder:60.0, sleeve:56.5 },
+        M: { height:[165,175], weight:[55,65], length:57.5, chest:53.5, shoulder:62.5, sleeve:59.0 },
+        L: { height:[175,185], weight:[65,75], length:60.0, chest:56.0, shoulder:65.0, sleeve:61.5 }
       }
+      // ▲▲▲ CLOUDY ZIP HOODIE series の追加ここまで ▲▲▲
     };
 
     const FIT_ADJUSTMENTS = {
