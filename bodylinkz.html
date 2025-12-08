@@ -155,25 +155,30 @@
         <div data-step="1" class="step-content fade-in h-full flex flex-col">
           <h2 class="text-lg font-bold text-gray-700 mb-4 text-center">どのアイテムをお探しですか？</h2>
           <div class="grid grid-cols-2 gap-3 flex-1 content-start" id="product-grid">
-            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('slash-tshirt', this)">
-              <i class="fa-solid fa-shirt text-2xl text-gray-300 mb-1"></i>
+            
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('slash-tshirt', this, 'tshirts.svg')">
+              <img src="tshirts.svg" alt="Tshirt Icon" class="w-8 h-8 text-gray-300 mb-1">
               <span class="text-sm font-bold text-center">Slash Tshirts</span>
             </div>
-            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('logo-tshirt', this)">
-              <i class="fa-solid fa-t" style="font-family: serif;" class="text-2xl text-gray-300 mb-1"></i>
+            
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('logo-tshirt', this, 'tshirts.svg')">
+              <img src="tshirts.svg" alt="Tshirt Icon" class="w-8 h-8 text-gray-300 mb-1">
               <span class="text-sm font-bold text-center">Logo Tshirts</span>
             </div>
-            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('lamp-zip-hoodie', this)">
-              <i class="fa-solid fa-vest text-2xl text-gray-300 mb-1"></i>
+            
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('lamp-zip-hoodie', this, 'hoodie.svg')">
+              <img src="hoodie.svg" alt="Hoodie Icon" class="w-8 h-8 text-gray-300 mb-1">
               <span class="text-sm font-bold text-center">Lamp Zip Hoodie</span>
             </div>
-            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('beg-zip-hoodie', this)">
-              <i class="fa-solid fa-user-astronaut text-2xl text-gray-300 mb-1"></i>
+            
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('beg-zip-hoodie', this, 'hoodie.svg')">
+              <img src="hoodie.svg" alt="Hoodie Icon" class="w-8 h-8 text-gray-300 mb-1">
               <span class="text-sm font-bold text-center">Beg Zip Hoodie</span>
             </div>
-            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('cloudy-zip-hoodie', this)">
-                <i class="fa-solid fa-hoodie text-2xl text-gray-300 mb-1"></i> 
-                <span class="text-sm font-bold text-center">CLOUD ZIP HOODIE⛈️</span>
+            
+            <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('cloudy-zip-hoodie', this, 'hoodie.svg')">
+                <img src="hoodie.svg" alt="Hoodie Icon" class="w-8 h-8 text-gray-300 mb-1">
+                <span class="text-sm font-bold text-center">CLOUDY ZIP HOODIE</span>
             </div>
             </div>
           <input type="hidden" id="product">
@@ -411,15 +416,39 @@
       currentStep = 1;
       document.getElementById('product').value = '';
       document.getElementById('fit').value = '';
-      document.querySelectorAll('.card-select').forEach(el => el.classList.remove('selected'));
+      // 選択状態のリセット
+      document.querySelectorAll('#product-grid .card-select').forEach(el => {
+          el.classList.remove('selected');
+          // アイコンを一旦非アクティブな状態に戻す (ここでは色が変わることを想定)
+          const img = el.querySelector('img');
+          if(img) img.classList.remove('text-[#8707ff]'); // 例としてアクティブな色クラスを削除
+      });
+      document.querySelectorAll('#fit-grid .card-select').forEach(el => el.classList.remove('selected'));
       updateUI(1);
     }
 
     // Selection Helpers
-    window.selectProduct = function(value, el) {
+    // 修正点: svgFilename引数を追加し、アイコンのsrcと色を動的に変更
+    window.selectProduct = function(value, el, svgFilename) {
       document.getElementById('product').value = value;
-      document.querySelectorAll('#product-grid .card-select').forEach(c => c.classList.remove('selected'));
+      
+      const allCards = document.querySelectorAll('#product-grid .card-select');
+      allCards.forEach(c => {
+          c.classList.remove('selected');
+          // 非選択状態のアイコンの色をリセット
+          const img = c.querySelector('img');
+          if(img) img.classList.remove('text-[#8707ff]');
+      });
+      
       el.classList.add('selected');
+      
+      // 選択されたカードのアイコンを更新
+      const img = el.querySelector('img');
+      if (img) {
+          img.src = svgFilename;
+          img.alt = svgFilename === 'hoodie.svg' ? 'Hoodie Icon' : 'Tshirt Icon';
+          img.classList.add('text-[#8707ff]'); // 例として選択時に色が変わるクラスを追加
+      }
     }
 
     window.selectFit = function(value, el) {
