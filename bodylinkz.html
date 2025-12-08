@@ -10,11 +10,22 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>fvvyn - Bodylinkz | Size Recommender</title>
-  <meta name="description" content="fvvyn - フヴィン | Bodylinkz -アイテムのサイズによる不安を解消しましょう。" />
+  
+  <title>fvvyn | Bodylinkz サイズ提案システム - 最適なサイズをご提案</title>
+  <meta name="description" content="fvvynによるBodylinkz独自のAIが、身長・体重・フィット感から理想のサイズをパーソナライズ診断。失敗しないサイズ選びを体験しましょう。" />
+  <link rel="canonical" href="https://fvvyn.com/bodylinkz/size-recommender" /> 
+  <meta property="og:title" content="fvvyn| Bodylinkz サイズ提案システム" />
+  <meta property="og:description" content="理想のサイズをAIが提案。fvvynアイテムによるサイズ不安を解消しましょう。" />
+  <meta property="og:url" content="https://fvvyn.com/bodylinkz/size-recommender" /> 
+  <meta property="og:site_name" content="fvvyn©︎公式 | Bodylinkz" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://fvvyn.com/images/bodylinkz-ogp.jpg" /> 
+  <meta name="twitter:card" content="summary_large_image" /> 
+  <meta name="twitter:creator" content="@fvvyn_official" />
+  <meta name="robots" content="index, follow">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -178,7 +189,7 @@
             
             <div class="card-select bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32" onclick="selectProduct('cloudy-zip-hoodie', this, 'hoodie.svg')">
                 <img src="hoodie.svg" alt="Hoodie Icon" class="w-8 h-8 text-gray-300 mb-1">
-                <span class="text-sm font-bold text-center">CLOUD ZIP HOODIE⛈️</span>
+                <span class="text-sm font-bold text-center">CLOUDY ZIP HOODIE</span>
             </div>
             </div>
           <input type="hidden" id="product">
@@ -303,9 +314,7 @@
   <div id="toast" class="toast">Message Here</div>
 
   <script>
-    // ▼▼▼▼▼ 設定完了: 提供されたGAS URLを埋め込みました ▼▼▼▼▼
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyrnuyKZiEgTPSYAPT5CL3D_t7-ToXUoelqXi40NW0-FwAG65XRZ9vqcVrbcYwuOdDQ7A/exec";
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     // --- Logic & Data ---
     const PRODUCT_SIZES = {
@@ -341,7 +350,6 @@
         L: { height:[180,190], weight:[70,85], length:61.5, chest:100, shoulder:76, sleeve:54 },
         XL: { height:[185,195], weight:[80,95], length:64.5, chest:103, shoulder:78, sleeve:55 }
       },
-      // ▼▼▼ CLOUDY ZIP HOODIE series の追加 ▼▼▼
       'cloudy-zip-hoodie': {
         name: "CLOUDY ZIP HOODIE",
         XS: { height:[145,155], weight:[35,45], length:52.5, chest:48.5, shoulder:57.5, sleeve:54.0 },
@@ -349,7 +357,6 @@
         M: { height:[165,175], weight:[55,65], length:57.5, chest:53.5, shoulder:62.5, sleeve:59.0 },
         L: { height:[175,185], weight:[65,75], length:60.0, chest:56.0, shoulder:65.0, sleeve:61.5 }
       }
-      // ▲▲▲ CLOUDY ZIP HOODIE series の追加ここまで ▲▲▲
     };
 
     const FIT_ADJUSTMENTS = {
@@ -374,7 +381,6 @@
       
       const targetStep = document.querySelector(`[data-step="${step}"]`);
       targetStep.classList.remove('hidden');
-      // Trigger reflow to restart animation
       void targetStep.offsetWidth;
       targetStep.classList.add('fade-in');
 
@@ -416,38 +422,34 @@
       currentStep = 1;
       document.getElementById('product').value = '';
       document.getElementById('fit').value = '';
-      // 選択状態のリセット
       document.querySelectorAll('#product-grid .card-select').forEach(el => {
           el.classList.remove('selected');
-          // アイコンを一旦非アクティブな状態に戻す (ここでは色が変わることを想定)
           const img = el.querySelector('img');
-          if(img) img.classList.remove('text-[#8707ff]'); // 例としてアクティブな色クラスを削除
+          if(img) img.classList.remove('text-[#8707ff]');
       });
       document.querySelectorAll('#fit-grid .card-select').forEach(el => el.classList.remove('selected'));
       updateUI(1);
     }
 
     // Selection Helpers
-    // 修正点: svgFilename引数を追加し、アイコンのsrcと色を動的に変更
     window.selectProduct = function(value, el, svgFilename) {
       document.getElementById('product').value = value;
       
       const allCards = document.querySelectorAll('#product-grid .card-select');
       allCards.forEach(c => {
           c.classList.remove('selected');
-          // 非選択状態のアイコンの色をリセット
           const img = c.querySelector('img');
           if(img) img.classList.remove('text-[#8707ff]');
       });
       
       el.classList.add('selected');
       
-      // 選択されたカードのアイコンを更新
       const img = el.querySelector('img');
       if (img) {
-          img.src = svgFilename;
+          // ファイルが存在しない可能性を考慮し、代替のfavicon.svgも参照可能
+          img.src = svgFilename; 
           img.alt = svgFilename === 'hoodie.svg' ? 'Hoodie Icon' : 'Tshirt Icon';
-          img.classList.add('text-[#8707ff]'); // 例として選択時に色が変わるクラスを追加
+          img.classList.add('text-[#8707ff]');
       }
     }
 
@@ -489,7 +491,7 @@
       // Show loading
       resultView.classList.add('hidden');
       loadingView.classList.remove('hidden');
-      nextBtn.classList.add('invisible'); // Hide button during load
+      nextBtn.classList.add('invisible');
 
       setTimeout(() => {
         loadingView.classList.add('hidden');
@@ -497,10 +499,10 @@
         nextBtn.classList.remove('invisible');
         
         performCalculation();
-      }, 1500); // Fake loading delay for UX
+      }, 1500);
     }
 
-        function performCalculation() {
+    function performCalculation() {
       const pid = document.getElementById('product').value;
       const fit = document.getElementById('fit').value;
       const h = parseInt(document.getElementById('height').value);
@@ -509,10 +511,7 @@
       const data = PRODUCT_SIZES[pid];
       const adjustment = FIT_ADJUSTMENTS[fit];
       const sizeKeys = Object.keys(data).filter(k => k !== 'name');
-
-      // --- 計算ロジック ---
       
-      // 1. 最適なベースサイズを探す
       let bestDist = Infinity;
       let baseIdx = 0;
 
@@ -529,26 +528,22 @@
         }
       });
 
-      // 2. フィット感の補正を適用
       let finalIdx = baseIdx + adjustment.offset;
       finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
       
-      const recSize = sizeKeys[finalIdx]; // ★ これが計算された推奨サイズ
+      const recSize = sizeKeys[finalIdx];
       const recData = data[recSize];
 
-      // ▼▼▼ データ送信 (メール機能削除・サイズ追加) ▼▼▼
       const trackingData = {
         productId: pid,
         productName: data.name,
         height: h,
         weight: w,
         fitPreference: fit,
-        recommendedSize: recSize // ★★★ ここでサイズ結果を送ります ★★★
+        recommendedSize: recSize
       };
       sendDataToGAS(trackingData);
-      // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-      // 3. 結果の表示 (以下変更なし)
       document.getElementById('result-product-name').textContent = data.name;
       document.getElementById('recommended-size').textContent = recSize;
       document.getElementById('result-message').textContent = adjustment.text;
@@ -561,7 +556,6 @@
         <li class="flex justify-between border-b border-gray-100 pb-1"><span>袖丈</span> <span class="font-bold text-slate-700">${recData.sleeve}</span></li>
       `;
 
-      // 4. メーター表示 (以下変更なし)
       let meterPos = 50;
       if (fit === 'slim') meterPos = 20; 
       else if (fit === 'oversized') meterPos = 80;
@@ -582,10 +576,8 @@
 
     /**
      * GASにデータを送信する関数
-     * @param {Object} data - 送信するデータオブジェクト
      */
     function sendDataToGAS(data) {
-        // no-corsモードを使用することで、CORSエラーを回避しつつリクエストを送信できます。
         fetch(GAS_API_URL, {
             method: 'POST',
             mode: 'no-cors', 
