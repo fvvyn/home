@@ -423,18 +423,22 @@ document.addEventListener('DOMContentLoaded', startTipRotation);
     let pivot;
     const loader = new THREE.GLTFLoader();
 
-    // ★★★ 修正箇所: HDRロード後にGLTFロードを開始する ★★★
-    new THREE.RGBELoader()
-      .setPath('https://rawcdn.githack.com/mrdoob/three.js/dev/examples/textures/equirectangular/')
-      .load('royal_esplanade_1k.hdr', tex => {
-        // HDRロード完了、環境設定
-        scene.environment = pmrem.fromEquirectangular(tex).texture;
-        tex.dispose(); 
-        pmrem.dispose();
-        
-        // 環境設定後、GLTF ロード開始
-        loadGltfModel();
-      },
+// 【修正対象のコード箇所】
+
+new THREE.RGBELoader()
+  // setPath() は完全に削除するか、空欄（''）にします
+  // .setPath('') 
+  .load('HDR_subdued_blue_nebulae.hdr', tex => { // ファイル名のみ指定
+    // HDRロード完了、環境設定
+    scene.environment = pmrem.fromEquirectangular(tex).texture;
+    tex.dispose(); 
+    pmrem.dispose();
+    
+    // 環境設定後、GLTF ロード開始
+    loadGltfModel();
+  },
+
+
       // HDRロードエラー処理
       (xhr) => { 
         // onProgress: HDRはファイルサイズが小さいため、進捗バー更新はGLTFに任せる
