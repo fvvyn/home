@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', startTipRotation);
 new THREE.RGBELoader()
   // setPath() は完全に削除するか、空欄（''）にします
   // .setPath('') 
-  .load('HDR_subdued_blue_nebulae.hdr', tex => { // ファイル名のみ指定
+  .load('hdr.hdr', tex => { // ファイル名のみ指定
     // HDRロード完了、環境設定
     scene.environment = pmrem.fromEquirectangular(tex).texture;
     tex.dispose(); 
