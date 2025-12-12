@@ -8,10 +8,9 @@
     gtag('js', new Date());
     gtag('config', 'G-MF598BWN4M');
   </script>
-  
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>fvvyn - フヴィン |公式オフィシャルサイト</title>
   <meta name="description" content="fvvyn - フヴィン | 公式オフィシャルサイト - 宇宙の世界観を融合させた、唯一無二のコレクションを展開。" />
@@ -37,63 +36,34 @@
   <link rel="shortcut icon" href="favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
-  <meta name="theme-color" content="#050508" />
+  <meta name="theme-color" content="#ffffff" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Archivo:wght@900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    /* --- 新しい背景スタイル (Rough x Space) --- */
-    :root {
-      --bg-color: #0c0c16; /* 深い宇宙の黒 */
-      --rough-texture: url('https://www.transparenttextures.com/patterns/stardust.png'); /* ノイズテクスチャ */
-    }
-
-    html {
-        height: -webkit-fill-available; /* iOS Safari対策 */
-    }
-
-    body {
+    /* =========================================
+       基本設定
+       ========================================= */
+    html, body {
       margin: 0;
       padding: 0;
-      /* dvhを使用してアドレスバーによるレイアウト崩れを防ぐ */
-      min-height: 100vh;
-      min-height: 100dvh; 
-      width: 100%;
-      background-color: var(--bg-color);
-      /* 全体にラフなノイズテクスチャをオーバーレイ */
-      background-image: var(--rough-texture);
-      background-attachment: fixed;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
       font-family: "Inter", sans-serif;
-      overflow: hidden; /* スクロール禁止 */
       touch-action: none;
       -webkit-user-select: none;
       user-select: none;
-      padding-bottom: env(safe-area-inset-bottom); /* iPhone下部バー対策 */
     }
 
-    /* 背景の星屑パーティクル用コンテナ (GSAP制御) */
-    #stars-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* 最背面 */
-        pointer-events: none;
-        overflow: hidden;
-    }
-    
-    .gsap-star {
-        position: absolute;
-        background-color: #fff;
-        border-radius: 50%;
-        opacity: 0; 
+    body {
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* Three.js Canvas */
@@ -102,24 +72,59 @@
       width: 100%;
       height: 100%;
       touch-action: none;
-      position: absolute; /* 背景の上に配置 */
+      position: absolute; /* ワープ背景の上に配置 */
       top: 0;
       left: 0;
-      z-index: 1; /* 星より手前、コンテンツより奥 */
-      pointer-events: auto; /* 3D操作のため */
+      z-index: 1; /* 背景より手前 */
+      outline: none;
     }
 
-    /* 流れ星スタイル (維持) */
-    .meteor {
+    /* =========================================
+       背景：ワープアニメーション (Code 2 Port)
+       ========================================= */
+    #warp-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0; /* 最背面 */
+      perspective: 300px;
+      overflow: hidden;
+      pointer-events: none; /* クリックを邪魔しない */
+    }
+
+    .warp-layer {
       position: absolute;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 60%, #fff 100%);
-      opacity: 0.9;
-      pointer-events: none;
-      border-radius: 1px;
-      z-index: 0; 
+      top: 0; right: 0; bottom: 0; left: 0;
+      transform-style: preserve-3d;
     }
 
-    /* コンテンツオーバーレイ */
+    /* 星の画像データと共通スタイル */
+    .warp-star {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0BAMAAAA5+MK5AAAAJFBMVEX////////////////////////////////////////////////Vd7HLAAAADHRSTlMARFVmd4iZqrvM3e7VNOnbAAADp0lEQVR4Xu3dwZGbMBQG4BcTg3EuKYESKMElUIJLoARKoASXmmtmsoeNLUBC33fb0zKDEZLe+1HUB4BHfGiNkl2jIGPsgyEyBjR//XGJzMDFdOYT0HxjHtzHF+jrWYECsBiVP3MzK/ibHVGaINv57hqlm+MkeHqITQSK4LnxDHH1IubdmZoxSiETPxUdYKORK43WTB6wLqvsJWCatSSqg/XHXiB08QFAVwFLwuLeK3aC8uWw+z6PDSnw6kfXLnMub8GLTQxFbZAKKpRcwGjC7atM+2Z0/Kw8QBjvX1Ga/v8vnZ9nutpr5GqOe7lFA1aXQJIhps0pA0ub+4+JNcF6vPm6JIA9yB/19Rn3Slffd8/qXvQGiK/g/rOWUqJpEn0RYNqwnvd8dzlxsW9YBDnsPucis1eYzospsEWu7PkuoT2gO2V+YClnqNLpzqyvaBeAANi82fBlZTPFAeiFquuYCGJSTFfbYhlFWvDgAcBNV4fgP3gGkYE58lxE4H72uMo10rmXWUxGuwlCBgC3AqJxT2kWyDTVbk4CgPMq5DuxJ4il3j0AZ1w0Jc4Ox12vVECVZ7Ev5uXfIL3i43mxBJiCpju+wWYgfZwSXCutFtgpX+3ub8xoMaR4pw4nGaqgVQ1TQQCBZeMzDmBSJiweo0zRe+CVtJoLgPIagAW9kCN0zmevDlPKw8E8IzwSHEUHYMBg2LG5jKsLqaX51E+XJo9XMc/NbzP4Ro3vXtBVl5B/1NVvPtjmKLXUCiBhiJQ3Tif4Xf5eKYLbYEvpVcW2nlx3e/Deye2wTUD6Cr6NKoOulmd93ajAQyZP3WWTiu8aIJVMmoX4sPX/V8r3scQ29VWJPqyG63dBl7jjjN5mGDK6Ok2EDlCTUakQLBGFO3TZz6/tJvbo1WexbvcMUFj3C24r3ki3wGkebFMCYyo3+NuWVqXDyItM1V22LK3nvvN5QA8IGrNoRTbLZODFeD36GBWYvhRTz5iiVgqknsl5gy5kYVMdkrhPNOqO5FMOoznqBsKYbNUK057tINAXWRGjSz5aNF7UZ6NCACDTrgHQvMhaEZzNAIC+wca9PHa6C8L+oOI9BwAWjmCSBNL+INoDIHx7lj7HuZJpI+o+L3EVchrD7IwCQ8pDQkQ6cM6QohA380I/ouxekyAqTRflwBwMxzsNIn9VHAggCyqXgscFLJTX2ADgJIrVV7EUpE3obK3ji4agAOa0ArSzOTsTEozdj4xfDYMEWsb1VYA/KFNOcBXJpxsAAAAASUVORK5CYII=);
+      animation: 12s warp linear infinite;
+      background-position: 50% 50%;
+    }
+
+    /* 各レイヤーの位置と遅延設定 */
+    .star-1 { background-position: -190px 80px; animation-delay: 0s; }
+    .star-2 { background-position: 90px -180px; animation-delay: -2s; }
+    .star-3 { background-position: 210px 180px; animation-delay: -4s; }
+    .star-4 { background-position: -120px 40px; animation-delay: -6s; }
+    .star-5 { background-position: 130px 140px; animation-delay: -8s; }
+    .star-6 { background-position: -150px -90px; animation-delay: -10s; }
+
+    @keyframes warp {
+      from { transform: rotate(-60deg) translateZ(-300px); }
+      to { transform: rotate(60deg) translateZ(300px); }
+    }
+
+    /* =========================================
+       UIオーバーレイ (Code 1 Original)
+       ========================================= */
     .overlay-container {
       position: absolute;
       top: 40%;
@@ -128,11 +133,10 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      z-index: 20; /* 3Dモデルより手前 */
+      z-index: 10;
       align-items: center;
       pointer-events: none;
       margin-top: 3rem;
-      width: 100%; /* 横幅確保 */
     }
 
     .overlay-container a {
@@ -141,13 +145,14 @@
       font-size: 1.5rem;
       color: #ffffff;
       transition: all 0.3s ease;
-      pointer-events: auto;
-      text-shadow: 0 0 10px rgba(63, 63, 63, 0.8); /* 視認性向上のため影追加 */
+      pointer-events: auto; /* リンクはクリック可能に */
+      text-shadow: 0 0 10px rgba(0,0,0,0.8); /* 視認性向上のため影追加 */
     }
-    .overlay-container a:hover { transform: scale(1.05); color: #00ffcc; /* アクセントカラー追加 */ }
+
+    .overlay-container a:hover { transform: scale(1.05); color: #ffffff; }
     .enter-link { font-size: 2rem !important; }
 
-    /* 遷移アニメーション */
+    /* Blur + Zoom 遷移アニメ */
     body.transition-blurzoom {
       filter: blur(12px);
       transform: scale(1.05);
@@ -161,16 +166,44 @@
       transition: all 0.6s ease;
     }
 
-    /* Footer */
-    footer {
-        z-index: 20;
-        pointer-events: auto; /* リンククリック可能に */
-    }
-    footer a { color: #b8b8b8; transition: color 0.3s; }
-    footer a:hover { color: #ffffff; }
+    footer a { color: #b8b8b8; transition: color 0.3s; pointer-events: auto;}
+    footer a:hover { color: #999898; }
 
-    /* ローディング画面 */
-    .fade-out { opacity: 0 !important; pointer-events: none; }
+    /* =========================================
+       雪のエフェクト (Code 1) - ワープと共存
+       ========================================= */
+    .snow {
+      color: snow;
+      font-size: 4px;
+      position: fixed;
+      top: -5%;
+      z-index: 5;
+      pointer-events: none;
+      text-shadow:
+        5vw   -100px 2px, 10vw  -400px 3px, 20vw  -500px 4px,
+        30vw  -580px 1px, 39vw  -250px 2px, 42vw  -340px 5px,
+        56vw  -150px 2px, 63vw  -180px 0,   78vw  -220px 4px,
+        86vw  -320px 9px, 94vw  -170px 7px;
+      animation: roll 5s linear infinite;
+    }
+    .snow2nd{ animation: anim 8s linear infinite; z-index: 5; pointer-events: none; }
+
+    @keyframes roll {
+       0% {transform:rotate(0deg);}
+       90% {opacity:1;}
+       100% {transform:rotate(20deg);top:100%;opacity:0;}
+    }
+    @keyframes anim {
+      100% {color:transparent;top:150%;}
+    }
+
+    /* =========================================
+       ローディング画面
+       ========================================= */
+    .fade-out {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
     .tip-fade { transition: opacity 0.5s ease-in-out; }
     .progress-bar-fill {
       background: #34d399; 
@@ -181,7 +214,14 @@
 
 <body class="relative">
 
-  <div id="stars-container"></div>
+  <div id="warp-background">
+    <div class="warp-layer"><div class="warp-star star-1"></div></div>
+    <div class="warp-layer"><div class="warp-star star-2"></div></div>
+    <div class="warp-layer"><div class="warp-star star-3"></div></div>
+    <div class="warp-layer"><div class="warp-star star-4"></div></div>
+    <div class="warp-layer"><div class="warp-star star-5"></div></div>
+    <div class="warp-layer"><div class="warp-star star-6"></div></div>
+  </div>
 
   <div id="loadingScreen" class="fixed inset-0 flex flex-col items-center justify-center bg-black text-white z-[100] transition-opacity duration-500 opacity-100">
     <div class="flex flex-col items-center">
@@ -193,29 +233,6 @@
     </div>
     <p id="loadingTip" class="text-sm text-gray-400 max-w-xs text-center px-4 tip-fade absolute bottom-12" style="opacity: 0;"></p>
   </div>
-
-  <h1 class="sr-only">fvvyn - フヴィン |公式オフィシャルサイト。ブランドの世界観を体感しましょう。</h1>
-
-  <main id="main-content">
-    <div class="overlay-container select-none">
-      <a id="enterButton" href="https://fvvyn.stores.jp/" rel="noopener" class="enter-link" aria-label="オンラインストアへ">ENTER</a>
-      <a href="scan.html" target="_blank" rel="noopener" aria-label="NFC スキャンページへ">NFC‑SCAN</a>
-      <a href="access.html" target="_blank" rel="noopener" aria-label="パスワード入力ページへ">Password</a>
-      <a href="bodylinkz.html" target="_blank" rel="noopener" aria-label="Bodylinkz">Bodylinkz</a>
-
-      <div class="flex gap-4 mt-4 pointer-events-auto">
-        <a href="https://instagram.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
-          <i class="fab fa-instagram"></i><span class="sr-only">Instagram</span>
-        </a>
-        <a href="https://x.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-400 hover:text-white transition-colors" aria-label="X">
-          <i class="fab fa-x-twitter"></i><span class="sr-only">X</span>
-        </a>
-        <a href="https://tiktok.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-400 hover:text-white transition-colors" aria-label="TikTok">
-          <i class="fab fa-tiktok"></i><span class="sr-only">TikTok</span>
-        </a>
-      </div>
-    </div>
-  </main>
 
   <div id="pwaAnnounce" class="fixed top-4 right-4 flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs z-50 animate-slide-in rounded-lg bg-[#232531] px-[10px] shadow-lg">
     <div class="cursor-default flex items-center justify-between w-full h-12 sm:h-14 rounded-lg">
@@ -238,8 +255,34 @@
     </div>
   </div>
 
-  <footer class="absolute bottom-2 w-full text-center text-xs text-gray-500 font-light select-none" role="contentinfo" style="padding-bottom: env(safe-area-inset-bottom);">
-    <div class="flex justify-center gap-4 flex-wrap pointer-events-auto">
+  <div class="snow"><i class="far fa-snowflake"></i></div>
+  <div class="snow2nd"><i class="far fa-snowflake"></i></div>
+
+  <h1 class="sr-only">fvvyn - フヴィン |公式オフィシャルサイト。ブランドの世界観を体感しましょう。</h1>
+
+  <main id="main-content">
+    <div class="overlay-container select-none">
+      <a id="enterButton" href="https://fvvyn.stores.jp/" rel="noopener" class="enter-link" aria-label="オンラインストアへ">ENTER</a>
+      <a href="scan.html" target="_blank" rel="noopener" aria-label="NFC スキャンページへ">NFC‑SCAN</a>
+      <a href="access.html" target="_blank" rel="noopener" aria-label="パスワード入力ページへ">Password</a>
+      <a href="bodylinkz.html" target="_blank" rel="noopener" aria-label="Bodylinkz">Bodylinkz</a>
+
+      <div class="flex gap-4 mt-4">
+        <a href="https://instagram.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-white transition-colors" aria-label="Instagram">
+          <i class="fab fa-instagram"></i><span class="sr-only">Instagram</span>
+        </a>
+        <a href="https://x.com/fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-white transition-colors" aria-label="X">
+          <i class="fab fa-x-twitter"></i><span class="sr-only">X</span>
+        </a>
+        <a href="https://tiktok.com/@fvvyn_official" target="_blank" rel="noopener" class="text-2xl text-gray-700 hover:text-white transition-colors" aria-label="TikTok">
+          <i class="fab fa-tiktok"></i><span class="sr-only">TikTok</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="absolute bottom-2 w-full text-center text-xs text-gray-500 font-light select-none z-20" role="contentinfo">
+    <div class="flex justify-center gap-4 flex-wrap">
       <a href="privacy.html" class="hover:underline" aria-label="プライバシーポリシー">プライバシーポリシー</a>
       <a href="terms.html" class="hover:underline" aria-label="利用規約">利用規約</a>
       <a href="mailto:fvvyn.brand@gmail.com" class="hover:underline" aria-label="メールでお問い合わせ">お問い合わせ</a>
@@ -247,62 +290,12 @@
     <div class="mt-1 text-gray">&copy; 2025 fvvyn</div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
 
   <script>
-    // --- GSAP Star Animation (浮遊とキラキラ点滅の追加) ---
-    document.addEventListener('DOMContentLoaded', () => {
-        const starsContainer = document.getElementById('stars-container');
-        const starCount = window.innerWidth < 768 ? 50 : 100;
-
-        for (let i = 0; i < starCount; i++) {
-            const star = document.createElement('div');
-            star.classList.add('gsap-star');
-            
-            // ランダムな配置とサイズ
-            gsap.set(star, {
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                width: Math.random() * 2 + 1 + 'px',
-                height: Math.random() * 2 + 1 + 'px',
-                opacity: Math.random() * 0.8 + 0.2
-            });
-
-            // まれに赤い星を混ぜる
-            if (i % 50 === 0) {
-                 star.style.backgroundColor = '#d65563'; // 赤系
-                 star.style.boxShadow = '0 0 5px #d65563';
-            }
-
-            starsContainer.appendChild(star);
-
-            // 浮遊アニメーション
-            gsap.to(star, {
-                y: '+=100', // 下にゆっくり移動
-                x: '+=' + (Math.random() * 50 - 25), // 左右にゆらゆら
-                rotation: Math.random() * 360,
-                duration: Math.random() * 10 + 10, // 10〜20秒
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut"
-            });
-            
-            // ★キラキラ点滅アニメーション (新しい追加部分)★
-            gsap.to(star, {
-                opacity: 0.2, // 最も暗い時の透明度
-                duration: Math.random() * 2 + 1, // 1〜3秒で変化
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-                delay: Math.random() * 2 // 開始時間をずらしてランダムなキラキラ感を出す
-            });
-        }
-    });
-
-    // --- Tip Rotation Logic ---
+    // Tipのリスト
     const TIPS = [
       "Tip: 3Dロゴはスワイプで回転させることができます。",
       "Tip: スワイプコードで隠されたページへ飛べる？",
@@ -311,17 +304,23 @@
       "Tip: instagramのストーリーの作成に1時間かけています。",
       "Tip: fvvyn.comは世界観を最大に表現するため、星一つからコードで作成しています"
     ];
+
     let tipInterval;
+
+    // Tipローテーション
     function startTipRotation() {
       const loadingTipElement = document.getElementById('loadingTip');
       if (!loadingTipElement) return;
       let currentTipIndex = -1;
       loadingTipElement.classList.add('tip-fade');
+
       function showNextTip() {
         loadingTipElement.style.opacity = '0';
         setTimeout(() => {
           let newTipIndex;
-          do { newTipIndex = Math.floor(Math.random() * TIPS.length); } while (newTipIndex === currentTipIndex);
+          do {
+            newTipIndex = Math.floor(Math.random() * TIPS.length);
+          } while (newTipIndex === currentTipIndex);
           currentTipIndex = newTipIndex;
           loadingTipElement.textContent = TIPS[currentTipIndex];
           loadingTipElement.style.opacity = '1';
@@ -330,21 +329,22 @@
       showNextTip();
       tipInterval = setInterval(showNextTip, 4000);
     }
+
     document.addEventListener('DOMContentLoaded', startTipRotation);
 
-    // --- Three.js Logic ---
+    /* --- Three.js ロゴ回転ロジック --- */
     const scene = new THREE.Scene();
+    // 背景を透明にして、背後のワープCSSを見せる
     scene.background = null; 
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 4.8);
 
+    // alpha: true でキャンバスを透明にする
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.setClearColor( 0x000000, 0 ); 
-    
+    // rendererのz-index管理はCSSで行う
     document.body.appendChild(renderer.domElement);
 
     const pmrem = new THREE.PMREMGenerator(renderer);
@@ -353,18 +353,16 @@
     let pivot;
     const loader = new THREE.GLTFLoader();
 
-    // HDR Load & GLTF Load
     new THREE.RGBELoader()
       .load('hdr.hdr', tex => {
-        const envMap = pmrem.fromEquirectangular(tex).texture;
-        scene.environment = envMap; 
+        scene.environment = pmrem.fromEquirectangular(tex).texture;
         tex.dispose(); 
         pmrem.dispose();
         loadGltfModel();
       },
-      undefined,
+      (xhr) => { },
       (error) => {
-        console.error('HDR loading error:', error);
+        console.error('HDR loading error:', error); 
         loadGltfModel();
       }
     );
@@ -389,11 +387,11 @@
             model.position.sub(center);
 
             pivot = new THREE.Object3D();
-            pivot.position.set(0, 1.5, 0); 
+            pivot.position.set(0, 1.5, 0);
             pivot.add(model);
             scene.add(pivot);
 
-            // Loading Complete
+            // ロード完了処理
             clearInterval(tipInterval); 
             const loadingDiv = document.getElementById('loadingScreen');
             if (loadingDiv) {
@@ -401,6 +399,7 @@
               const progressPercentage = document.getElementById('progressPercentage');
               if (progressBarFill) progressBarFill.style.width = '100%';
               if (progressPercentage) progressPercentage.textContent = '100%';
+
               loadingDiv.classList.add('fade-out');
               setTimeout(() => loadingDiv.remove(), 500); 
             }
@@ -409,21 +408,20 @@
             const percent = (xhr.loaded / xhr.total) * 100;
             const progressBarFill = document.getElementById('progressBarFill');
             const progressPercentage = document.getElementById('progressPercentage'); 
-            if (progressBarFill && isFinite(percent)) progressBarFill.style.width = percent.toFixed(0) + '%';
-            if (progressPercentage && isFinite(percent)) progressPercentage.textContent = percent.toFixed(0) + '%';
+            if (progressBarFill) progressBarFill.style.width = percent.toFixed(0) + '%';
+            if (progressPercentage) progressPercentage.textContent = percent.toFixed(0) + '%';
         }, 
         (error) => {
-            console.error('Model load error', error);
+            console.error('An error happened while loading the model', error);
             clearInterval(tipInterval);
             const loadingDiv = document.getElementById('loadingScreen');
             if (loadingDiv) {
-                loadingDiv.classList.add('fade-out');
-                setTimeout(() => loadingDiv.remove(), 500);
+              loadingDiv.classList.add('fade-out');
+              setTimeout(() => loadingDiv.remove(), 500);
             }
         });
     }
 
-    // 3D Interaction
     const dom = renderer.domElement;
     let dragging = false;
     let lastX = 0, lastY = 0;
@@ -433,7 +431,8 @@
     let autoRotate = true;
 
     function getXY(ev) {
-      return ev.touches ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY } : { x: ev.clientX, y: ev.clientY };
+      return ev.touches ? { x: ev.touches[0].clientX, y: ev.touches[0].clientY } :
+        { x: ev.clientX, y: ev.clientY };
     }
 
     dom.addEventListener('pointerdown', e => {
@@ -451,10 +450,13 @@
       const dy = p.y - lastY;
       lastX = p.x;
       lastY = p.y;
+
       const rotY = dx * SPEED;
       const rotX = dy * SPEED;
+
       pivot.rotation.y += rotY;
       pivot.rotation.x += rotX;
+
       velY = rotY;
       velX = rotX;
       autoRotate = false;
@@ -484,18 +486,13 @@
     }
     animate();
 
-    // Resize Handling
-    function onWindowResize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-    }
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
-
-    // --- Swipe Code Logic ---
+    /* --- スワイプコマンド --- */
     let startX = 0, startY = 0;
     const swipeCode = ["right", "left"];
     let swipeSequence = [];
@@ -517,64 +514,38 @@
       const p = getXY(e);
       const dx = p.x - startX;
       const dy = p.y - startY;
+
       const direction = getSwipeDirection(dx, dy);
       if (direction) {
         swipeSequence.push(direction);
         if (swipeSequence.length > swipeCode.length) swipeSequence.shift();
+
         if (JSON.stringify(swipeSequence) === JSON.stringify(swipeCode)) {
           document.body.classList.add("transition-blurzoom");
-          setTimeout(() => { window.location.href = "hello.html"; }, 600);
+          setTimeout(() => {
+            window.location.href = "hello.html";
+          }, 600);
           swipeSequence = [];
         }
       }
     });
 
-    // --- Meteor Logic (流れ星維持) ---
-    const meteorDurationRange = [1500, 3000];
-    const meteorLengthRange = [50, 150];
-    const meteorWidth = 2; 
-
-    function createMeteor() {
-      const meteor = document.createElement('div');
-      meteor.classList.add('meteor');
-      const angle = Math.random() * 360; 
-      const distance = 600 + Math.random() * 300; 
-      const length = meteorLengthRange[0] + Math.random() * (meteorLengthRange[1] - meteorLengthRange[0]);
-      meteor.style.width = length + 'px';
-      meteor.style.height = meteorWidth + 'px';
-
-      const side = Math.floor(Math.random() * 4);
-      let mStartX, mStartY;
-      switch(side) {
-        case 0: mStartX = Math.random() * window.innerWidth; mStartY = -length; break;
-        case 1: mStartX = window.innerWidth + length; mStartY = Math.random() * window.innerHeight; break;
-        case 2: mStartX = Math.random() * window.innerWidth; mStartY = window.innerHeight + length; break;
-        case 3: mStartX = -length; mStartY = Math.random() * window.innerHeight; break;
+    // Code 2のワープ背景があるため、Code 1の静的な星生成コードは
+    // ビジュアル的に衝突するため無効化しています。
+    // 必要であれば以下のコメントアウトを解除してください。
+    /*
+    document.addEventListener('DOMContentLoaded', () => {
+      const count = 50; 
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        // ... (省略)
       }
-      meteor.style.left = mStartX + 'px';
-      meteor.style.top = mStartY + 'px';
-      meteor.style.transform = `rotate(${angle}deg)`;
+      // Meteor生成コード...
+    });
+    */
 
-      const duration = meteorDurationRange[0] + Math.random() * (meteorDurationRange[1] - meteorDurationRange[0]);
-      const rad = angle * Math.PI / 180;
-      const deltaX = Math.cos(rad) * distance;
-      const deltaY = Math.sin(rad) * distance;
-
-      meteor.animate([
-        { transform: `translate(0, 0) rotate(${angle}deg)`, opacity: 1 },
-        { transform: `translate(${deltaX}px, ${deltaY}px) rotate(${angle}deg)`, opacity: 0 }
-      ], {
-        duration: duration,
-        easing: 'linear',
-        fill: 'forwards'
-      });
-      document.body.appendChild(meteor);
-      setTimeout(() => meteor.remove(), duration);
-    }
-    // 流れ星開始
-    setInterval(() => { createMeteor(); }, 1500); 
-
-    // PWA Close
+    // PWAアナウンスを閉じる
     document.getElementById('closePwaAnnounce').addEventListener('click', () => {
       const el = document.getElementById('pwaAnnounce');
       el.style.transition = 'opacity 0.3s ease';
