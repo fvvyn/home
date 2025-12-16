@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- Google Analytics / Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MF598BWN4M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MF598BWN4M');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>FAQ & Bodylinkzガイド | fvvyn - よくある質問と使い方</title>
+    <meta name="description" content="fvvyn（フヴィン）のよくある質問（FAQ）と、AIサイズ提案システム「Bodylinkz」の使い方ガイド。配送、返品、サイズ選びの疑問を解決します。">
+    <link rel="canonical" href="https://fvvyn.com/faq">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --fvvyn-black: #050505;
+            --fvvyn-accent: #a855f7;
+            --fvvyn-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--fvvyn-black);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Starry Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+
+        /* Accordion Styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 500px; /* Adjust based on content */
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+            color: var(--fvvyn-accent);
+        }
+
+        /* Menu Styles (Same as about.html) */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.98);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-items {
+            list-style: none;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+
+        .menu-overlay.active .menu-items {
+            transform: translateY(0);
+        }
+
+        .menu-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin: 1.5rem 0;
+            transition: color 0.3s;
+        }
+
+        .menu-link:hover {
+            color: var(--fvvyn-accent);
+        }
+        
+        .menu-sub {
+            font-size: 0.9rem;
+            color: #aaa;
+            font-family: 'Noto Sans JP', sans-serif;
+            display: block;
+            margin-top: -5px;
+            font-weight: 400;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #fff, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Schema.org FAQ Data (CRITICAL for Google Rich Results) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Bodylinkzとは何ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "fvvyn独自のAIサイズ提案システムです。身長・体重・好みのフィット感を入力するだけで、あなたの体型に最適なサイズをAIが推奨し、3Dモデルで着用イメージを確認できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "送料はかかりますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "全国一律800円です。ただし、15,000円以上のご購入で送料無料となります。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "注文からどれくらいで届きますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常、ご注文確定から2〜3営業日以内に発送いたします。配送地域により異なりますが、発送から1〜3日程度でお手元に届きます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "サイズ交換は可能ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "商品到着後7日以内で、未使用（試着のみ可）・タグ付きの状態であればサイズ交換が可能です。Bodylinkzをご利用の上で購入された場合のサイズ不一致については、返送料無料で対応いたします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "予約商品はどれくらいで届きますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "予約商品につきましては、ご注文確定後、商品のお届けまで約1ヶ月ほどお時間をいただいております。生産状況により発送時期が前後する場合がございますので、あらかじめご了承ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bodylinkzのサイズ提案は正確ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BodylinkzはAIによるサイズ提案システムですが、必ずしもすべてのお客様に対して完全に正確な結果を保証するものではありません。あくまで参考としてご利用いただき、最終的なご判断はお客様ご自身でお願いいたします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "複数の注文を1つにまとめられますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "複数のご注文を1つにまとめるサービスは行っておりませんので、あらかじめご了承ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "注文したのにメールが届きません。どうすればよいですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "メールアドレスの誤入力や迷惑メール設定の可能性があります。迷惑メールフォルダをご確認ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "注文内容を変更できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ご注文完了後のお客様都合による変更は、原則としてお受けできません。あらかじめご了承ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "注文をキャンセル・返品・交換はできますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ご注文完了後のお客様都合によるキャンセル・返品・交換は、原則としてお受けできません。あらかじめご了承ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支払い方法を注文後に変更できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ご注文完了後のお支払い方法の変更はできませんので、注文の際に必ずご確認ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "商品が届きません。どうすればよいですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常、受注確定・決済完了確認後3営業日以内に発送され、商品到着まで5日程かかります。発送完了メールをご確認の上、出荷伝票番号または注文番号を添えてお問い合わせください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "個人情報のお取り扱いについて",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "個人情報のお取り扱いについては、プライバシーポリシーをご確認ください。"
+      }
+    }
+  ]
+}
+</script>
+
+    <div class="stars"></div>
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center mix-blend-difference text-white">
+        <a href="index.html" class="text-2xl font-orbitron font-bold tracking-widest z-50">fvvyn</a>
+        
+        <button id="menuBtn" class="z-50 focus:outline-none group relative w-8 h-6 flex flex-col justify-between">
+            <span class="w-full h-0.5 bg-white transition-all duration-300 group-hover:bg-purple-400"></span>
+            <span class="w-full h-0.5 bg-white transition-all duration-300 group-hover:bg-purple-400"></span>
+            <span class="w-2/3 h-0.5 bg-white ml-auto transition-all duration-300 group-hover:w-full group-hover:bg-purple-400"></span>
+        </button>
+    </header>
+
+    <!-- Navigation Overlay -->
+    <div id="menuOverlay" class="menu-overlay">
+        <nav>
+            <ul class="menu-items">
+                <li><a href="about.html" class="menu-link">BRAND <span class="menu-sub">ブランド概要</span></a></li>
+                <li><a href="collection.html" class="menu-link">COLLECTION <span class="menu-sub">アイテム一覧</span></a></li>
+                <li><a href="bodylinkz.html" class="menu-link text-gradient">Bodylinkz <span class="menu-sub">AIサイズ提案</span></a></li>
+                <li><a href="faq.html" class="menu-link">FAQ <span class="menu-sub">よくある質問</span></a></li>
+                <li><a href="contact.html" class="menu-link">CONTACT <span class="menu-sub">お問い合わせ</span></a></li>
+                <li class="mt-8 flex justify-center gap-6">
+                    <a href="https://instagram.com/fvvyn_official" class="text-2xl hover:text-purple-400"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/fvvyn_official" class="text-2xl hover:text-blue-400"><i class="fab fa-twitter"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-20 px-4 md:px-0">
+        
+        <div class="text-center mb-16">
+            <h1 class="font-orbitron text-4xl md:text-6xl font-bold mb-4">SUPPORT</h1>
+            <p class="text-gray-400 tracking-wider">よくある質問 & ガイド</p>
+        </div>
+
+        <!-- Bodylinkz Guide Section -->
+        <section class="max-w-5xl mx-auto mb-24">
+            <div class="bg-[#0a0a0a] border border-gray-800 rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                <!-- BG Glow -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-purple-900/20 blur-3xl rounded-full pointer-events-none"></div>
+
+                <div class="relative z-10 text-center mb-12">
+                    <span class="text-purple-400 font-orbitron tracking-widest text-sm font-bold">HOW TO USE</span>
+                    <h2 class="text-3xl font-bold mt-2 font-orbitron">Bodylinkz <span class="text-white text-base font-normal font-sans ml-2">の使い方</span></h2>
+                    <p class="text-gray-400 mt-4 text-sm md:text-base">
+                        fvvyn独自のAIシステムで、あなたの「最適サイズ」を3Dで見つけよう。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Step 1 -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-700 group-hover:border-purple-500 transition duration-300">
+                            <span class="font-orbitron text-xl font-bold text-gray-300">01</span>
+                        </div>
+                        <h3 class="font-bold mb-3">身長・体重を入力</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            商品ページの「Bodylinkz」ボタンをタップし、あなたの基本データを入力します。
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-700 group-hover:border-blue-500 transition duration-300">
+                            <span class="font-orbitron text-xl font-bold text-gray-300">02</span>
+                        </div>
+                        <h3 class="font-bold mb-3">AI解析 & 3D表示</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            AIが体型を解析し、3Dアバターを生成。画面上で着用イメージを確認できます。
+                        </p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="text-center group">
+                        <div class="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-700 group-hover:border-white transition duration-300">
+                            <span class="font-orbitron text-xl font-bold text-gray-300">03</span>
+                        </div>
+                        <h3 class="font-bold mb-3">ベストサイズを提案</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            「Just Fit」や「Oversize」など、好みに合わせた推奨サイズを表示します。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <a href="bodylinkz.html" class="inline-block bg-white text-black font-bold py-3 px-8 rounded-full hover:bg-purple-500 hover:text-white transition duration-300 font-orbitron">
+                        TRY DEMO <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="max-w-3xl mx-auto px-4">
+            <h2 class="font-orbitron text-2xl mb-8 border-b border-gray-800 pb-4">FAQ</h2>
+
+            <!-- Category: Bodylinkz -->
+            <div class="mb-12">
+                <h3 class="text-gray-400 text-sm font-bold mb-4 tracking-wider">BODYLINKZ / サイズについて</h3>
+                
+                <div class="space-y-4">
+                    <!-- Q1 -->
+                    <div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+                        <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                            <span class="font-medium pr-4">Bodylinkzは無料で使えますか？</span>
+                            <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+                        </button>
+                        <div class="accordion-content bg-[#0a0a0a]">
+                            <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+                                はい、Bodylinkzはすべての機能を無料でご利用いただけます。会員登録も不要で、各商品ページからすぐにサイズ診断が可能です。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+                        <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                            <span class="font-medium pr-4">提案されたサイズが合わなかった場合は？</span>
+                            <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+                        </button>
+                        <div class="accordion-content bg-[#0a0a0a]">
+                            <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+                                Bodylinkzの提案サイズをご購入いただいたにも関わらずサイズが合わなかった場合、返送料無料でサイズ交換を承ります。安心してお試しください。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category: Shipping & Payment -->
+            <div class="mb-12">
+                <h3 class="text-gray-400 text-sm font-bold mb-4 tracking-wider">SHIPPING & PAYMENT / 配送・決済</h3>
+                
+                <div class="space-y-4">
+                    <!-- Q3 -->
+                    <div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+                        <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                            <span class="font-medium pr-4">支払い方法は何がありますか？</span>
+                            <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+                        </button>
+                        <div class="accordion-content bg-[#0a0a0a]">
+                            <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+                                クレジットカード（Visa, Mastercard, Amex, JCB）、PayPay、あと払い（ペイディ）、コンビニ決済をご利用いただけます。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+                        <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+                            <span class="font-medium pr-4">注文した商品はいつ届きますか？</span>
+                            <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+                        </button>
+                        <div class="accordion-content bg-[#0a0a0a]">
+                            <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+                                通常商品は、ご注文確定後2〜3営業日以内に発送いたします。予約商品については各商品ページに記載の発送時期をご確認ください。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Q5 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">複数の注文を1つにまとめられますか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            複数のご注文を1つにまとめるサービスは行っておりませんので、予めご了承ください。
+        </div>
+    </div>
+</div>
+
+<!-- Q6 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">注文したのにメールが届きません。どうすればよいですか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            メールアドレスの誤入力や迷惑メール設定の可能性があります。迷惑メールフォルダをご確認ください。
+        </div>
+    </div>
+</div>
+
+<!-- Q7 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">注文内容を変更できますか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            ご注文完了後のお客様都合による変更は、原則的にお受けできません。予めご了承ください。
+        </div>
+    </div>
+</div>
+
+<!-- Q8 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">注文をキャンセル・返品・交換はできますか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            ご注文完了後のお客様都合によるキャンセル・返品・交換は、原則的にお受けできません。予めご了承ください。
+        </div>
+    </div>
+</div>
+
+<!-- Q9 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">支払い方法を、注文後に変更できますか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            ご注文完了後のお支払い方法の変更はできませんので、注文の際に必ずご確認ください。
+        </div>
+    </div>
+</div>
+
+<!-- Q10 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">商品が届きません。どうすればよいですか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            商品の発送は、通常、受注確定・決済完了確認後3営業日以内の発送となり、商品到着まで5日程お時間がかかります。発送完了メールが届いているかをご確認の上、出荷伝票番号から配送状況をご確認いただくか、注文番号と一緒にInstagramのDM、もしくは fvvyn.brand@gmail.com よりお問い合わせください。
+        </div>
+    </div>
+</div>
+
+<!-- Q11 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">個人情報のお取り扱いについて</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            個人情報のお取り扱いについては、プライバシーポリシーをご確認ください。
+        </div>
+    </div>
+</div>
+<!-- Q : Bodylinkz 精度 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">Bodylinkzのサイズ提案は正確ですか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            Bodylinkzは、入力いただいた情報をもとにAIが最適なサイズを推奨するシステムですが、必ずしもすべてのお客様に対して完全に正確な結果を保証するものではありません。<br><br>
+            あくまでサイズ選びの参考としてご利用いただき、最終的なご判断はお客様ご自身のご確認のうえでお願いいたします。
+        </div>
+    </div>
+</div>
+<!-- Q : 予約販売 -->
+<div class="accordion-item bg-[#111] rounded-lg border border-gray-800 overflow-hidden">
+    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none">
+        <span class="font-medium pr-4">予約商品はどれくらいで届きますか？</span>
+        <i class="fas fa-chevron-down accordion-icon text-gray-500"></i>
+    </button>
+    <div class="accordion-content bg-[#0a0a0a]">
+        <div class="px-6 py-4 text-gray-400 text-sm border-t border-gray-800">
+            予約商品につきましては、ご注文確定後、商品のお届けまで約1ヶ月ほどお時間をいただいております。<br><br>
+            生産状況により発送時期が前後する場合がございますので、あらかじめご了承のうえご注文ください。詳しい発送時期は、各商品ページに記載の内容をご確認ください。
+        </div>
+    </div>
+</div>
+            <!-- Contact Link -->
+            <div class="text-center mt-12 p-8 bg-gray-900/50 rounded-xl">
+                <p class="text-gray-300 mb-4">その他のご質問はこちらから</p>
+                <a href="contact.html" class="text-white border-b border-purple-500 pb-1 hover:text-purple-400 transition">
+                    お問い合わせフォームへ
+                </a>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-900 py-12 px-6 text-center md:text-left">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div>
+                <span class="font-orbitron text-2xl font-bold">fvvyn</span>
+                <p class="text-gray-500 text-xs mt-2">© 2025 fvvyn. All Rights Reserved.</p>
+            </div>
+            <div class="flex gap-6 text-sm font-orbitron text-gray-400">
+                <a href="about.html" class="hover:text-white">BRAND</a>
+                <a href="collection.html" class="hover:text-white">COLLECTION</a>
+                <a href="bodylinkz.html" class="hover:text-white">Bodylinkz</a>
+                <a href="faq.html" class="hover:text-white">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Accordion Logic
+        document.querySelectorAll('.accordion-item button').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                
+                // Close other items (Optional: remove this block if you want multiple open)
+                document.querySelectorAll('.accordion-item').forEach(other => {
+                    if (other !== item) {
+                        other.classList.remove('active');
+                    }
+                });
+
+                item.classList.toggle('active');
+            });
+        });
+
+        // Hamburger Menu Logic (Reusable)
+        const menuBtn = document.getElementById('menuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const body = document.body;
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                menuOverlay.classList.add('active');
+                menuBtn.children[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+                menuBtn.children[1].style.opacity = '0';
+                menuBtn.children[2].style.width = '100%';
+                menuBtn.children[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+                body.style.overflow = 'hidden';
+            } else {
+                menuOverlay.classList.remove('active');
+                menuBtn.children[0].style.transform = 'none';
+                menuBtn.children[1].style.opacity = '1';
+                menuBtn.children[2].style.width = '66%';
+                menuBtn.children[2].style.transform = 'none';
+                body.style.overflow = '';
+            }
+        });
+        
+        // Close menu on link click
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                menuOverlay.classList.remove('active');
+                body.style.overflow = '';
+            });
+        });
+    </script>
+</body>
+</html>
+
