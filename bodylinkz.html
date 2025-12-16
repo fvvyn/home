@@ -52,27 +52,31 @@ body {
 }
 
 /* 2. 3Dコンテナの高さを「固定」ではなく「最低高さ」に変更 */
-#canvas-container {
-    width: 100%;
-    min-height: 350px; /* スマホでもしっかり高さを確保 */
-    position: relative;
-    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-    #canvas-container {
-        min-height: 600px; /* PCではさらに大きく */
-    }
-}
-
-/* 3. 結果画面（Step 4）をスクロール可能にする */
+/* 結果画面全体を少し内側に寄せる設定 */
+/* #result-view を以下に書き換え（!important を追加） */
 #result-view {
-    flex: 1;
-    overflow-y: auto; /* ここで縦スクロールを許可 */
-    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+    padding-left: 16px !important;  /* 左右に強制的に隙間を作る */
+    padding-right: 16px !important;
+    padding-top: 10px !important;    /* 上にも少し隙間があると綺麗です */
+    box-sizing: border-box !important;
+}
+
+/* #canvas-container はそのままでOKですが、
+   もし枠自体が太すぎると感じたら width を 95% くらいに微調整してください */
+#canvas-container {
+    width: 100% !important;
+    min-height: 500px !important;
+    position: relative !important;
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%) !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    margin-bottom: 1.5rem !important;
+
+    /* 枠線を表示させるための強制設定 */
+    border: 1px solid #d1d5db !important; /* 少し濃いめのグレーに変更しました */
+    box-sizing: border-box !important;   /* これがないと枠線の分だけズレます */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
 }
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
