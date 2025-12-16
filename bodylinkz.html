@@ -199,7 +199,13 @@ body {
 /* 3Dエリアの高さが足りないとスクロールが発生しないため、
    スマホでの最小高さを少し高めに設定します */
 #canvas-container {
-    min-height: 520px; /* 500px以上を推奨 */
+    min-height: 400px; /* 500px以上を推奨 */
+    #canvas-container {
+    width: 100%;
+    min-height: 550px; /* ここを 500〜550 くらいにするとスクロールしやすくなります */
+    position: relative;
+    overflow: hidden;
+}
 }
 
 /* 結果表示画面のスクロールを滑らかにする */
@@ -660,6 +666,8 @@ body {
         };
     }
 
+
+
     function renderResult(res) {
         document.getElementById('recommended-size').textContent = res.recSize;
         document.getElementById('product-name-display').textContent = res.productName;
@@ -766,13 +774,23 @@ body {
         try {
             const container = document.getElementById('canvas-container');
             
-            // Annotation Elements Re-injection (初期は非表示)
-            container.innerHTML = `
-                <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
-                <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
-                <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
-                <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none"><p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm"><i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム</p></div>
-            `;
+// init3DScene 関数内の container.innerHTML を以下に差し替え
+container.innerHTML = `
+    <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
+    <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
+    <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
+    
+    <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
+        <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
+        <i class="fa-solid fa-chevron-down text-lg"></i>
+    </div>
+
+    <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
+        <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
+            <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
+        </p>
+    </div>
+`;
             renderResult(result);
             trackers.shoulder.el = document.getElementById('annotation-shoulder');
             trackers.chest.el = document.getElementById('annotation-chest');
