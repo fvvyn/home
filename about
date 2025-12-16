@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- Google Analytics / Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MF598BWN4M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MF598BWN4M');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>ABOUT fvvyn© | 宇宙とファッションの融合 - AIサイズ提案機能搭載のアパレルブランド</title>
+    <meta name="description" content="fvvyn©（フヴィン）は、宇宙の世界観とストリートカルチャーを融合させた唯一無二のコレクションを展開。独自のAIサイズ提案システム"Bodylinkz"で、あなたに完璧なフィットを提供します。">
+    <meta name="keywords" content="fvvyn, フヴィン, ストリートファッション, Bodylinkz, AIサイズ提案, UK Drip, US Drip, ユニセックス, アパレルブランド">
+    <link rel="canonical" href="https://fvvyn.com/about">
+
+    <!-- OGP -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="fvvyn©" />
+    <meta property="og:title" content="ABOUT fvvyn | Cosmos×Fashion×Tech" />
+    <meta property="og:description" content="既存の枠を超え、次世代のファッションを創造するfvvynのブランドストーリー。" />
+    <meta property="og:image" content="https://fvvyn.com/assets/ogp-about.jpg" /> <!-- 実際の画像URLに変更推奨 -->
+    <meta property="og:url" content="https://fvvyn.com/about" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --fvvyn-black: #050505;
+            --fvvyn-accent: #a855f7; /* Purple accent */
+            --fvvyn-blue: #3b82f6;   /* Blue accent */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--fvvyn-black);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Starry Background Animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #fff, #a855f7, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hamburger Menu Styles */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.98);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-items {
+            list-style: none;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+
+        .menu-overlay.active .menu-items {
+            transform: translateY(0);
+        }
+
+        .menu-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin: 1.5rem 0;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .menu-link:hover {
+            color: var(--fvvyn-accent);
+        }
+        
+        .menu-sub {
+            font-size: 0.9rem;
+            color: #aaa;
+            font-family: 'Noto Sans JP', sans-serif;
+            display: block;
+            margin-top: -5px;
+            font-weight: 400;
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Schema.org Data (SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "fvvyn",
+          "url": "https://fvvyn.com",
+          "logo": "https://fvvyn.com/assets/logo.png",
+          "description": "宇宙の世界観を融合させた、唯一無二のストリートアパレルブランド。",
+          "sameAs": [
+            "https://instagram.com/fvvyn_official",
+            "https://x.com/fvvyn_official",
+            "https://tiktok.com/@fvvyn_official",
+            "https://youtube.com/@fvvyn_official"
+          ]
+        },
+        {
+          "@type": "AboutPage",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "fvvyn",
+            "foundingDate": "2023", 
+            "description": "UK Drip、US Dripのストリートカルチャーと宇宙観を融合。独自のAIサイズ提案システムBodylinkzを展開。"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Starry Background -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center mix-blend-difference text-white">
+        <a href="index.html" class="text-2xl font-orbitron font-bold tracking-widest z-50 relative">fvvyn</a>
+        
+        <!-- Hamburger Button -->
+        <button id="menuBtn" class="z-50 focus:outline-none group relative w-8 h-6 flex flex-col justify-between">
+            <span class="w-full h-0.5 bg-white transition-all duration-300 group-hover:bg-purple-400 origin-left"></span>
+            <span class="w-full h-0.5 bg-white transition-all duration-300 group-hover:bg-purple-400"></span>
+            <span class="w-2/3 h-0.5 bg-white ml-auto transition-all duration-300 group-hover:w-full group-hover:bg-purple-400 origin-left"></span>
+        </button>
+    </header>
+
+    <!-- Fullscreen Navigation Overlay -->
+    <div id="menuOverlay" class="menu-overlay">
+        <nav>
+            <ul class="menu-items">
+                <li>
+                    <a href="about.html" class="menu-link">
+                        BRAND <span class="menu-sub">ブランド概要</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="collection.html" class="menu-link">
+                        COLLECTION <span class="menu-sub">アイテム一覧</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="bodylinkz.html" class="menu-link text-gradient">
+                        Bodylinkz <span class="menu-sub">AIサイズ提案</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="faq.html" class="menu-link">
+                        FAQ <span class="menu-sub">よくある質問</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="contact.html" class="menu-link">
+                        CONTACT <span class="menu-sub">お問い合わせ</span>
+                    </a>
+                </li>
+                <li class="mt-8 flex justify-center gap-6">
+                    <a href="https://instagram.com/fvvyn_official" target="_blank" class="text-2xl hover:text-purple-400 transition"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/fvvyn_official" target="_blank" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                    <a href="https://tiktok.com/@fvvyn_official" target="_blank" class="text-2xl hover:text-pink-400 transition"><i class="fab fa-tiktok"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="h-screen flex flex-col justify-center items-center text-center px-4 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505]/80 to-[#050505]"></div>
+            
+            <h1 class="font-orbitron text-5xl md:text-8xl font-black tracking-tighter mb-4 relative z-10 reveal active">
+                SHIFT THE<br>
+                <span class="text-gradient">COSMOS</span>
+            </h1>
+            <p class="text-sm md:text-lg tracking-[0.2em] text-gray-300 relative z-10 reveal active" style="transition-delay: 0.2s;">
+                Shift the Cosmos
+            </p>
+            
+            <div class="absolute bottom-10 animate-bounce">
+                <i class="fas fa-chevron-down text-gray-500"></i>
+            </div>
+        </section>
+
+        <!-- Brand Story Section -->
+        <section class="py-24 px-6 md:px-20 max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h2 class="font-orbitron text-3xl md:text-4xl font-bold mb-8 border-l-4 border-purple-600 pl-4">
+                        BRAND STORY
+                    </h2>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        <strong class="text-white">fvvyn（フヴィン）</strong>は、広大な宇宙からインスピレーションを得て、ファッションに「広大な可能性」を展開するブランドです。
+                    </p>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        "fvvyn"のコレクションは、単なる衣服ではありません。<br>
+                        usのカルチャーをベースにしながら、固定概念に囚われない<strong class="text-white">"Shift The cosmos"</strong>を掲げるデザインを追求しています。
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        あなただけのCosmosを。<br>
+                        流行を追うだけでなく、着る人自身の個性を最大限に引き出す。fvvynのスタイルです。
+                    </p>
+                </div>
+                <div class="relative h-[400px] w-full rounded-lg overflow-hidden reveal" style="transition-delay: 0.2s;">
+                    <!-- Placeholder for Brand Image -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-blue-900/40 z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?q=80&w=1000&auto=format&fit=crop" alt="fvvyn collection image" class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-700">
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section (Bodylinkz) -->
+        <section class="py-24 bg-[#0a0a0a] relative overflow-hidden">
+            <!-- Decorative Elements -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="container mx-auto px-6 max-w-5xl text-center reveal">
+                <span class="font-orbitron text-purple-400 tracking-widest text-sm mb-2 block">TECHNOLOGY</span>
+                <h2 class="font-orbitron text-3xl md:text-5xl font-bold mb-8">
+                    FUTURE OF <span class="text-gradient">FITTING</span>
+                </h2>
+                
+                <p class="text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+                    EC最大の課題である「サイズ選び」に革命を。<br>
+                    fvvynは独自の<strong class="text-white">AIサイズ提案システム"Bodylinkz"</strong>を開発しました。
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-8 text-left">
+                    <div class="bg-[#111] p-8 rounded-xl border border-gray-800 hover:border-purple-500/50 transition duration-300 group">
+                        <div class="text-4xl text-purple-500 mb-4 group-hover:scale-110 transition"><i class="fas fa-ruler-combined"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-white">AI Analysis</h3>
+                        <p class="text-sm text-gray-400">身長・体重・好みのフィット感を入力するだけで、AIが最適なサイズを瞬時に算出します。</p>
+                    </div>
+                    <div class="bg-[#111] p-8 rounded-xl border border-gray-800 hover:border-blue-500/50 transition duration-300 group">
+                        <div class="text-4xl text-blue-500 mb-4 group-hover:scale-110 transition"><i class="fas fa-cube"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-white">3D Modeling</h3>
+                        <p class="text-sm text-gray-400">あなたの体型データを基に3Dモデルを生成。着用イメージを視覚的に確認できます。</p>
+                    </div>
+                    <div class="bg-[#111] p-8 rounded-xl border border-gray-800 hover:border-pink-500/50 transition duration-300 group">
+                        <div class="text-4xl text-pink-500 mb-4 group-hover:scale-110 transition"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-white">NFC & QR</h3>
+                        <p class="text-sm text-gray-400">アイテムに搭載されたNFC/QRタグから、偽造品を見分ける鑑定ページへアクセス可能。</p>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <a href="bodylinkz.html" class="inline-flex items-center gap-2 bg-white text-black font-orbitron font-bold py-3 px-8 rounded-full hover:bg-purple-500 hover:text-white transition duration-300">
+                        TRY Bodylinkz <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-32 px-6 text-center">
+            <h2 class="font-orbitron text-2xl md:text-4xl font-bold mb-6 reveal">
+                FIND YOUR <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">DRIP</span>
+            </h2>
+            <p class="text-gray-400 mb-8 reveal">最新のコレクションをチェックして、あなたのスタイルを見つけよう。</p>
+            <a href="collection.html" class="reveal inline-block border border-white text-white font-orbitron py-3 px-10 hover:bg-white hover:text-black transition duration-300">
+                VIEW COLLECTION
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-900 py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <span class="font-orbitron text-2xl font-bold">fvvyn</span>
+                <p class="text-gray-500 text-xs mt-2">© 2025 fvvyn. All Rights Reserved.</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-8 text-sm font-orbitron text-gray-400">
+                <a href="about.html" class="hover:text-white transition">BRAND</a>
+                <a href="collection.html" class="hover:text-white transition">COLLECTION</a>
+                <a href="bodylinkz.html" class="hover:text-white transition">Bodylinkz</a>
+                <a href="faq.html" class="hover:text-white transition">FAQ</a>
+                <a href="contact.html" class="hover:text-white transition">CONTACT</a>
+            </div>
+
+            <div class="flex gap-6">
+                <a href="https://instagram.com/fvvyn_official" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/fvvyn_official" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                <a href="https://tiktok.com/@fvvyn_official" class="text-gray-400 hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Star Animation Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsContainer = document.getElementById('starsContainer');
+            const starCount = 100;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const xy = Math.random() * 100;
+                const duration = Math.random() * 3 + 2;
+                const size = Math.random() * 2 + 1;
+                
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${duration}s`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                starsContainer.appendChild(star);
+            }
+
+            // Scroll Reveal Logic
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Hamburger Menu Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const body = document.body;
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            
+            if (isMenuOpen) {
+                menuOverlay.classList.add('active');
+                // Animate hamburger to X
+                menuBtn.children[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+                menuBtn.children[1].style.opacity = '0';
+                menuBtn.children[2].style.width = '100%';
+                menuBtn.children[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+                body.style.overflow = 'hidden'; // Prevent scrolling
+            } else {
+                menuOverlay.classList.remove('active');
+                // Restore hamburger
+                menuBtn.children[0].style.transform = 'none';
+                menuBtn.children[1].style.opacity = '1';
+                menuBtn.children[2].style.width = '66%';
+                menuBtn.children[2].style.transform = 'none';
+                body.style.overflow = ''; // Restore scrolling
+            }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                menuOverlay.classList.remove('active');
+                menuBtn.children[0].style.transform = 'none';
+                menuBtn.children[1].style.opacity = '1';
+                menuBtn.children[2].style.width = '66%';
+                menuBtn.children[2].style.transform = 'none';
+                body.style.overflow = '';
+            });
+        });
+    </script>
+</body>
+</html>
