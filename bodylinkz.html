@@ -737,7 +737,11 @@
             // Camera Setup
             camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
             // [修正] カメラ位置を少し離して全体が見えるように調整
-            camera.position.set(0, 1.2, 4.5); 
+            // [修正前]
+// camera.position.set(0, 1.2, 4.5); 
+
+// [修正後] 斜め45度から見下ろすアングル
+          camera.position.set(0.25, 1.8, 0.2);
 
             // Renderer Setup
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -812,6 +816,10 @@
             // [修正] ズームを有効化
             controls.enableZoom = true; 
             // [追加] ズーム範囲を制限 (寄りすぎ・離れすぎ防止)
+            // --- ここから追加 ---
+controls.autoRotate = true;          // 自動回転を有効化
+controls.autoRotateSpeed = 2.0;      // 回転速度（デフォルトは2.0。1.0にするとよりゆっくりになります）
+// ------------------
             controls.minDistance = 2.5;
             controls.maxDistance = 6.0;
             
