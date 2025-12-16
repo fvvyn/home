@@ -43,13 +43,37 @@
       --bg-color: #f8fafc;
       --text-main: #1e293b;
     }
-    body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; touch-action: manipulation; }
-    
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+/* 1. bodyのoverflow-x: hiddenを維持しつつ、縦スクロールを自然にする */
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--bg-color); 
+    color: var(--text-main); 
+    /* touch-action: manipulation; はそのままでOK */
+}
 
+/* 2. 3Dコンテナの高さを「固定」ではなく「最低高さ」に変更 */
+#canvas-container {
+    width: 100%;
+    min-height: 350px; /* スマホでもしっかり高さを確保 */
+    position: relative;
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    #canvas-container {
+        min-height: 600px; /* PCではさらに大きく */
+    }
+}
+
+/* 3. 結果画面（Step 4）をスクロール可能にする */
+#result-view {
+    flex: 1;
+    overflow-y: auto; /* ここで縦スクロールを許可 */
+    -webkit-overflow-scrolling: touch;
+}
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .fade-in { animation: fadeIn 0.4s ease-out forwards; }
@@ -162,7 +186,27 @@
     .toast.show { visibility: visible; animation: slideUpFade 0.5s, fadeOut 0.5s 2.5s forwards; }
     @keyframes slideUpFade { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
     @keyframes fadeOut { from {opacity: 1;} to {opacity: 0;} }
+/* アニメーションの定義 */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) translateX(-50%); }
+  50% { transform: translateY(10px) translateX(-50%); }
+}
 
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+/* 3Dエリアの高さが足りないとスクロールが発生しないため、
+   スマホでの最小高さを少し高めに設定します */
+#canvas-container {
+    min-height: 520px; /* 500px以上を推奨 */
+}
+
+/* 結果表示画面のスクロールを滑らかにする */
+#result-view {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+}
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 md:p-4 bg-slate-50">
@@ -199,11 +243,11 @@
             <span class="text-xs font-bold text-center">Lamp Zip Hoodie</span>
           </div>
 
-          <!-- Added Beg Zip Hoodie from Bodylinkz.html -->
+          <!-- Added Beg Zip Hoodie from Bodylinkz.html 
           <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('beg-zip-hoodie', this)">
             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-vest"></i></div>
             <span class="text-xs font-bold text-center">Beg Zip Hoodie</span>
-          </div>
+          </div>-->
           
           <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('cloudy-zip-hoodie', this)">
              <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-cloud"></i></div>
@@ -310,6 +354,10 @@
                     <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
                 </p>
             </div>
+            <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none">
+    <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
+    <i class="fa-solid fa-chevron-down text-lg"></i>
+</div>
           </div>
 
           <div class="px-6 pb-24">
@@ -741,7 +789,7 @@
 // camera.position.set(0, 1.2, 4.5); 
 
 // [修正後] 斜め45度から見下ろすアングル
-          camera.position.set(0.25, 1.4, 0.2);
+          camera.position.set(0.25, 1.8, 0.1);
 
             // Renderer Setup
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -891,7 +939,15 @@ controls.autoRotateSpeed = 2.0;      // 回転速度（デフォルトは2.0。1
         camera.updateProjectionMatrix();
         renderer.setSize(container.clientWidth, container.clientHeight);
     }
-
+// 結果画面（result-view）をスクロールした時に矢印を消す処理
+document.getElementById('result-view').addEventListener('scroll', function() {
+    const indicator = document.getElementById('scroll-indicator');
+    if (indicator && this.scrollTop > 20) {
+        indicator.style.opacity = '0';
+        indicator.style.transition = 'opacity 0.5s';
+        setTimeout(() => indicator.style.display = 'none', 500);
+    }
+}, { passive: true });
     function animate() {
         if (!renderer) return;
         animationId = requestAnimationFrame(animate);
