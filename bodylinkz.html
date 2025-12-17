@@ -501,12 +501,31 @@ body {
       backBtn.classList.toggle('hidden', step === 1);
       
       // If result screen, hide normal nav controls
-      if (step === 4) {
-        navControls.classList.add('hidden');
-      } else {
-        navControls.classList.remove('hidden');
-      }
+ // updateUI 関数内 (step === 4 のブロック)
+if (step === 4) {
+    navControls.classList.add('hidden');
+    resultView.innerHTML = '';
+    
+    // 1. 【一番上】サイズ詳細 (cm)
+    resultView.appendChild(sizeDetails);
+    
+    // 2. 【真ん中】AIからのアドバイス（メッセージ）
+    resultView.appendChild(messageContainer);
+    
+    // 3. 【一番下】3Dモデルの枠
+    resultView.appendChild(container);
+    
+    // 3Dシーンの描画を開始
+    init3DScene(container, recommendation);
+    
+    // スクロール矢印を表示
+    const indicator = document.getElementById('scroll-indicator');
+    if (indicator) {
+        indicator.style.display = 'flex';
+        indicator.style.opacity = '1';
     }
+}
+
 
     nextBtn.onclick = () => {
       if (!validateStep()) return;
