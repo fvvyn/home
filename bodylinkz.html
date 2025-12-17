@@ -67,7 +67,7 @@ body {
 #canvas-container {
     width: 100% !important;
     /* ここを調整：400px くらいにするとコンパクトになります */
-    height: 330px !important; 
+    height: 400px !important; 
     min-height: 400px !important; 
     
     position: relative !important;
@@ -501,14 +501,12 @@ body {
       backBtn.classList.toggle('hidden', step === 1);
       
       // If result screen, hide normal nav controls
-if (step === 4) {
-navControls.classList.add('hidden');
-} else {
-507
-navControls.classList.remove('hidden');
-508
-｝
-
+      if (step === 4) {
+        navControls.classList.add('hidden');
+      } else {
+        navControls.classList.remove('hidden');
+      }
+    }
 
     nextBtn.onclick = () => {
       if (!validateStep()) return;
