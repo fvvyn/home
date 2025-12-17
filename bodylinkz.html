@@ -239,6 +239,38 @@ body {
 #fit-indicator-bar {
     background-color: rgba(197, 142, 248, 0.8) !important; 
 }
+/* 右下固定の3D移動ボタン */
+.scroll-to-3d-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 100px; /* 「このサイズで購入」ボタンに被らないよう調整 */
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+    box-shadow: 0 4px 15px rgba(135, 7, 255, 0.4);
+    cursor: pointer;
+    z-index: 40; /* 下部ボタンより上に表示 */
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    line-height: 1.2;
+}
+
+.scroll-to-3d-btn:active {
+    transform: scale(0.9);
+}
+
+.scroll-to-3d-btn i {
+    font-size: 16px;
+    margin-bottom: 2px;
+}
   </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 md:p-4 bg-slate-50">
@@ -393,18 +425,33 @@ body {
     <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
         <i class="fa-solid fa-chart-simple text-[#8707ff]"></i> サイズ詳細 (cm)
     </h3>
-    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
-        <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
-            </ul>
-    </div>
+   <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-2"> <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
+    </ul>
+</div>
 
-    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-xs text-purple-800 leading-relaxed">
-        <i class="fa-solid fa-circle-info mr-1"></i>
-        <span id="result-message">メッセージ</span>
-    </div>
+<div class="py-2 px-3 mt-0 bg-purple-50 rounded-xl border border-purple-100 text-[11px] text-purple-800 leading-snug">
+    <i class="fa-solid fa-circle-info mr-1"></i>
+    <span id="result-message">メッセージ</span>
+</div>
   </div>
 
-  <div id="canvas-container" class="relative">
+  <div id="move-to-3d" class="scroll-to-3d-btn hidden" onclick="scrollTo3D()">
+    <i class="fa-solid fa-cube"></i>
+    <span>3D↓</span>
+</div>
+
+<div class="px-7 mt-8 mb-2">
+    <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+        <i class="fa-solid fa-person-half-dress text-[#8707ff]"></i>　3Dフィッティング・プレビュー
+    </h3>
+    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">
+        AIが算出した体型データを元に、推奨サイズの着用感をシミュレートしています。肩幅・身幅・袖丈のゆとりを確認してください。
+    </p>
+</div>
+
+<div id="canvas-container" class="relative">
+    ...
+
     <div id="annotation-shoulder" class="annotation" style="display: none;">
       <span class="label text-[9px] text-gray-400 uppercase">Shoulder</span>
       <span class="status font-bold"></span>
