@@ -73,7 +73,7 @@ body {
     background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%) !important;
     border-radius: 20px !important;
     overflow: hidden !important;
-    margin-bottom: 80px !important; /* 下のボタンと重ならないように余白を確保 */
+    margin-bottom: 30px !important;
     border: 1px solid #d1d5db !important;
     box-sizing: border-box !important;
 }
@@ -217,6 +217,7 @@ body {
     min-height: 550px; /* ここを 500〜550 くらいにするとスクロールしやすくなります */
     position: relative;
     overflow: hidden;
+    
 }
 }
 
@@ -398,39 +399,77 @@ body {
     </div>
     <p id="product-name-display" class="text-xs text-gray-400 mt-1">Product Name</p>
   </div>
-<div class="px-6 mb-6">
-  <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4 text-center">Fit Analysis</p>
-    <div id="fit-indicator-bar" class="relative w-full h-2 bg-gray-200 rounded-full mb-6">
-      <div class="absolute w-full flex justify-between -top-1 px-1">
-        <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
-        <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
-        <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
-      </div>
-      <div id="fit-pin" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all duration-1000 ease-out" style="left: 50%;">
-        <div class="w-4 h-4 bg-[#8707ff] rounded-full border-2 border-white shadow-md"></div>
-        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold whitespace-nowrap text-[#8707ff]" id="fit-label">
-          Standard
+
+  <div class="px-6 mb-6">
+    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+      <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-4 text-center">Fit Analysis</p>
+      <div id="fit-indicator-bar" class="relative w-full h-2 bg-gray-200 rounded-full mb-6">
+        <div class="absolute w-full flex justify-between -top-1 px-1">
+          <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
+          <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
+          <span class="w-1 h-4 bg-white border border-gray-200 rounded-full"></span>
+        </div>
+        <div id="fit-pin" class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all duration-1000 ease-out" style="left: 50%;">
+          <div class="w-4 h-4 bg-[#8707ff] rounded-full border-2 border-white shadow-md"></div>
+          <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold whitespace-nowrap text-[#8707ff]" id="fit-label">
+            Standard
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex justify-between text-[9px] text-gray-400 font-bold uppercase tracking-tighter">
-      <span>Tight</span>
-      <span>Optimal</span>
-      <span>Loose</span>
+      <div class="flex justify-between text-[9px] text-gray-400 font-bold uppercase tracking-tighter">
+        <span>Tight</span>
+        <span>Optimal</span>
+        <span>Loose</span>
+      </div>
     </div>
   </div>
-</div>
-  <div class="px-6 pb-4">
+
+  <div class="px-7 mt-0.5 mb-3.5">
+      <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-person-half-dress text-[#8707ff]"></i>　3Dフィッティング・プレビュー
+      </h3>
+      <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">
+          AIが算出した体型データを元に、推奨サイズの着用感をシミュレートしています。肩幅・身幅・袖丈のゆとりを確認してください。
+      </p>
+  </div>
+
+  <div id="canvas-container" class="relative">
+      <div id="annotation-shoulder" class="annotation" style="display: none;">
+        <span class="label text-[9px] text-gray-400 uppercase">Shoulder</span>
+        <span class="status font-bold"></span>
+      </div>
+      <div id="annotation-chest" class="annotation" style="display: none;">
+        <span class="label text-[9px] text-gray-400 uppercase">Chest</span>
+        <span class="status font-bold"></span>
+      </div>
+      <div id="annotation-sleeve" class="annotation" style="display: none;">
+        <span class="label text-[9px] text-gray-400 uppercase">Sleeve</span>
+        <span class="status font-bold"></span>
+      </div>
+
+      <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
+          <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
+              <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
+          </p>
+      </div>
+      
+      <div id="scroll-indicator" class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
+          <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll to view 3D</span>
+          <i class="fa-solid fa-chevron-down text-lg"></i>
+      </div>
+  </div>
+
+  <div class="px-6 mt-6 pb-4">
     <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
         <i class="fa-solid fa-chart-simple text-[#8707ff]"></i> サイズ詳細 (cm)
     </h3>
-   <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-2"> <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
-    </ul>
-</div>
+    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-2"> 
+        <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
+            </ul>
+    </div>
 
-<div class="py-2 px-3 mt-0 bg-purple-50 rounded-xl border border-purple-100 text-[11px] text-purple-800 leading-snug">
-    <i class="fa-solid fa-circle-info mr-1"></i>
+<div class="py-4 px-5 -mx-2 mt-3 bg-purple-50 rounded-xl border border-purple-100 text-xs text-purple-800 leading-relaxed shadow-sm">
+    <i class="fa-solid fa-circle-info mr-2"></i>
     <span id="result-message">メッセージ</span>
 </div>
   </div>
@@ -438,55 +477,18 @@ body {
   <div id="move-to-3d" class="scroll-to-3d-btn hidden" onclick="scrollTo3D()">
     <i class="fa-solid fa-cube"></i>
     <span>3D↓</span>
-</div>
-
-<div class="px-7 mt-8 mb-2">
-    <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-        <i class="fa-solid fa-person-half-dress text-[#8707ff]"></i>　3Dフィッティング・プレビュー
-    </h3>
-    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">
-        AIが算出した体型データを元に、推奨サイズの着用感をシミュレートしています。肩幅・身幅・袖丈のゆとりを確認してください。
-    </p>
-</div>
-
-<div id="canvas-container" class="relative">
-    ...
-
-    <div id="annotation-shoulder" class="annotation" style="display: none;">
-      <span class="label text-[9px] text-gray-400 uppercase">Shoulder</span>
-      <span class="status font-bold"></span>
-    </div>
-    <div id="annotation-chest" class="annotation" style="display: none;">
-      <span class="label text-[9px] text-gray-400 uppercase">Chest</span>
-      <span class="status font-bold"></span>
-    </div>
-    <div id="annotation-sleeve" class="annotation" style="display: none;">
-      <span class="label text-[9px] text-gray-400 uppercase">Sleeve</span>
-      <span class="status font-bold"></span>
-    </div>
-
-    <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
-        <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
-            <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
-        </p>
-    </div>
-    
-    <div id="scroll-indicator" class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
-        <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll to view 3D</span>
-        <i class="fa-solid fa-chevron-down text-lg"></i>
-    </div>
   </div>
-<div class="pt-10 pb-1 text-center">
-    <p class="text-[10px] text-gray-400 font-medium tracking-tight">
-        &copy; 2025 fvvyn. All Rights Reserved.
-    </p>
-    <p class="text-[9px] text-gray-300 mt-1">
-        この技術はfvvynによって保護されています
-    </p>
-</div>
-  <div class="h-24">
-    
+
+  <div class="pt-10 pb-1 text-center">
+      <p class="text-[10px] text-gray-400 font-medium tracking-tight">
+          &copy; 2025 fvvyn. All Rights Reserved.
+      </p>
+      <p class="text-[9px] text-gray-300 mt-1">
+          この技術はfvvynによって保護されています
+      </p>
   </div>
+  
+  <div class="h-24"></div>
   
 </div>
 
@@ -562,7 +564,7 @@ body {
     const FIT_PRESETS = {
         'slim': { offset: -1, text: 'タイトなシルエットをご提案します。' },
         'standard': { offset: 0, text: 'スタンダードなサイズ感です。' },
-        'oversized': { offset: 1, text: 'ゆとりのあるサイズ感をご提案します。' }
+        'oversized': { offset: 1, text: 'ゆとりあるサイズをご提案します。' }
     };
 
     // --- State Management ---
