@@ -54,34 +54,30 @@ body {
 /* 2. 3Dコンテナの高さを「固定」ではなく「最低高さ」に変更 */
 /* 結果画面全体を少し内側に寄せる設定 */
 /* #result-view を以下に書き換え（!important を追加） */
-/* サイズ詳細テーブルの最適化 */
-#size-details {
-    margin-bottom: 24px !important;
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    border: 1px solid #f1f5f9;
+#result-view {
+    width: 100% !important;
+    padding-left: 16px !important;  /* 左右に強制的に隙間を作る */
+    padding-right: 16px !important;
+    padding-top: 10px !important;    /* 上にも少し隙間があると綺麗です */
+    box-sizing: border-box !important;
 }
 
-/* AIアドバイス部分の最適化 */
-#result-view .bg-white.rounded-2xl.p-6.shadow-sm {
-    margin-bottom: 32px !important;
-    border-left: 4px solid var(--primary); /* ブランドカラーのアクセント線 */
-    line-height: 1.8;
-}
-
-/* 3Dコンテナ：縦幅を少し抑え、スマホで「次が見える」状態に */
+/* #canvas-container はそのままでOKですが、
+   もし枠自体が太すぎると感じたら width を 95% くらいに微調整してください */
 #canvas-container {
     width: 100% !important;
-    height: 420px !important; /* 少しコンパクトに */
-    min-height: 420px !important;
+    /* ここを調整：400px くらいにするとコンパクトになります */
+    height: 400px !important; 
+    min-height: 400px !important; 
+    
     position: relative !important;
-    background: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%) !important;
-    border-radius: 24px !important;
-    border: 1px solid #e2e8f0 !important;
-    margin-bottom: 120px !important; /* 最後に大きな余白 */
-    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05) !important;
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%) !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    margin-bottom: 1.5rem !important;
+    border: 1px solid #d1d5db !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
 }
 
     /* Animations */
@@ -340,57 +336,60 @@ body {
           <p class="text-xs text-gray-500 font-medium tracking-widest animate-pulse">AI Analyzing...</p>
         </div>
 
-        <div id="result-view" class="flex-1 flex flex-col h-full overflow-y-auto bg-white fade-in">
-          
-          <div class="px-6 pt-2 pb-4 text-center">
-            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Recommended Size</p>
-            <div class="flex items-baseline justify-center gap-2">
-                <span id="recommended-size" class="text-5xl font-black text-[#8707ff]">L</span>
-                <span class="text-sm text-gray-500 font-medium">がおすすめです</span>
-            </div>
-            <p id="product-name-display" class="text-xs text-gray-400 mt-1">Product Name</p>
-          </div>
-          <div class="px-6 pb-24">
-            <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-                <i class="fa-solid fa-chart-simple text-[#8707ff]"></i> サイズ詳細 (cm)
-            </h3>
-            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
-                    </ul>
-            </div>
+<div id="result-view" class="flex-1 flex flex-col h-full overflow-y-auto bg-white fade-in">
+  
+  <div class="px-6 pt-6 pb-4 text-center">
+    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Recommended Size</p>
+    <div class="flex items-baseline justify-center gap-2">
+        <span id="recommended-size" class="text-5xl font-black text-[#8707ff]">L</span>
+        <span class="text-sm text-gray-500 font-medium">がおすすめです</span>
+    </div>
+    <p id="product-name-display" class="text-xs text-gray-400 mt-1">Product Name</p>
+  </div>
 
-            <div class="mt-4 p-3 bg-purple-50 rounded-xl border border-purple-100 text-xs text-purple-800 leading-relaxed">
-                <i class="fa-solid fa-circle-info mr-1"></i>
-                <span id="result-message">メッセージ</span>
-            </div>
-          </div>
-        </div>
-          <div id="canvas-container">
-            <div id="annotation-shoulder" class="annotation" style="display: none;">
-              <span class="label text-[9px] text-gray-400 uppercase">Shoulder</span>
-              <span class="status font-bold"></span>
-            </div>
-            <div id="annotation-chest" class="annotation" style="display: none;">
-              <span class="label text-[9px] text-gray-400 uppercase">Chest</span>
-              <span class="status font-bold"></span>
-            </div>
-            <div id="annotation-sleeve" class="annotation" style="display: none;">
-              <span class="label text-[9px] text-gray-400 uppercase">Sleeve</span>
-              <span class="status font-bold"></span>
-            </div>
+  <div class="px-6 pb-4">
+    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+        <i class="fa-solid fa-chart-simple text-[#8707ff]"></i> サイズ詳細 (cm)
+    </h3>
+    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
+        <ul id="size-spec" class="grid grid-cols-2 gap-y-3 text-sm text-gray-600">
+            </ul>
+    </div>
 
-            <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
-                <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
-                    <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
-                </p>
-            </div>
-<div id="scroll-indicator" class="fixed bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-[#8707ff] z-50 pointer-events-none drop-shadow-md" style="display: none;">
-    <span class="text-[9px] font-black uppercase tracking-[0.2em] mb-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-purple-100 shadow-sm">Scroll to View 3D</span>
-    <i class="fa-solid fa-chevron-down text-xl"></i>
+    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 text-xs text-purple-800 leading-relaxed">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        <span id="result-message">メッセージ</span>
+    </div>
+  </div>
+
+  <div id="canvas-container" class="relative">
+    <div id="annotation-shoulder" class="annotation" style="display: none;">
+      <span class="label text-[9px] text-gray-400 uppercase">Shoulder</span>
+      <span class="status font-bold"></span>
+    </div>
+    <div id="annotation-chest" class="annotation" style="display: none;">
+      <span class="label text-[9px] text-gray-400 uppercase">Chest</span>
+      <span class="status font-bold"></span>
+    </div>
+    <div id="annotation-sleeve" class="annotation" style="display: none;">
+      <span class="label text-[9px] text-gray-400 uppercase">Sleeve</span>
+      <span class="status font-bold"></span>
+    </div>
+
+    <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
+        <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
+            <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
+        </p>
+    </div>
+    
+    <div id="scroll-indicator" class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
+        <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll to view 3D</span>
+        <i class="fa-solid fa-chevron-down text-lg"></i>
+    </div>
+  </div>
+
+  <div class="h-24"></div>
 </div>
-          </div>
-
-
 
         <div class="absolute bottom-0 left-0 w-full p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 flex gap-3 z-30">
             <button onclick="resetForm()" class="px-6 py-3 rounded-full border border-gray-200 text-gray-600 font-bold text-xs hover:bg-gray-50">
@@ -505,29 +504,12 @@ body {
       backBtn.classList.toggle('hidden', step === 1);
       
       // If result screen, hide normal nav controls
-if (step === 4) {
-    navControls.classList.add('hidden');
-    resultView.innerHTML = '';
-    
-    // 診断結果が出た瞬間に画面の最上部へスクロール（重要！）
-    resultView.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // 順序どおりに追加
-    resultView.appendChild(sizeDetails);
-    resultView.appendChild(messageContainer);
-    resultView.appendChild(container);
-    
-    init3DScene(container, recommendation);
-    
-    // 矢印を「3Dモデルの少し上」で待機させる
-    const indicator = document.getElementById('scroll-indicator');
-    if (indicator) {
-        indicator.style.display = 'flex';
-        indicator.style.opacity = '1';
-        // テキストをより分かりやすく
-        indicator.querySelector('span').textContent = "VIEW 3D MODEL";
+      if (step === 4) {
+        navControls.classList.add('hidden');
+      } else {
+        navControls.classList.remove('hidden');
+      }
     }
-}
 
     nextBtn.onclick = () => {
       if (!validateStep()) return;
@@ -801,11 +783,17 @@ if (step === 4) {
         try {
             const container = document.getElementById('canvas-container');
             
+// init3DScene 関数内の container.innerHTML を以下に差し替え
 container.innerHTML = `
     <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
     <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
     <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
     
+    <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
+        <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
+        <i class="fa-solid fa-chevron-down text-lg"></i>
+    </div>
+
     <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
         <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
             <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
