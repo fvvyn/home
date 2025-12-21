@@ -757,8 +757,11 @@ function renderResult(res) {
     if (prodNameEl) prodNameEl.textContent = res.productName;
     if (msgEl) msgEl.textContent = res.message;
 
+    const isPants = state.product === 'cloud-pants';
+
+    // スペックリスト（テキスト）の更新
     if (specList) {
-        if (state.product === 'cloud-pants') {
+        if (isPants) {
             specList.innerHTML = `
                 <li class="flex justify-between border-b border-gray-100 pb-2"><span>ウエスト</span> <span class="font-bold text-slate-800">${res.spec.waist} cm</span></li>
                 <li class="flex justify-between border-b border-gray-100 pb-2"><span>総丈</span> <span class="font-bold text-slate-800">${res.spec.length} cm</span></li>
@@ -774,32 +777,33 @@ function renderResult(res) {
         }
     }
 
-    // アノテーションの表示・非表示
-    const isPants = state.product === 'cloud-pants';
-    const annShoulder = document.getElementById('annotation-shoulder');
-    const annChest = document.getElementById('annotation-chest');
-    const annSleeve = document.getElementById('annotation-sleeve');
+    // 3Dピン（アノテーション）の表示切り替えと数値代入
+    const topKeys = ['shoulder', 'chest', 'sleeve'];
+    const pantsKeys = ['waist', 'length', 'inseam'];
 
-    if (annShoulder) annShoulder.style.display = isPants ? 'none' : 'flex';
-    if (annChest) annChest.style.display = isPants ? 'none' : 'flex';
-    if (annSleeve) annSleeve.style.display = isPants ? 'none' : 'flex';
-    
-    // トップスの場合のみアノテーションの中身を更新
-    if (!isPants) {
-        updateAnnotationDOM('shoulder', res.analysis.shoulder);
-        updateAnnotationDOM('chest', res.analysis.chest);
-        updateAnnotationDOM('sleeve', res.analysis.sleeve);
+    // 一旦すべて非表示
+    [...topKeys, ...pantsKeys].forEach(key => {
+        const el = document.getElementById(`annotation-${key}`);
+        if (el) el.style.display = 'none';
+    });
+
+    // 選択されたアイテムに応じて数値を反映して表示
+    if (isPants) {
+        pantsKeys.forEach(key => updateAnnotationDOM(key, res.spec[key]));
+    } else {
+        topKeys.forEach(key => updateAnnotationDOM(key, res.spec[key]));
     }
 }
 
-    function updateAnnotationDOM(id, data) {
-        const el = document.getElementById(`annotation-${id}`);
-        if (!el) return; 
-        const statusEl = el.querySelector('.status');
-        statusEl.textContent = data.text; 
-        statusEl.className = 'status font-bold';
-        statusEl.classList.add(data.class);
-    }
+function updateAnnotationDOM(id, value) {
+    const el = document.getElementById(`annotation-${id}`);
+    if (!el) return;
+    const statusEl = el.querySelector('.status');
+    // 数値を表示（例: 75cm）
+    statusEl.textContent = `${value}cm`;
+    statusEl.className = 'status font-bold text-[#8707ff]'; // 数値を目立たせる色に変更
+    el.style.display = 'flex';
+}
 
     // --- POPUP Logic ---
     function closePopup() {
@@ -855,13 +859,20 @@ function renderResult(res) {
     }
 
     // --- THREE.JS Implementation ---
-    let scene, camera, renderer, mannequin, controls, animationId;
-    
-    const trackers = {
-        shoulder: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(-0.3, 2.12, 0.0) }, 
-        chest: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(0, 1.8, 0.15) }, 
-        sleeve: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(0.8, 1.75, 0.0) } 
-    };
+// --- THREE.JS Implementation ---
+let scene, camera, renderer, mannequin, controls, animationId;
+
+// ピン（アノテーション）の定義
+const trackers = {
+    // トップス用
+    shoulder: { el: null, localPos: new THREE.Vector3(-0.3, 2.12, 0.0), label: 'Shoulder' }, 
+    chest:    { el: null, localPos: new THREE.Vector3(0, 1.8, 0.15),   label: 'Chest' }, 
+    sleeve:   { el: null, localPos: new THREE.Vector3(0.8, 1.75, 0.0),  label: 'Sleeve' },
+    // パンツ用
+    waist:    { el: null, localPos: new THREE.Vector3(0, 1.1, 0.18),   label: 'Waist' },
+    length:   { el: null, localPos: new THREE.Vector3(-0.25, 0.6, 0.1), label: 'Length' },
+    inseam:   { el: null, localPos: new THREE.Vector3(0.1, 0.4, 0.05),  label: 'Inseam' }
+};
     
     function disposeHierarchy (node) {
         for (var i = node.children.length - 1; i >= 0; i--) {
@@ -920,23 +931,24 @@ function renderResult(res) {
     }
 
 function init3DScene(result) {
-    // 既存のシーンを破棄してメモリを解放
     cleanup3DScene();
     
     try {
         const container = document.getElementById('canvas-container');
         
-        // 1. UI要素（アノテーションとインジケーター）の再生成
+        // アノテーション要素をすべて生成
         container.innerHTML = `
             <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
             <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
             <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
+            <div id="annotation-waist" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Waist</span><span class="status font-bold"></span></div>
+            <div id="annotation-length" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Length</span><span class="status font-bold"></span></div>
+            <div id="annotation-inseam" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Inseam</span><span class="status font-bold"></span></div>
             
             <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
                 <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
                 <i class="fa-solid fa-chevron-down text-lg"></i>
             </div>
-
             <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
                 <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
                     <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
@@ -944,8 +956,14 @@ function init3DScene(result) {
             </div>
         `;
 
-        // 2. グローバル変数のトラッカー要素を更新
+        // トラッカーとDOM要素の紐付け
+        for (const key in trackers) {
+            trackers[key].el = document.getElementById(`annotation-${key}`);
+        }
+
         renderResult(result);
+        
+        // ...（以下、cameraやrendererの設定は既存のまま）
         trackers.shoulder.el = document.getElementById('annotation-shoulder');
         trackers.chest.el = document.getElementById('annotation-chest');
         trackers.sleeve.el = document.getElementById('annotation-sleeve');
