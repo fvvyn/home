@@ -257,13 +257,6 @@
             <span class="text-xs font-bold text-center">Logo Tshirts</span>
           </div>
           
-
-      
-  <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('cloud-pants', this)">
-      <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-layer-group"></i></div>
-      <span class="text-xs font-bold text-center">Cloud Pants ☁️</span>
-
-  </div>
           <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('lamp-zip-hoodie', this)">
             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-vest"></i></div>
             <span class="text-xs font-bold text-center">Lamp Zip Hoodie</span>
@@ -273,7 +266,12 @@
              <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-cloud"></i></div>
              <span class="text-xs font-bold text-center">CLOUD ZIP HOODIE⛈️</span>
           </div>
+          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('cloud-pants', this)">
+  <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-person-walking"></i></div>
+  <span class="text-xs font-bold text-center">Cloud pants</span>
+</div>
         </div>
+        
         <input type="hidden" id="product">
       </div>
 
@@ -529,17 +527,19 @@
         M: { height:[165,175], weight:[55,65], length:57.5, chest:107, shoulder:62.5, sleeve:59.0 },
         L: { height:[175,185], weight:[65,75], length:60.0, chest:112, shoulder:65.0, sleeve:61.5 }
       },
-          'cloud-pants': {
-    name: "Cloud Pants",
-    type: "bottom", // ★ボトムス判定用フラグ
-    XS: { height:[150,160], weight:[40,50], waist:65, totalLen:100, inseam:73 }, // 基準サイズ
-    S:  { height:[160,168], weight:[50,60], waist:70, totalLen:102, inseam:74 },
-    M:  { height:[168,175], weight:[60,70], waist:76, totalLen:104, inseam:75 },
-    L:  { height:[175,182], weight:[70,80], waist:82, totalLen:106, inseam:76 },
-    XL: { height:[180,188], weight:[80,90], waist:88, totalLen:108, inseam:77 }
+    
+        'cloud-pants': {
+    name: "Cloud pants",
+    XS: { height:[150,160], weight:[45,55], waist:65, length:100, inseam:73 },
+    S:  { height:[160,170], weight:[50,60], waist:70, length:103, inseam:75 },
+    M:  { height:[170,180], weight:[60,75], waist:75, length:106, inseam:77 },
+    L:  { height:[180,190], weight:[70,85], waist:80, length:109, inseam:79 },
+    XL: { height:[185,195], weight:[80,95], waist:85, length:112, inseam:81 }
   }
 };
       
+ 
+
     const FIT_PRESETS = {
         'slim': { offset: -1, text: 'タイトなシルエットをご提案します。' },
         'standard': { offset: 0, text: 'スタンダードなサイズ感です。' },
@@ -662,175 +662,144 @@
 
     // --- Core Calculation & 3D Logic ---
 
-    function calculateAndShowResult() {
-        const loading = document.getElementById('loading-view');
-        updateUI(4);
-        loading.classList.remove('hidden');
+function calculateAndShowResult() {
+    const loading = document.getElementById('loading-view');
+    updateUI(4);
+    loading.classList.remove('hidden');
 
-        setTimeout(() => {
-            const result = performCalculation();
-            renderResult(result);
-            init3DScene(result);
-            
-            // Send Tracking Data to GAS
-            const trackingData = {
-                type: 'tracking',
-                productId: state.product,
-                productName: result.productName,
-                height: state.height,
-                weight: state.weight,
-                fitPreference: state.fit,
-                recommendedSize: result.recSize
-            };
-            sendDataToGAS(trackingData);
-
-            loading.classList.add('hidden');
-            
-            // --- Show Email Popup after 3.5 seconds (Only if not registered) ---
-            setTimeout(() => {
-                // Check if user has already registered
-                const hasRegistered = localStorage.getItem('fvvyn_email_registered');
-                
-                if (!hasRegistered) {
-                    document.getElementById('email-popup').classList.remove('hidden');
-                    document.getElementById('email-popup').classList.add('fade-in');
-                } else {
-                    console.log("User already registered. Popup suppressed.");
-                }
-            }, 3500);
-
-        }, 1500);
-    }
-
-// 既存の performCalculation 関数をこれに置き換えてください
-function performCalculation() {
-    const data = PRODUCT_SIZES[state.product];
-    const adjustment = FIT_PRESETS[state.fit];
-    const h = state.height;
-    const w = state.weight;
-    const isBottom = data.type === 'bottom'; // ボトムス判定
-
-    const sizeKeys = Object.keys(data).filter(k => k !== 'name' && k !== 'type');
-
-    let bestDist = Infinity;
-    let baseIdx = 0;
-
-    // サイズ推定ロジック（身長・体重からの距離計算）
-    sizeKeys.forEach((size, idx) => {
-        const sData = data[size];
-        const avgH = (sData.height[0] + sData.height[1]) / 2;
-        const avgW = (sData.weight[0] + sData.weight[1]) / 2;
-        const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
-        if (dist < bestDist) { bestDist = dist; baseIdx = idx; }
-    });
-
-    let finalIdx = baseIdx + adjustment.offset;
-    finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
-    const recSize = sizeKeys[finalIdx];
-    const prod = data[recSize];
-
-    // 分析用ヘルパー関数
-    const analyze = (body, garment, thresholdLoose, thresholdTight) => {
-        let diff = garment - body;
-        if (diff < thresholdTight) return { status: 'Tight', class: 'status-tight', text: 'タイト' };
-        if (diff > thresholdLoose) return { status: 'Loose', class: 'status-loose', text: 'ゆったり' };
-        return { status: 'Just Right', class: 'status-just', text: '標準' };
-    };
-
-    let analysisResult = {};
-
-    if (isBottom) {
-        // --- ボトムス用の推定ロジック ---
-        // 推定ウエスト (簡易計算: 身長体重から概算)
-        // ※体重が重いほどウエストへの影響が大きい係数設定
-        const estWaist = (h * 0.15) + (w * 0.65) + 5; 
+    setTimeout(() => {
+        const result = performCalculation();
+        // renderResult(result); // ← ここでエラーが出ていたので削除
+        init3DScene(result);
         
-        // 推定脚長 (身長の約45%前後)
-        const estLeg = h * 0.45;
-
-        analysisResult = {
-            main: analyze(estWaist, prod.waist, 8, -2), // ウエスト判定
-            sub1: analyze(estLeg, prod.totalLen - 25, 5, -5), // 丈感判定 (股上分25cm引いて比較など簡易化)
-            sub2: { status: 'Normal', class: 'status-just', text: '標準' } // 股下は個体差大きいため標準固定
+        const trackingData = {
+            type: 'tracking',
+            productId: state.product,
+            productName: result.productName,
+            height: state.height,
+            weight: state.weight,
+            fitPreference: state.fit,
+            recommendedSize: result.recSize
         };
-    } else {
-        // --- トップス用の推定ロジック (既存) ---
+        sendDataToGAS(trackingData);
+
+        loading.classList.add('hidden');
+        
+        setTimeout(() => {
+            const hasRegistered = localStorage.getItem('fvvyn_email_registered');
+            if (!hasRegistered) {
+                document.getElementById('email-popup').classList.remove('hidden');
+                document.getElementById('email-popup').classList.add('fade-in');
+            }
+        }, 3500);
+
+    }, 1500);
+}
+
+    function performCalculation() {
+        const data = PRODUCT_SIZES[state.product];
+        const adjustment = FIT_PRESETS[state.fit];
+        const h = state.height;
+        const w = state.weight;
+        const sizeKeys = Object.keys(data).filter(k => k !== 'name');
+
+        let bestDist = Infinity;
+        let baseIdx = 0;
+
+        sizeKeys.forEach((size, idx) => {
+            const sData = data[size];
+            const avgH = (sData.height[0] + sData.height[1]) / 2;
+            const avgW = (sData.weight[0] + sData.weight[1]) / 2;
+            const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
+            if (dist < bestDist) { bestDist = dist; baseIdx = idx; }
+        });
+
+        let finalIdx = baseIdx + adjustment.offset;
+        finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
+        const recSize = sizeKeys[finalIdx];
+
         const estShoulder = (h * 0.23) + (w * 0.1); 
         const estChest = (h * 0.48) + (w * 0.25);
         const estArm = (h * 0.35) + (w * 0.05);
-        
-        const looseT = state.product.includes('hoodie') ? 15 : 10; 
-        const tightT = state.product.includes('hoodie') ? 6 : 4;
 
-        analysisResult = {
-            main: analyze(estChest, prod.chest, looseT, tightT),
-            sub1: analyze(estShoulder, prod.shoulder, looseT, tightT),
-            sub2: analyze(estArm, prod.sleeve, looseT, tightT)
+        const prod = data[recSize];
+        
+        const analyze = (body, garment, type) => {
+            let diff = garment - body;
+            const looseThreshold = state.product.includes('hoodie') ? 15 : 10; 
+            const tightThreshold = state.product.includes('hoodie') ? 6 : 4;
+            
+            if (diff < tightThreshold) return { status: 'Tight', class: 'status-tight', text: 'タイト' };
+            if (diff > looseThreshold) return { status: 'Loose', class: 'status-loose', text: 'ゆったり' };
+            return { status: 'Just Right', class: 'status-just', text: '標準' };
+        };
+
+        return {
+            recSize,
+            productName: data.name,
+            spec: prod,
+            analysis: {
+                shoulder: analyze(estShoulder, prod.shoulder, 'shoulder'),
+                chest: analyze(estChest, prod.chest, 'chest'),
+                sleeve: analyze(estArm, prod.sleeve, 'sleeve')
+            },
+            message: adjustment.text
         };
     }
 
-    return {
-        recSize,
-        productName: data.name,
-        type: data.type || 'top', // タイプを返す
-        spec: prod,
-        analysis: analysisResult,
-        message: adjustment.text
-    };
-}
-
-// 既存の renderResult 関数をこれに置き換えてください
 function renderResult(res) {
-    document.getElementById('recommended-size').textContent = res.recSize;
-    document.getElementById('product-name-display').textContent = res.productName;
-    document.getElementById('result-message').textContent = res.message;
-
-    const pin = document.getElementById('fit-pin');
-    const label = document.getElementById('fit-label');
-    const status = res.analysis.main.status; // Main指標(Chest or Waist)で判定
-    
-    if (status === 'Tight') { pin.style.left = '15%'; label.textContent = 'タイト'; }
-    else if (status === 'Loose') { pin.style.left = '85%'; label.textContent = 'ゆったり'; }
-    else { pin.style.left = '50%'; label.textContent = 'ジャスト'; }
-
+    const recSizeEl = document.getElementById('recommended-size');
+    const prodNameEl = document.getElementById('product-name-display');
+    const msgEl = document.getElementById('result-message');
     const specList = document.getElementById('size-spec');
-    let htmlContent = '';
 
-    if (res.type === 'bottom') {
-        // ボトムス用表示
-        htmlContent = `
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>ウエスト</span> <span class="font-bold text-slate-800">${res.spec.waist}</span></li>
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>総丈</span> <span class="font-bold text-slate-800">${res.spec.totalLen}</span></li>
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>股下</span> <span class="font-bold text-slate-800">${res.spec.inseam}</span></li>
-        `;
-        // Annotationタグの更新
-        updateAnnotationText('shoulder', 'Waist', res.analysis.main);   // 既存IDを再利用
-        updateAnnotationText('chest', 'Length', res.analysis.sub1);    // 既存IDを再利用
-        updateAnnotationText('sleeve', 'Inseam', res.analysis.sub2);   // 既存IDを再利用
-    } else {
-        // トップス用表示
-        htmlContent = `
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>着丈</span> <span class="font-bold text-slate-800">${res.spec.length}</span></li>
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>身幅</span> <span class="font-bold text-slate-800">${res.spec.chest}</span></li>
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>肩幅</span> <span class="font-bold text-slate-800">${res.spec.shoulder}</span></li>
-            <li class="flex justify-between border-b border-gray-100 pb-2"><span>袖丈</span> <span class="font-bold text-slate-800">${res.spec.sleeve}</span></li>
-        `;
-        updateAnnotationText('shoulder', 'Shoulder', res.analysis.sub1);
-        updateAnnotationText('chest', 'Chest', res.analysis.main);
-        updateAnnotationText('sleeve', 'Sleeve', res.analysis.sub2);
+    if (recSizeEl) recSizeEl.textContent = res.recSize;
+    if (prodNameEl) prodNameEl.textContent = res.productName;
+    if (msgEl) msgEl.textContent = res.message;
+
+    if (specList) {
+        if (state.product === 'cloud-pants') {
+            specList.innerHTML = `
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>ウエスト</span> <span class="font-bold text-slate-800">${res.spec.waist} cm</span></li>
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>総丈</span> <span class="font-bold text-slate-800">${res.spec.length} cm</span></li>
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>股下</span> <span class="font-bold text-slate-800">${res.spec.inseam} cm</span></li>
+            `;
+        } else {
+            specList.innerHTML = `
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>着丈</span> <span class="font-bold text-slate-800">${res.spec.length} cm</span></li>
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>身幅</span> <span class="font-bold text-slate-800">${res.spec.chest} cm</span></li>
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>肩幅</span> <span class="font-bold text-slate-800">${res.spec.shoulder} cm</span></li>
+                <li class="flex justify-between border-b border-gray-100 pb-2"><span>袖丈</span> <span class="font-bold text-slate-800">${res.spec.sleeve} cm</span></li>
+            `;
+        }
     }
-    specList.innerHTML = htmlContent;
+
+    // アノテーションの表示・非表示
+    const isPants = state.product === 'cloud-pants';
+    const annShoulder = document.getElementById('annotation-shoulder');
+    const annChest = document.getElementById('annotation-chest');
+    const annSleeve = document.getElementById('annotation-sleeve');
+
+    if (annShoulder) annShoulder.style.display = isPants ? 'none' : 'flex';
+    if (annChest) annChest.style.display = isPants ? 'none' : 'flex';
+    if (annSleeve) annSleeve.style.display = isPants ? 'none' : 'flex';
+    
+    // トップスの場合のみアノテーションの中身を更新
+    if (!isPants) {
+        updateAnnotationDOM('shoulder', res.analysis.shoulder);
+        updateAnnotationDOM('chest', res.analysis.chest);
+        updateAnnotationDOM('sleeve', res.analysis.sleeve);
+    }
 }
 
-// ヘルパー関数: Annotationのラベルとステータスを更新
-function updateAnnotationText(id, labelText, data) {
-    const el = document.getElementById(`annotation-${id}`);
-    if (!el) return;
-    el.querySelector('.label').textContent = labelText;
-    const statusEl = el.querySelector('.status');
-    statusEl.textContent = data.text;
-    statusEl.className = 'status font-bold ' + data.class;
-}
+    function updateAnnotationDOM(id, data) {
+        const el = document.getElementById(`annotation-${id}`);
+        if (!el) return; 
+        const statusEl = el.querySelector('.status');
+        statusEl.textContent = data.text; 
+        statusEl.className = 'status font-bold';
+        statusEl.classList.add(data.class);
+    }
 
     // --- POPUP Logic ---
     function closePopup() {
@@ -886,183 +855,249 @@ function updateAnnotationText(id, labelText, data) {
     }
 
     // --- THREE.JS Implementation ---
-// 初期定義は空にしておき、init3DScene内でセットするように変更します
-let trackers = {}; 
+    let scene, camera, renderer, mannequin, controls, animationId;
+    
+    const trackers = {
+        shoulder: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(-0.3, 2.12, 0.0) }, 
+        chest: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(0, 1.8, 0.15) }, 
+        sleeve: { pos: new THREE.Vector3(0, 0, 0), el: null, localPos: new THREE.Vector3(0.8, 1.75, 0.0) } 
+    };
+    
+    function disposeHierarchy (node) {
+        for (var i = node.children.length - 1; i >= 0; i--) {
+            var child = node.children[i];
+            disposeHierarchy(child);
+            scene.remove(child);
+        }
+        if (node.geometry) {
+            node.geometry.dispose();
+        }
+        if (node.material) {
+            if (node.material.length) {
+                for (let i = 0; i < node.material.length; ++i) {
+                    node.material[i].dispose();
+                }
+            } else {
+                node.material.dispose();
+            }
+        }
+    }
 
-// 座標設定用の関数
-function getTrackers(type) {
-    if (type === 'bottom') {
-        // ボトムス用の座標 (Waist, Length(裾), Inseam(膝付近))
-        return {
-            shoulder: { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(0, 1.05, 0.15) }, // Waist (ID再利用: shoulder)
-            chest:    { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(0.3, 0.1, 0.05) },   // Hem/Length (ID再利用: chest)
-            sleeve:   { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(-0.15, 0.5, 0.1) }   // Inseam/Knee (ID再利用: sleeve)
-        };
-    } else {
-        // トップス用の座標 (Shoulder, Chest, Sleeve)
-        return {
-            shoulder: { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(-0.3, 1.45, 0.0) }, // 少し位置調整
-            chest:    { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(0, 1.35, 0.15) },
-            sleeve:   { pos: new THREE.Vector3(), el: null, localPos: new THREE.Vector3(0.6, 1.3, 0.0) }
-        };
+    function cleanup3DScene() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        if (scene) {
+            disposeHierarchy(scene);
+            scene = null;
+        }
+        if (renderer) {
+            renderer.dispose();
+            const container = document.getElementById('canvas-container');
+            if (container && renderer.domElement) {
+                 container.removeChild(renderer.domElement);
+            }
+            renderer = null;
+        }
+        if (controls) {
+            controls.dispose();
+            controls = null;
+        }
+        window.removeEventListener('resize', onWindowResize);
+    }
+
+    function createFallbackMannequin() {
+        const fallbackGroup = new THREE.Group();
+        const mat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.8 });
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), mat);
+        torso.position.y = 1.0;
+        fallbackGroup.add(torso);
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), mat);
+        head.position.y = 1.55;
+        fallbackGroup.add(head);
+        return fallbackGroup;
+    }
+
+function init3DScene(result) {
+    // 既存のシーンを破棄してメモリを解放
+    cleanup3DScene();
+    
+    try {
+        const container = document.getElementById('canvas-container');
+        
+        // 1. UI要素（アノテーションとインジケーター）の再生成
+        container.innerHTML = `
+            <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
+            <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
+            <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
+            
+            <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
+                <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
+                <i class="fa-solid fa-chevron-down text-lg"></i>
+            </div>
+
+            <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
+                <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
+                    <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
+                </p>
+            </div>
+        `;
+
+        // 2. グローバル変数のトラッカー要素を更新
+        renderResult(result);
+        trackers.shoulder.el = document.getElementById('annotation-shoulder');
+        trackers.chest.el = document.getElementById('annotation-chest');
+        trackers.sleeve.el = document.getElementById('annotation-sleeve');
+
+        // 3. シーンとカメラの設定
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf1f5f9); 
+
+        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        
+        // ★ アイテム種別によるカメラ初期位置の分岐
+        if (state.product === 'cloud-pants') {
+            camera.position.set(0, 0.5, 3.5); // パンツ用：低い位置から見上げる
+        } else {
+            camera.position.set(0.25, 1.8, 0.1); // トップス用：高い位置から
+        }
+
+        // 4. レンダラーの設定
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+        
+        // リサイズ処理の実行
+        onWindowResize(); 
+
+        // 5. ライティング
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+        dirLight.position.set(2, 5, 2);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // 6. 地面（シャドウ受け用）
+        const planeGeo = new THREE.PlaneGeometry(10, 10);
+        const planeMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+        const plane = new THREE.Mesh(planeGeo, planeMat);
+        plane.rotation.x = -Math.PI / 2;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        // 7. 3Dモデル（マネキン）のロード
+        const loader = new THREE.GLTFLoader();
+        const modelPath = 'mannequin.glb'; 
+
+        loader.load(
+            modelPath,
+            (gltf) => {
+                mannequin = gltf.scene;
+                const isMobile = window.innerWidth < 768;
+                const scale = isMobile ? 0.9 : 0.8;
+                mannequin.scale.set(scale, scale, scale);
+                mannequin.position.y = 0; 
+                mannequin.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                scene.add(mannequin);
+                onModelReady(result);
+            },
+            undefined,
+            (error) => {
+                console.error('GLBロードエラー。代替マネキンを生成します。', error);
+                mannequin = createFallbackMannequin();
+                scene.add(mannequin);
+                // 代替モデル用のアノテーション位置調整
+                trackers.shoulder.localPos.set(0.35, 1.3, 0);
+                trackers.chest.localPos.set(0, 1.0, 0.2);
+                trackers.sleeve.localPos.set(0.5, 1.0, 0);
+                onModelReady(result);
+            }
+        );
+
+        // 8. マウス・タッチ操作（OrbitControls）
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        
+        // ★ アイテム種別による注視点（ターゲット）の分岐
+        if (state.product === 'cloud-pants') {
+            controls.target.set(0, 0.6, 0); // 下半身を画面中央に
+        } else {
+            controls.target.set(0, 1.2, 0); // 上半身を画面中央に
+        }
+
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true; 
+        controls.autoRotate = true;          
+        controls.autoRotateSpeed = 2.0;      
+        controls.minDistance = 2.0;
+        controls.maxDistance = 6.0;
+        controls.minPolarAngle = Math.PI / 4; 
+        controls.maxPolarAngle = Math.PI * 0.55; 
+
+        window.addEventListener('resize', onWindowResize, false);
+
+    } catch (error) {
+        console.error("Three.js initialization error:", error);
+        cleanup3DScene();
+        const container = document.getElementById('canvas-container');
+        container.innerHTML = `<div class="p-4 text-center text-red-500 font-bold">3Dモデルの表示に失敗しました。</div>`;
     }
 }
 
-// init3DScene の冒頭で trackers を初期化
-function init3DScene(result) {
-    cleanup3DScene();
+function onModelReady(resultData) {
+    addGarmentLayer(resultData);
+    if (mannequin) {
+        // アイテムに応じてターゲット（注視点）を再設定
+        if (state.product === 'cloud-pants') {
+            controls.target.set(0, 0.6, 0); // 下半身に固定
+        } else {
+            controls.target.set(0, 1.2, 0); // 上半身に固定
+        }
+    }
+    controls.update();
+    if (!animationId) animate();
+}
+
+function addGarmentLayer(result) {
+    if (!mannequin) return;
     
-    // タイプに応じてトラッカー座標を取得
-    trackers = getTrackers(result.type);
-        try {
-            const container = document.getElementById('canvas-container');
-            
-            container.innerHTML = `
-                <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
-                <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
-                <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
-                
-                <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
-                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
-                    <i class="fa-solid fa-chevron-down text-lg"></i>
-                </div>
+    // パンツの場合は一旦レイヤー追加をスキップ（トップス用の計算でNaNになるのを防ぐ）
+    if (state.product === 'cloud-pants') return;
 
-                <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
-                    <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
-                        <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
-                    </p>
-                </div>
-            `;
-            renderResult(result);
-            trackers.shoulder.el = document.getElementById('annotation-shoulder');
-            trackers.chest.el = document.getElementById('annotation-chest');
-            trackers.sleeve.el = document.getElementById('annotation-sleeve');
+    const garmentColor = 0; 
+    const garmentOpacity = 0; 
+    const scaleFactor = 0.0055; 
+    const modelScale = mannequin.scale.y;
 
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf1f5f9); 
-
-            // カメラ位置設定 (ボトムスの場合は全身が見えるように少し引く)
-    if (result.type === 'bottom') {
-        camera.position.set(0.25, 1.0, 4.5); // ボトムス用カメラ位置
-        // OrbitControlsのターゲットも少し下げる
-        setTimeout(() => { if(controls) controls.target.set(0, 0.8, 0); }, 100);
-    } else {
-        camera.position.set(0.25, 1.8, 0.1); // 既存のトップス用カメラ位置 (これは近すぎる可能性があるので調整推奨: set(0.25, 1.5, 3.5)程度)
-    }
-
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.shadowMap.enabled = true;
-            container.appendChild(renderer.domElement);
-            
-            onWindowResize(); 
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
-            dirLight.position.set(2, 5, 2);
-            dirLight.castShadow = true;
-            scene.add(dirLight);
-
-            const planeGeo = new THREE.PlaneGeometry(10, 10);
-            const planeMat = new THREE.MeshStandardMaterial({ color: 0xdddddd });
-            const plane = new THREE.Mesh(planeGeo, planeMat);
-            plane.rotation.x = -Math.PI / 2;
-            plane.receiveShadow = true;
-            scene.add(plane);
-
-            const loader = new THREE.GLTFLoader();
-            const modelPath = 'mannequin.glb'; 
-
-            loader.load(
-                modelPath,
-                (gltf) => {
-                    mannequin = gltf.scene;
-                    const isMobile = window.innerWidth < 768;
-                    const scale = isMobile ? 0.9 : 0.8;
-                    mannequin.scale.set(scale, scale, scale);
-                    mannequin.position.y = 0; 
-                    mannequin.traverse((child) => {
-                        if (child.isMesh) {
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
-                    });
-                    scene.add(mannequin);
-                    onModelReady(result);
-                },
-                undefined,
-                (error) => {
-                    console.error('GLBロードエラー', error);
-                    mannequin = createFallbackMannequin();
-                    scene.add(mannequin);
-                    trackers.shoulder.localPos.set(0.35, 1.3, 0);
-                    trackers.chest.localPos.set(0, 1.0, 0.2);
-                    trackers.sleeve.localPos.set(0.5, 1.0, 0);
-                    onModelReady(result);
-                }
-            );
-
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            controls.enableZoom = true; 
-            controls.autoRotate = true;          
-            controls.autoRotateSpeed = 2.0;      
-            controls.minDistance = 2.5;
-            controls.maxDistance = 6.0;
-            controls.minPolarAngle = Math.PI / 4; 
-            controls.maxPolarAngle = Math.PI * 0.55; 
-            controls.target.set(0, 1.0, 0); 
-
-            window.addEventListener('resize', onWindowResize, false);
-
-        } catch (error) {
-            console.error("Three.js initialization error:", error);
-            cleanup3DScene();
-            const container = document.getElementById('canvas-container');
-            container.innerHTML = `<div class="p-4 text-center text-red-500 font-bold">3Dモデルの表示に失敗しました。</div>`;
-        }
-    }
-
-    function onModelReady(resultData) {
-        addGarmentLayer(resultData);
-        if (mannequin) {
-             controls.target.set(0, 1.2, 0);
-        }
-        controls.update();
-        if (!animationId) animate();
-    }
-
-    function addGarmentLayer(result) {
-        if (!mannequin) return;
-
-        const garmentColor = 0; 
-        const garmentOpacity = 0; 
-        const scaleFactor = 0.0055; 
-        const modelScale = mannequin.scale.y;
-
-        const garmentChest = result.spec.chest * scaleFactor * modelScale; 
-        const garmentLength = result.spec.length * scaleFactor * modelScale; 
-        const garmentShoulder = result.spec.shoulder * scaleFactor * modelScale * 2.0; 
-        
-        const garmentGeo = new THREE.BoxGeometry(garmentShoulder, garmentLength, garmentChest / 2.5); 
-        const garmentMaterial = new THREE.MeshStandardMaterial({
-            color: garmentColor,
-            transparent: true,
-            opacity: garmentOpacity,
-            side: THREE.DoubleSide, 
-            wireframe: false
-        });
-        
-        const garment = new THREE.Mesh(garmentGeo, garmentMaterial);
-        
-        garment.position.y = (1.3 * modelScale); 
-        garment.castShadow = false; 
-        
-        mannequin.add(garment);
-        trackers.chest.localPos.z = (garmentChest / 5) + 0.15; 
-    }
+    const garmentChest = result.spec.chest * scaleFactor * modelScale; 
+    const garmentLength = result.spec.length * scaleFactor * modelScale; 
+    const garmentShoulder = result.spec.shoulder * scaleFactor * modelScale * 2.0; 
+    
+    const garmentGeo = new THREE.BoxGeometry(garmentShoulder, garmentLength, garmentChest / 2.5); 
+    const garmentMaterial = new THREE.MeshStandardMaterial({
+        color: garmentColor,
+        transparent: true,
+        opacity: garmentOpacity,
+        side: THREE.DoubleSide, 
+        wireframe: false
+    });
+    
+    const garment = new THREE.Mesh(garmentGeo, garmentMaterial);
+    
+    garment.position.y = (1.3 * modelScale); 
+    garment.castShadow = false; 
+    
+    mannequin.add(garment);
+    trackers.chest.localPos.set(0, 1.8, (garmentChest / 5) + 0.15); 
+}
 
     function onWindowResize() {
         if (!camera || !renderer) return;
