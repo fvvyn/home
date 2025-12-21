@@ -777,6 +777,19 @@ function renderResult(res) {
         }
     }
 
+    // 各アノテーションの数値を更新
+    for (const key in trackers) {
+        const el = trackers[key].el;
+        if (el && res.spec[key]) {
+            const statusEl = el.querySelector('.status');
+            if (statusEl) {
+                statusEl.textContent = `${res.spec[key]}cm`;
+                statusEl.className = 'status font-bold text-[#8707ff]'; 
+            }
+        }
+    }
+
+
     // 3Dピン（アノテーション）の表示切り替えと数値代入
     const topKeys = ['shoulder', 'chest', 'sleeve'];
     const pantsKeys = ['waist', 'length', 'inseam'];
@@ -976,7 +989,7 @@ function init3DScene(result) {
         
         // ★ アイテム種別によるカメラ初期位置の分岐
         if (state.product === 'cloud-pants') {
-            camera.position.set(0, 0.5, 3.5); // パンツ用：低い位置から見上げる
+            camera.position.set(-0.2, 0.5, 1.5); // パンツ用：低い位置から見上げる
         } else {
             camera.position.set(0.25, 1.8, 0.1); // トップス用：高い位置から
         }
@@ -1142,36 +1155,52 @@ function addGarmentLayer(result) {
         updateAnnotations();
     }
 
-    function updateAnnotations() {
-        if (!renderer || !camera || !mannequin) return;
+function updateAnnotations() {
+    if (!renderer || !camera || !mannequin) return;
 
-        const width = renderer.domElement.clientWidth;
-        const height = renderer.domElement.clientHeight;
-        const widthHalf = width / 2;
-        const heightHalf = height / 2;
+    const width = renderer.domElement.clientWidth;
+    const height = renderer.domElement.clientHeight;
+    const widthHalf = width / 2;
+    const heightHalf = height / 2;
 
-        for (const key in trackers) {
-            const t = trackers[key];
-            if (!t.el || !t.localPos) continue;
+    const isPants = state.product === 'cloud-pants';
+    const pantsKeys = ['waist', 'length', 'inseam'];
+    const topKeys = ['shoulder', 'chest', 'sleeve'];
 
-            const pos = t.localPos.clone().applyMatrix4(mannequin.matrixWorld);
-            pos.project(camera);
+    for (const key in trackers) {
+        const t = trackers[key];
+        if (!t.el) continue;
 
-            const x = (pos.x * widthHalf) + widthHalf;
-            const y = -(pos.y * heightHalf) + heightHalf;
+        // --- 追加：アイテムタイプによる出し分けロジック ---
+        const isRelevant = isPants ? pantsKeys.includes(key) : topKeys.includes(key);
+        
+        if (!isRelevant) {
+            t.el.style.display = 'none';
+            continue; // このピンの計算をスキップ
+        }
+        // ----------------------------------------------
 
-            if (pos.z < 1 && x > 0 && x < width && y > 0 && y < height) {
-                t.el.style.display = 'flex';
-                t.el.style.left = `${x}px`;
-                t.el.style.top = `${y}px`;
-                
-                if (key === 'shoulder') t.el.style.top = `${y - 40}px`;
-                if (key === 'sleeve') t.el.style.top = `${y - 40}px`;
-            } else {
-                t.el.style.display = 'none';
+        const pos = t.localPos.clone().applyMatrix4(mannequin.matrixWorld);
+        pos.project(camera);
+
+        const x = (pos.x * widthHalf) + widthHalf;
+        const y = -(pos.y * heightHalf) + heightHalf;
+
+        // カメラの視界内（前面）にある場合のみ表示
+        if (pos.z < 1 && x > 0 && x < width && y > 0 && y < height) {
+            t.el.style.display = 'flex';
+            t.el.style.left = `${x}px`;
+            t.el.style.top = `${y}px`;
+            
+            // 位置の微調整（既存ロジック）
+            if (key === 'shoulder' || key === 'sleeve') {
+                t.el.style.top = `${y - 40}px`;
             }
+        } else {
+            t.el.style.display = 'none';
         }
     }
+}
     
     updateUI(1);
 
