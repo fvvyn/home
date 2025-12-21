@@ -116,44 +116,51 @@
     }
     
     /* 3D Annotations */
-    .annotation {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #334155;
-      pointer-events: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: opacity 0.3s;
-      z-index: 10;
-    }
-    .annotation::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 6px 6px 0;
-      border-style: solid;
-      border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
-    }
-    .annotation span.status {
-      display: block;
-      font-size: 10px;
-      margin-top: 2px;
-    }
-    .status-tight { color: #ef4444; }
-    .status-just { color: #10b981; }
-    .status-loose { color: #3b82f6; }
+/* アノテーション（ピン）のベーススタイル */
+.annotation {
+    position: absolute;
+    width: 75px;               /* 幅を固定で統一 */
+    height: 48px;              /* 高さを固定で統一 */
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+    display: flex;
+    flex-direction: column;    /* 縦に並べる */
+    align-items: center;       /* 左右中央揃え */
+    justify-content: center;   /* 上下中央揃え */
+    pointer-events: none;
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: opacity 0.3s;
+    transform: translate(-50%, -50%); /* 座標の基準をピンの中心にする */
+}
 
+/* ラベル（WAISTなど）のスタイル */
+.annotation .label {
+    font-size: 7px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+/* 数値とフィット感のコンテナ */
+.annotation .status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+.annotation .value-text {
+    color: #868686; /* ここに好きな色を指定 */
+    font-size: 11px;
+    font-weight: 400;
+}
+/* フィット感テキストの個別色設定 */
+.status-tight { color: #ef4444; font-weight: bold; } /* 赤系 */
+.status-just  { color: #10b981; font-weight: bold; } /* 緑系 */
+.status-loose { color: #3b82f6; font-weight: bold; } /* 青系 */
     /* Loader */
     .loader {
       border: 3px solid #f3f3f3; border-top: 3px solid var(--primary);
@@ -696,56 +703,66 @@ function calculateAndShowResult() {
     }, 1500);
 }
 
-    function performCalculation() {
-        const data = PRODUCT_SIZES[state.product];
-        const adjustment = FIT_PRESETS[state.fit];
-        const h = state.height;
-        const w = state.weight;
-        const sizeKeys = Object.keys(data).filter(k => k !== 'name');
+function performCalculation() {
+    const data = PRODUCT_SIZES[state.product];
+    const adjustment = FIT_PRESETS[state.fit];
+    const h = state.height;
+    const w = state.weight;
+    const sizeKeys = Object.keys(data).filter(k => k !== 'name');
 
-        let bestDist = Infinity;
-        let baseIdx = 0;
+    let bestDist = Infinity;
+    let baseIdx = 0;
 
-        sizeKeys.forEach((size, idx) => {
-            const sData = data[size];
-            const avgH = (sData.height[0] + sData.height[1]) / 2;
-            const avgW = (sData.weight[0] + sData.weight[1]) / 2;
-            const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
-            if (dist < bestDist) { bestDist = dist; baseIdx = idx; }
-        });
+    sizeKeys.forEach((size, idx) => {
+        const sData = data[size];
+        const avgH = (sData.height[0] + sData.height[1]) / 2;
+        const avgW = (sData.weight[0] + sData.weight[1]) / 2;
+        const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
+        if (dist < bestDist) { bestDist = dist; baseIdx = idx; }
+    });
 
-        let finalIdx = baseIdx + adjustment.offset;
-        finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
-        const recSize = sizeKeys[finalIdx];
+    let finalIdx = baseIdx + adjustment.offset;
+    finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
+    const recSize = sizeKeys[finalIdx];
+    const prod = data[recSize];
 
-        const estShoulder = (h * 0.23) + (w * 0.1); 
-        const estChest = (h * 0.48) + (w * 0.25);
-        const estArm = (h * 0.35) + (w * 0.05);
+    // 体型推定
+    const est = {
+        shoulder: (h * 0.23) + (w * 0.1),
+        chest: (h * 0.48) + (w * 0.25),
+        sleeve: (h * 0.35) + (w * 0.05),
+        waist: (w * 1.2), // 簡易計算
+        length: (h * 0.55),
+        inseam: (h * 0.42)
+    };
 
-        const prod = data[recSize];
+    const analyze = (body, garment, type) => {
+        let diff = garment - body;
+        // アイテム特性に合わせた閾値設定
+        const looseThreshold = state.product.includes('hoodie') || state.product.includes('pants') ? 12 : 8;
+        const tightThreshold = state.product.includes('hoodie') || state.product.includes('pants') ? 5 : 3;
         
-        const analyze = (body, garment, type) => {
-            let diff = garment - body;
-            const looseThreshold = state.product.includes('hoodie') ? 15 : 10; 
-            const tightThreshold = state.product.includes('hoodie') ? 6 : 4;
-            
-            if (diff < tightThreshold) return { status: 'Tight', class: 'status-tight', text: 'タイト' };
-            if (diff > looseThreshold) return { status: 'Loose', class: 'status-loose', text: 'ゆったり' };
-            return { status: 'Just Right', class: 'status-just', text: '標準' };
-        };
+        if (diff < tightThreshold) return { status: 'Tight', class: 'status-tight', text: 'タイト' };
+        if (diff > looseThreshold) return { status: 'Loose', class: 'status-loose', text: 'ゆったり' };
+        return { status: 'Just Right', class: 'status-just', text: '標準' };
+    };
 
-        return {
-            recSize,
-            productName: data.name,
-            spec: prod,
-            analysis: {
-                shoulder: analyze(estShoulder, prod.shoulder, 'shoulder'),
-                chest: analyze(estChest, prod.chest, 'chest'),
-                sleeve: analyze(estArm, prod.sleeve, 'sleeve')
-            },
-            message: adjustment.text
-        };
-    }
+    // 全てのキーに対して解析を実行
+    const analysis = {};
+    Object.keys(est).forEach(key => {
+        if (prod[key]) {
+            analysis[key] = analyze(est[key], prod[key], key);
+        }
+    });
+
+    return {
+        recSize,
+        productName: data.name,
+        spec: prod,
+        analysis: analysis,
+        message: adjustment.text
+    };
+}
 
 function renderResult(res) {
     const recSizeEl = document.getElementById('recommended-size');
@@ -759,52 +776,36 @@ function renderResult(res) {
 
     const isPants = state.product === 'cloud-pants';
 
-    // スペックリスト（テキスト）の更新
+    // スペックリスト（表）の更新
     if (specList) {
-        if (isPants) {
-            specList.innerHTML = `
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>ウエスト</span> <span class="font-bold text-slate-800">${res.spec.waist} cm</span></li>
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>総丈</span> <span class="font-bold text-slate-800">${res.spec.length} cm</span></li>
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>股下</span> <span class="font-bold text-slate-800">${res.spec.inseam} cm</span></li>
-            `;
-        } else {
-            specList.innerHTML = `
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>着丈</span> <span class="font-bold text-slate-800">${res.spec.length} cm</span></li>
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>身幅</span> <span class="font-bold text-slate-800">${res.spec.chest} cm</span></li>
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>肩幅</span> <span class="font-bold text-slate-800">${res.spec.shoulder} cm</span></li>
-                <li class="flex justify-between border-b border-gray-100 pb-2"><span>袖丈</span> <span class="font-bold text-slate-800">${res.spec.sleeve} cm</span></li>
-            `;
-        }
+        const specs = isPants ? 
+            [['ウエスト', 'waist'], ['総丈', 'length'], ['股下', 'inseam']] : 
+            [['着丈', 'length'], ['身幅', 'chest'], ['肩幅', 'shoulder'], ['袖丈', 'sleeve']];
+        
+        specList.innerHTML = specs.map(s => `
+            <li class="flex justify-between border-b border-gray-100 pb-2">
+                <span>${s[0]}</span> 
+                <span class="font-bold text-slate-800">${res.spec[s[1]]} cm</span>
+            </li>
+        `).join('');
     }
 
-    // 各アノテーションの数値を更新
-    for (const key in trackers) {
+for (const key in trackers) {
         const el = trackers[key].el;
         if (el && res.spec[key]) {
-            const statusEl = el.querySelector('.status');
-            if (statusEl) {
-                statusEl.textContent = `${res.spec[key]}cm`;
-                statusEl.className = 'status font-bold text-[#8707ff]'; 
+            const statusData = res.analysis[key] || { text: '標準', class: 'status-just' };
+            
+            // 数値（cm）の書き換え
+            const valueEl = el.querySelector('.value-text');
+            if (valueEl) valueEl.textContent = `${res.spec[key]}cm`;
+            
+            // フィット感（タイト/標準/ゆったり）の書き換え
+            const fitEl = el.querySelector('.fit-text');
+            if (fitEl) {
+                fitEl.textContent = statusData.text;
+                fitEl.className = `fit-text text-[9px] ${statusData.class}`;
             }
         }
-    }
-
-
-    // 3Dピン（アノテーション）の表示切り替えと数値代入
-    const topKeys = ['shoulder', 'chest', 'sleeve'];
-    const pantsKeys = ['waist', 'length', 'inseam'];
-
-    // 一旦すべて非表示
-    [...topKeys, ...pantsKeys].forEach(key => {
-        const el = document.getElementById(`annotation-${key}`);
-        if (el) el.style.display = 'none';
-    });
-
-    // 選択されたアイテムに応じて数値を反映して表示
-    if (isPants) {
-        pantsKeys.forEach(key => updateAnnotationDOM(key, res.spec[key]));
-    } else {
-        topKeys.forEach(key => updateAnnotationDOM(key, res.spec[key]));
     }
 }
 
@@ -882,9 +883,9 @@ const trackers = {
     chest:    { el: null, localPos: new THREE.Vector3(0, 1.8, 0.15),   label: 'Chest' }, 
     sleeve:   { el: null, localPos: new THREE.Vector3(0.8, 1.75, 0.0),  label: 'Sleeve' },
     // パンツ用
-    waist:    { el: null, localPos: new THREE.Vector3(0, 1.1, 0.18),   label: 'Waist' },
+    waist:    { el: null, localPos: new THREE.Vector3(0.2, 1.33, 0.18),   label: 'Waist' },
     length:   { el: null, localPos: new THREE.Vector3(-0.25, 0.6, 0.1), label: 'Length' },
-    inseam:   { el: null, localPos: new THREE.Vector3(0.1, 0.4, 0.05),  label: 'Inseam' }
+    inseam:   { el: null, localPos: new THREE.Vector3(0.29, 0.8, 0.05),  label: 'Inseam' }
 };
     
     function disposeHierarchy (node) {
@@ -950,24 +951,18 @@ function init3DScene(result) {
         const container = document.getElementById('canvas-container');
         
         // アノテーション要素をすべて生成
-        container.innerHTML = `
-            <div id="annotation-shoulder" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Shoulder</span><span class="status font-bold"></span></div>
-            <div id="annotation-chest" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Chest</span><span class="status font-bold"></span></div>
-            <div id="annotation-sleeve" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Sleeve</span><span class="status font-bold"></span></div>
-            <div id="annotation-waist" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Waist</span><span class="status font-bold"></span></div>
-            <div id="annotation-length" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Length</span><span class="status font-bold"></span></div>
-            <div id="annotation-inseam" class="annotation" style="display: none;"><span class="label text-[9px] text-gray-400 uppercase">Inseam</span><span class="status font-bold"></span></div>
-            
-            <div id="scroll-indicator" class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-slate-400 pointer-events-none z-30">
-                <span class="text-[10px] font-bold uppercase tracking-widest mb-1">Scroll</span>
-                <i class="fa-solid fa-chevron-down text-lg"></i>
+// init3DScene 関数内の container.innerHTML 書き換え
+container.innerHTML = `
+    ${Object.keys(trackers).map(key => `
+        <div id="annotation-${key}" class="annotation" style="display: none;">
+            <span class="label">${trackers[key].label}</span>
+            <div class="status-container">
+                <span class="value-text text-[11px] font-black text-[#8707ff]"></span>
+                <span class="fit-text text-[9px]"></span>
             </div>
-            <div class="absolute bottom-4 left-0 w-full text-center pointer-events-none">
-                <p class="text-[10px] text-gray-400 bg-white/80 inline-block px-3 py-1 rounded-full backdrop-blur-sm">
-                    <i class="fa-solid fa-arrows-up-down-left-right mr-1"></i> 回転 / ズーム
-                </p>
-            </div>
-        `;
+        </div>
+    `).join('')}
+`;
 
         // トラッカーとDOM要素の紐付け
         for (const key in trackers) {
@@ -989,9 +984,16 @@ function init3DScene(result) {
         
         // ★ アイテム種別によるカメラ初期位置の分岐
         if (state.product === 'cloud-pants') {
-            camera.position.set(-0.2, 0.5, 1.5); // パンツ用：低い位置から見上げる
+            camera.position.set(1.3, 0.5, 1.5);   // パンツ用 低い位置から
+
+
+               //：X: 左右（プラスで右へ、マイナスで左へ）
+              // Y: 高さ（プラスで上へ、マイナスで下へ）
+             // Z: 距離（プラスで手前へ、マイナスで奥へ）
+
+
         } else {
-            camera.position.set(0.25, 1.8, 0.1); // トップス用：高い位置から
+            camera.position.set(0.25, 3.8, 0.1); // トップス用：高い位置から
         }
 
         // 4. レンダラーの設定
@@ -1187,19 +1189,19 @@ function updateAnnotations() {
         const y = -(pos.y * heightHalf) + heightHalf;
 
         // カメラの視界内（前面）にある場合のみ表示
-        if (pos.z < 1 && x > 0 && x < width && y > 0 && y < height) {
-            t.el.style.display = 'flex';
-            t.el.style.left = `${x}px`;
-            t.el.style.top = `${y}px`;
-            
-            // 位置の微調整（既存ロジック）
-            if (key === 'shoulder' || key === 'sleeve') {
-                t.el.style.top = `${y - 40}px`;
-            }
-        } else {
-            t.el.style.display = 'none';
+ if (pos.z < 1 && x > 0 && x < width && y > 0 && y < height) {
+        t.el.style.display = 'flex';
+        t.el.style.left = `${x}px`;
+        t.el.style.top = `${y}px`;
+        
+        // 特定の部位のみ少し上にずらす調整（必要であれば）
+        if (key === 'shoulder' || key === 'sleeve') {
+            t.el.style.top = `${y - 30}px`; // 以前より少し控えめな調整
         }
+    } else {
+        t.el.style.display = 'none';
     }
+}
 }
     
     updateUI(1);
