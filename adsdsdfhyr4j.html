@@ -1,0 +1,364 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fvvyn VIP Admin | Bodylinkz Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #8707ff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* テーブルのスクロールバーを細くする */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    </style>
+</head>
+<body class="text-slate-800 p-4 md:p-6 lg:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-black tracking-tight text-slate-900">fvvyn <span class="text-[#8707ff] font-light">VIP Admin</span></h1>
+                <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Bodylinkz Management System</p>
+            </div>
+            <div class="w-full md:w-auto flex items-center gap-2">
+                <input type="password" id="admin-key" placeholder="Enter Admin Key" 
+                    class="w-full md:w-64 px-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-[#8707ff] shadow-sm">
+                <button onclick="fetchLogs()" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-black transition-all">
+                    Login / Reload
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <div class="lg:col-span-8 space-y-6">
+                
+                <div class="glass-panel rounded-3xl p-6 shadow-sm bg-white">
+                    <h2 class="text-sm font-bold flex items-center gap-2 mb-4 text-slate-700">
+                        <i class="fa-solid fa-chart-pie text-[#8707ff]"></i> Size Popularity Summary
+                    </h2>
+                    
+                    <div id="summary-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-xs text-gray-400 py-4 col-span-full text-center">データを読み込むとここに集計が表示されます</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-6 shadow-sm bg-white">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-sm font-bold flex items-center gap-2 text-slate-700">
+                            <i class="fa-solid fa-list text-gray-400"></i> Recent Logs
+                        </h2>
+                        <span class="text-[10px] text-gray-400 bg-gray-100 px-2 py-1 rounded-full" id="log-count">0 records</span>
+                    </div>
+
+                    <div class="overflow-hidden rounded-xl border border-gray-100">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 text-[10px] uppercase text-gray-400 font-bold tracking-wider">
+                                    <tr>
+                                        <th class="px-3 py-3 w-24">Date</th>
+                                        <th class="px-3 py-3">Product</th>
+                                        <th class="px-3 py-3 text-center w-24">User Info</th>
+                                        <th class="px-3 py-3 text-center w-20">Fit</th>
+                                        <th class="px-3 py-3 text-right w-16">Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logs-table-body" class="text-xs divide-y divide-gray-50 bg-white">
+                                    <tr>
+                                        <td colspan="5" class="px-4 py-12 text-center text-gray-400">
+                                            キーを入力してデータを取得してください
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
+    <div class="glass-panel rounded-3xl p-6 shadow-xl bg-white border-t-4 border-[#8707ff]">
+        <h2 class="text-lg font-bold flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-paper-plane text-[#8707ff]"></i> Broadcast Email
+        </h2>
+        <p class="text-[10px] text-gray-400 mb-6 leading-relaxed">
+            Emailsシートの全登録者へ一斉送信します。
+        </p>
+
+        <form class="space-y-4" onsubmit="return false;">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Subject</label>
+                <input type="text" id="email-subject" required placeholder="【重要】fvvyn VIP 限定セール"
+                    class="w-full px-4 py-2 rounded-xl bg-slate-50 border border-gray-200 text-sm focus:outline-none focus:border-[#8707ff] focus:ring-1 focus:ring-[#8707ff]">
+            </div>
+            
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Body</label>
+                <textarea id="email-body" rows="12" required placeholder="本文を入力..."
+                    class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-gray-200 text-sm focus:outline-none focus:border-[#8707ff] focus:ring-1 focus:ring-[#8707ff] resize-none"></textarea>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-100 rounded-lg p-3 text-[10px] text-yellow-800 mb-2 flex gap-2">
+                <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                <span class="leading-tight">送信ボタンを押すと即時配信されます。取り消しはできません。</span>
+            </div>
+
+            <button type="button" onclick="handleBroadcast()" id="send-btn" class="w-full py-3 rounded-full bg-slate-900 text-white font-bold text-sm shadow-lg hover:bg-black transition-all flex justify-center items-center gap-2">
+                <span>Send Broadcast</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+    <script>
+        // ★ここに前回のデプロイURLを入力してください
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwQ5ty0nbI1-dDl1-BsFGp0Xxg5XJ8xnpIn3vv2qN440Wgtt3bUfPUeoG-Bh--Vw6wt/exec";
+
+        // Enterキーでログイン
+        document.getElementById('admin-key').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') fetchLogs();
+        });
+
+        function getAdminKey() {
+            return document.getElementById('admin-key').value;
+        }
+
+        // --- Fetch Logs ---
+        function fetchLogs() {
+            const key = getAdminKey();
+            if(!key) { alert("Admin Keyを入力してください"); return; }
+
+            const tbody = document.getElementById('logs-table-body');
+            const summaryContainer = document.getElementById('summary-container');
+            
+            tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-12 text-center text-gray-400"><div class="loader mx-auto mb-2"></div>Loading data...</td></tr>';
+            summaryContainer.innerHTML = '<div class="col-span-full text-center py-4"><div class="loader mx-auto"></div></div>';
+
+            const payload = {
+                type: 'admin_get_logs',
+                adminKey: key
+            };
+
+            fetch(GAS_API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                // no-corsなのでレスポンスボディが読めないため、再度GET/POSTハックが必要ですが、
+                // 簡略化のため、今回はfetchのthenチェーンをそのまま模倣します。
+                // ★注意: 実際にGASからデータを読むには、GAS側でJSONPを使うか、
+                // 戻り値をHTMLの中に埋め込んで返すなどの工夫が必要ですが、
+                // 最も簡単なのは「redirect: follow」を指定し、GAS側でContentServiceを返すことです。
+                
+                // ※ ここでは「JSONデータを返すGAS」に対して、ブラウザのセキュリティ（CORS）が厳しいため
+                // クライアントJSのみで完結させるには、fetch(..., {redirect: 'follow'}) を使い、
+                // GAS側もリダイレクト対応が必要になる場合があります。
+                
+                // 修正：通常のfetchリクエストとして再定義
+                return fetch(GAS_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    renderLogs(data.logs);
+                    calculateAndRenderSummary(data.logs);
+                } else {
+                    const msg = data.message || "Unknown Error";
+                    tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-red-400 text-xs">${msg}</td></tr>`;
+                    summaryContainer.innerHTML = `<p class="text-xs text-red-400 col-span-full text-center">${msg}</p>`;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-red-400 text-xs">Connection Error (CORS/Network)<br>コンソールを確認してください</td></tr>`;
+            });
+        }
+
+        // --- Render Logs ---
+        function renderLogs(logs) {
+            const tbody = document.getElementById('logs-table-body');
+            document.getElementById('log-count').innerText = `${logs.length} records`;
+
+            if(logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">データがありません</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(log => {
+                const date = new Date(log.timestamp);
+                const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
+                
+                return `
+                <tr class="hover:bg-purple-50 transition-colors group">
+                    <td class="px-3 py-3 font-medium text-gray-400 text-[10px] whitespace-nowrap align-top">${dateStr}</td>
+                    <td class="px-3 py-3 align-top">
+                        <span class="text-xs font-bold text-slate-700 block whitespace-normal leading-tight">${log.product}</span>
+                    </td>
+                    <td class="px-3 py-3 text-center align-top">
+                        <div class="text-[10px] text-gray-500 font-medium bg-slate-100 rounded px-1 py-0.5 inline-block whitespace-nowrap">
+                            ${log.height}cm / ${log.weight}kg
+                        </div>
+                    </td>
+                    <td class="px-3 py-3 text-center align-top">
+                        <span class="inline-block px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wide border ${getFitStyle(log.fit)}">
+                            ${log.fit}
+                        </span>
+                    </td>
+                    <td class="px-3 py-3 text-right align-top">
+                        <span class="text-sm font-black text-[#8707ff] bg-purple-50 px-2 py-1 rounded">${log.size}</span>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function getFitStyle(fit) {
+            if(fit === 'slim') return 'bg-pink-50 text-pink-500 border-pink-100';
+            if(fit === 'standard') return 'bg-teal-50 text-teal-500 border-teal-100';
+            if(fit === 'oversized') return 'bg-blue-50 text-blue-500 border-blue-100';
+            return 'bg-gray-50 text-gray-400 border-gray-100';
+        }
+
+        // --- Summary Logic ---
+        function calculateAndRenderSummary(logs) {
+            const summaryContainer = document.getElementById('summary-container');
+            const summary = {};
+
+            // 集計処理
+            logs.forEach(log => {
+                const key = log.product; // 商品名
+                const size = log.size;   // サイズ
+                
+                if (!summary[key]) {
+                    summary[key] = {};
+                }
+                if (!summary[key][size]) {
+                    summary[key][size] = 0;
+                }
+                summary[key][size]++;
+            });
+
+            // HTML生成
+            if (Object.keys(summary).length === 0) {
+                summaryContainer.innerHTML = '<p class="text-xs text-gray-400 col-span-full text-center">集計データがありません</p>';
+                return;
+            }
+
+            let html = '';
+            // 商品ごとにカードを作成
+            for (const [product, sizes] of Object.entries(summary)) {
+                // サイズ順（XS->S->M...）に並べ替えるための簡易ロジック
+                const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                const sortedSizes = Object.entries(sizes).sort((a, b) => {
+                    return sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0]);
+                });
+
+                let rowsHtml = sortedSizes.map(([size, count]) => `
+                    <div class="flex justify-between items-center py-1.5 border-b border-gray-50 last:border-0">
+                        <span class="text-xs font-bold text-slate-600 w-8">${size}</span>
+                        <div class="flex-1 mx-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-[#8707ff] opacity-80" style="width: ${(count / logs.length) * 100 * 5}%"></div>
+                        </div>
+                        <span class="text-xs font-mono font-medium text-gray-400">${count}</span>
+                    </div>
+                `).join('');
+
+                const totalCount = Object.values(sizes).reduce((a,b) => a+b, 0);
+
+                html += `
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <div class="flex justify-between items-start mb-3 border-b border-gray-100 pb-2">
+                        <h3 class="text-xs font-bold text-slate-800 leading-tight pr-2">${product}</h3>
+                        <span class="text-[10px] font-medium text-[#8707ff] bg-purple-50 px-1.5 py-0.5 rounded">Total: ${totalCount}</span>
+                    </div>
+                    <div class="space-y-0.5">
+                        ${rowsHtml}
+                    </div>
+                </div>
+                `;
+            }
+
+            summaryContainer.innerHTML = html;
+        }
+
+        // --- Broadcast Email ---
+// --- Broadcast Email ---
+function handleBroadcast() {
+    // 1. Admin Key チェック
+    const key = getAdminKey();
+    if(!key) { alert("Admin Keyを入力してください"); return; }
+    
+    // 2. 入力値の取得とチェック
+    const subject = document.getElementById('email-subject').value;
+    const body = document.getElementById('email-body').value;
+
+    if (!subject || !body) {
+        alert("件名(Subject)と本文(Body)を入力してください。");
+        return;
+    }
+    
+    // 3. 確認ダイアログ
+    if(!confirm('本当にfvvyn VIPリスト全員に送信しますか？')) return;
+
+    // 4. 送信処理開始
+    const btn = document.getElementById('send-btn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loader border-white border-t-transparent" style="width:16px; height:16px;"></div> Sending...';
+
+    const payload = {
+        type: 'admin_broadcast',
+        adminKey: key,
+        subject: subject,
+        body: body
+    };
+
+    fetch(GAS_API_URL, {
+        method: 'POST',
+        // GASの設定によっては no-cors が必要な場合がありますが、
+        // 戻り値をJSONで受け取るにはGAS側で ContentService を返すのが正解です。
+        // ここでは前回同様の構成で送信します。
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(`送信完了: ${data.sentCount} 件`);
+            document.getElementById('email-subject').value = '';
+            document.getElementById('email-body').value = '';
+        } else {
+            alert('エラー: ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('通信エラーが発生しました。コンソールを確認してください。');
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    });
+}
+    </script>
+</body>
+</html>
+
+
+
+
+		
