@@ -208,6 +208,95 @@
         background-color: rgba(197, 142, 248, 0.8) !important; 
     }
 
+/* 使い方ガイド用スタイル (4ステップ) */
+    .guide-container {
+      padding: 0 16px 16px 16px;
+      margin-top: -4px;
+    }
+    .guide-card {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid #f1f5f9;
+      border-radius: 16px;
+      padding: 10px 4px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+    }
+    .guide-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    .guide-step-num {
+      width: 20px;
+      height: 20px;
+      background: #f1f5f9; /* 未達成ステップの色 */
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 900;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    /* アクティブ（紫）の状態 */
+    .guide-item.completed .guide-step-num {
+      background: var(--primary);
+      color: white;
+    }
+    .guide-text {
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .guide-item.completed .guide-text {
+      color: var(--text-main);
+    }
+    .guide-arrow {
+      font-size: 7px;
+      color: #e2e8f0;
+    }
+
+    /* 商品画像：円を削除し拡大 */
+    .product-img-wrapper {
+      width: 100px; /* サイズを大きく */
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+/* 選択されたカードの紫枠 */
+    .card-select.selected {
+      border: 2px solid #8707ff !important;
+      background-color: #f5f3ff;
+    }
+
+    /* ボタンの表示・非表示アニメーション */
+    .next-btn-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+    .next-btn-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
     /* Scroll to 3D Btn */
     .scroll-to-3d-btn {
         position: fixed;
@@ -245,40 +334,80 @@
 
     <header class="pt-6 px-6 pb-2 text-center flex-shrink-0 z-10 bg-white md:bg-transparent">
       <h1 class="text-xl font-black tracking-tight text-slate-800">fvvyn <span class="text-[#8707ff] font-light">Bodylinkz</span></h1>
-      <p class="text-[10px] text-gray-400 mt-1 tracking-widest uppercase font-medium" id="step-indicator">Step 1 / 3</p>
+      <p class="text-[10px] text-gray-400 mt-1 tracking-widest uppercase font-medium" id="step-indicator">Step 1 / 4</p>
     </header>
 
-    <div id="step-container" class="relative flex-1 overflow-hidden">
+    <div class="guide-container">
+      <div class="guide-card" id="main-guide">
+        <div class="guide-item completed" data-gstep="1">
+          <span class="guide-step-num">1</span>
+          <span class="guide-text">アイテム選択</span>
+        </div>
+        <i class="fa-solid fa-chevron-right guide-arrow"></i>
+        <div class="guide-item" data-gstep="2">
+          <span class="guide-step-num">2</span>
+          <span class="guide-text">理想のフィット感</span>
+        </div>
+        <i class="fa-solid fa-chevron-right guide-arrow"></i>
+        <div class="guide-item" data-gstep="3">
+          <span class="guide-step-num">3</span>
+          <span class="guide-text">体重身長を入力</span>
+        </div>
+        <i class="fa-solid fa-chevron-right guide-arrow"></i>
+        <div class="guide-item" data-gstep="4">
+          <span class="guide-step-num">4</span>
+          <span class="guide-text">サイズ算出</span>
+        </div>
+      </div>
+    </div>
 
+    <div id="step-container" class="relative flex-1 overflow-hidden">
       <div data-step="1" class="step-content fade-in h-full flex flex-col p-6 overflow-y-auto">
         <h2 class="text-lg font-bold text-slate-700 mb-4 text-center">どのアイテムをお探しですか？</h2>
         <div class="grid grid-cols-2 gap-3 flex-1 content-start" id="product-grid">
           
-          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('slash-tshirt', this)">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-shirt"></i></div>
+          <!-- <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('slash-tshirt', this)">
+            <div class="product-img-wrapper">
+              <img src="https://via.placeholder.com/200/FFFFFF/8707ff?text=Slash" class="product-img">
+            </div>
             <span class="text-xs font-bold text-center">Slash Tshirts</span>
-          </div>
+          </div>-->
           
-          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('logo-tshirt', this)">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-shirt"></i></div>
+         <!-- <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('logo-tshirt', this)">
+            <div class="product-img-wrapper">
+              <img src="https://via.placeholder.com/200/FFFFFF/8707ff?text=Logo" class="product-img">
+            </div>
             <span class="text-xs font-bold text-center">Logo Tshirts</span>
-          </div>
+           </div> -->
           
-          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('lamp-zip-hoodie', this)">
-            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-vest"></i></div>
+          <!-- <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('lamp-zip-hoodie', this)">
+            <div class="product-img-wrapper">
+              <img src="https://via.placeholder.com/200/FFFFFF/8707ff?text=Lamp" class="product-img">
+            </div>
             <span class="text-xs font-bold text-center">Lamp Zip Hoodie</span>
-          </div>
+          </div>-->
           
-          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('cloudy-zip-hoodie', this)">
-             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-cloud"></i></div>
-             <span class="text-xs font-bold text-center">CLOUD ZIP HOODIE⛈️</span>
+          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('cloudy-zip-hoodie', this)">
+             <div class="product-img-wrapper">
+               <img src="https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/67dd6b6ac7a8724e2295d4ff/ec49c656f8c2e44d3393.png/fit=cover,w=920,h=920" class="product-img">
+             </div>
+             <span class="text-xs font-bold text-center">CLOUD ZIP HOODIE</span>
           </div>
-          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-3 h-36" onclick="selectProduct('cloud-pants', this)">
-  <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 text-xl"><i class="fa-solid fa-person-walking"></i></div>
-  <span class="text-xs font-bold text-center">Cloud pants</span>
-</div>
+
+          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('cloud-pants', this)">
+            <div class="product-img-wrapper">
+              <img src="https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/67dd6b6ac7a8724e2295d4ff/815577f9f2e2b5686be9.png/fit=cover,w=920,h=920" class="product-img">
+            </div>
+            <span class="text-xs font-bold text-center">Cloud pants</span>
+          </div>
         </div>
-        
+        <input type="hidden" id="product">
+      </div>
+
+    <div id="step-container" class="relative flex-1 overflow-hidden">
+
+ 
+
         <input type="hidden" id="product">
       </div>
 
@@ -620,12 +749,29 @@
       return true;
     }
 
-    window.selectProduct = (id, el) => {
-      state.product = id;
-      document.querySelectorAll('#product-grid .card-select').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      setTimeout(() => nextBtn.click(), 300);
-    };
+function selectProduct(product, element) {
+    state.product = product;
+    document.getElementById('product').value = product;
+
+    // 1. すべてのカードから選択状態（selectedクラス）を消す
+    document.querySelectorAll('#product-grid .card-select').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // 2. クリックしたカードだけに紫の枠（selectedクラス）を付ける
+    element.classList.add('selected');
+
+    // 3. 「次へ進む」ボタンをふわっと表示させる
+    const nextBtn1 = document.getElementById('next-btn-step1');
+    if (nextBtn1) {
+        nextBtn1.classList.remove('opacity-0', 'pointer-events-none');
+        nextBtn1.classList.add('opacity-100', 'pointer-events-auto');
+        // 少し上に浮き上がるアニメーションを加える場合（CSSに合わせて）
+        nextBtn1.style.transform = "translateY(0)";
+    }
+    
+    // 【修正】ここにあった nextStep(); を削除しました
+}
 
     window.selectFit = (id, el) => {
       state.fit = id;
@@ -701,6 +847,8 @@ function calculateAndShowResult() {
         }, 3500);
 
     }, 1500);
+
+    
 }
 
 function performCalculation() {
@@ -1156,7 +1304,44 @@ function addGarmentLayer(result) {
         renderer.render(scene, camera);
         updateAnnotations();
     }
+// --- UI Logic 修正 ---
+    function updateUI(step) {
+      state.step = step;
+      steps.forEach(s => {
+        s.classList.add('hidden');
+        s.classList.remove('fade-in');
+      });
+      
+      const targetStep = document.querySelector(`[data-step="${step}"]`);
+      targetStep.classList.remove('hidden');
+      void targetStep.offsetWidth; 
+      targetStep.classList.add('fade-in');
 
+      // プログレスバー（最上部）の更新
+      const percentage = (step / 4) * 100;
+      progressBar.style.width = percentage + '%';
+      
+      // ヘッダーテキストの更新
+      stepIndicator.textContent = step === 4 ? "RESULT" : `Step ${step} / 4`;
+
+      // ★追加：4ステップガイドの色更新ロジック
+      document.querySelectorAll('.guide-item').forEach(item => {
+        const gStep = parseInt(item.getAttribute('data-gstep'));
+        if (gStep <= step) {
+          item.classList.add('completed');
+        } else {
+          item.classList.remove('completed');
+        }
+      });
+
+      backBtn.classList.toggle('hidden', step === 1);
+      
+      if (step === 4) {
+        navControls.classList.add('hidden');
+      } else {
+        navControls.classList.remove('hidden');
+      }
+    }
 function updateAnnotations() {
     if (!renderer || !camera || !mannequin) return;
 
