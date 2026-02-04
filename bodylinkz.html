@@ -320,6 +320,30 @@
         border: 2px solid white;
         line-height: 1.2;
     }
+
+    /* ガイドポップアップのアニメーション */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+
+/* 左下の？ボタンのふわふわアニメーション */
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(135, 7, 255, 0.2); }
+  50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(135, 7, 255, 0.4); }
+}
+.btn-pulse { animation: pulse-slow 3s infinite ease-in-out; }
+
+/* ガイド用ステップ図解 */
+.guide-step-box {
+  transition: all 0.3s ease;
+  border-left: 3px solid #e2e8f0;
+}
+.guide-step-box:hover {
+  border-left-color: #8707ff;
+  background: #fdfcff;
+}
     .scroll-to-3d-btn:active { transform: scale(0.9); }
     .scroll-to-3d-btn i { font-size: 16px; margin-bottom: 2px; }
   </style>
@@ -404,12 +428,7 @@
         <input type="hidden" id="product">
       </div>
 
-    <div id="step-container" class="relative flex-1 overflow-hidden">
 
- 
-
-        <input type="hidden" id="product">
-      </div>
 
       <div data-step="2" class="step-content hidden fade-in h-full flex flex-col p-6">
         <h2 class="text-lg font-bold text-slate-700 mb-4 text-center">好みのフィット感を選択してください</h2>
@@ -445,9 +464,16 @@
         <div class="mb-10 bg-slate-50 p-6 rounded-3xl">
           <div class="flex justify-between items-end mb-6">
             <label class="text-sm font-bold text-gray-500 flex items-center gap-2"><i class="fa-solid fa-ruler-vertical"></i> 身長</label>
-            <span class="text-3xl font-black text-[#8707ff]"><span id="height-val">170</span> <span class="text-sm text-gray-400 font-medium">cm</span></span>
+           <span class="text-3xl font-black text-[#8707ff]">
+  <span id="height-val">170</span> <span class="text-sm text-gray-400 font-medium">cm</span>
+  <span id="height-imperial" class="text-xs text-gray-400 font-medium ml-1">(5'7")</span>
+</span>
           </div>
-          <input type="range" id="height-range" min="140" max="210" value="170" class="w-full accent-[#8707ff]" oninput="syncInput('height', this.value)">
+         <input type="range" min="140" max="210" value="170" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#8707ff]" oninput="syncInput('height', this.value)">
+
+<div id="step3-error-msg" class="hidden text-red-500 text-xs text-center mt-4 font-bold">
+    ご自身の数値を入力してください
+</div>
           <div class="flex justify-between text-[10px] text-gray-400 mt-2 font-medium tracking-wide">
               <span>140cm</span>
               <span>210cm</span>
@@ -567,11 +593,21 @@
 
     </div>
 
-    <div id="nav-controls" class="p-6 bg-white border-t border-gray-50 flex gap-3 flex-shrink-0 z-10">
-      <button id="back-button" class="flex-1 py-3 rounded-full border border-gray-200 text-gray-500 font-bold text-sm hover:bg-gray-50 transition-colors hidden focus:outline-none">戻る</button>
-      <button id="next-button" class="flex-1 py-3 rounded-full bg-[#8707ff] text-white font-bold text-sm shadow-lg shadow-purple-200 hover:bg-[#6a00cd] hover:shadow-purple-300 transition-all active:scale-95">次へ</button>
-    </div>
+  <div id="nav-controls" class="p-6 bg-white flex flex-col gap-3 flex-shrink-0 z-10">
+  <div class="w-full text-center mb-1">
+      <p class="text-[10px] text-gray-400 font-medium tracking-tight">
+          &copy; 2025 fvvyn All Rights Reserved.
+      </p>
+      <p class="text-[9px] text-gray-300">
+          この技術はfvvyn©により保護されています
+      </p>
   </div>
+  
+  <div class="flex gap-3">
+      <button id="back-button" class="flex-1 py-3 rounded-full border border-gray-200 text-gray-500 font-bold text-sm hover:bg-gray-50 transition-colors hidden focus:outline-none">戻る</button>
+      <button id="next-button" class="flex-1 py-3 rounded-full bg-[#8707ff] text-white font-bold text-sm shadow-lg shadow-purple-200 hover:bg-[#6a00cd] transition-all active:scale-95">次へ</button>
+  </div>
+</div>
 
   <div id="toast" class="toast">Message Here</div>
 
@@ -682,14 +718,17 @@
         'oversized': { offset: 1, text: 'ゆとりあるサイズをご提案します。' }
     };
 
-    // --- State Management ---
-    const state = {
-        step: 1,
-        product: null,
-        fit: null,
-        height: 170,
-        weight: 60
-    };
+// 修正後
+// --- State Management ---
+const state = {
+    step: 1,
+    product: null,
+    fit: null,
+    height: 170,
+    weight: 60,
+    heightTouched: false, // 追加：身長を操作したか
+    weightTouched: false  // 追加：体重を操作したか
+};
 
     // --- UI Logic ---
     const steps = document.querySelectorAll('.step-content');
@@ -742,12 +781,33 @@
             updateUI(state.step - 1);
         }
     };
-
-    function validateStep() {
-      if (state.step === 1 && !state.product) { showToast('アイテムを選択してください'); return false; }
-      if (state.step === 2 && !state.fit) { showToast('フィット感を選択してください'); return false; }
-      return true;
+function validateStep() {
+    const errorMsg = document.getElementById('step3-error-msg');
+    
+    if (state.step === 1 && !state.product) { showToast('アイテムを選択してください'); return false; }
+    if (state.step === 2 && !state.fit) { showToast('フィット感を選択してください'); return false; }
+    
+    if (state.step === 3) {
+        // 未操作（身長か体重のどちらかが一度も動かされていない）
+        if (!state.heightTouched || !state.weightTouched) {
+            errorMsg.classList.remove('hidden'); // メッセージを表示
+            showToast('ご自身の数値を入力してください');
+            return false;
+        }
+        
+        // 異常値チェック（前の条件も維持）
+        if (state.height < 145 || state.height > 205 || state.weight < 35 || state.weight > 125) {
+            errorMsg.textContent = '正しい値を入力してください'; // 文言を切り替え
+            errorMsg.classList.remove('hidden');
+            showToast('正しい値を入力してください');
+            return false;
+        }
     }
+    
+    // エラーがなければ隠す
+    if (errorMsg) errorMsg.classList.add('hidden');
+    return true;
+}
 
 function selectProduct(product, element) {
     state.product = product;
@@ -780,10 +840,26 @@ function selectProduct(product, element) {
        setTimeout(() => nextBtn.click(), 300);
     };
 
-    window.syncInput = (key, val) => {
-      state[key] = parseInt(val);
-      document.getElementById(`${key}-val`).textContent = val;
-    };
+window.syncInput = (key, val) => {
+    const value = parseInt(val);
+    state[key] = value;
+    document.getElementById(`${key}-val`).textContent = val;
+    
+    state[`${key}Touched`] = true;
+
+    // ↓ここを追加：操作されたらエラー文を隠す
+    const errorMsg = document.getElementById('step3-error-msg');
+    if (state.heightTouched && state.weightTouched) {
+        if (errorMsg) errorMsg.classList.add('hidden');
+    }
+
+    if (key === 'height') {
+        const totalInches = value / 2.54;
+        const feet = Math.floor(totalInches / 12);
+        const inches = Math.round(totalInches % 12);
+        document.getElementById('height-imperial').textContent = `(${feet}'${inches}")`;
+    }
+};
 
     function showToast(msg) {
         const t = document.getElementById('toast');
@@ -1388,11 +1464,73 @@ function updateAnnotations() {
     }
 }
 }
-    
+    function openGuide() {
+    const guide = document.getElementById('guide-popup');
+    guide.classList.remove('hidden');
+    // 開く時のアニメーションをリセットするために一度クラスを外して付ける
+    guide.querySelector('.modal-animate').style.animation = 'none';
+    guide.querySelector('.modal-animate').offsetHeight; /* trigger reflow */
+    guide.querySelector('.modal-animate').style.animation = null;
+}
+
+function closeGuide() {
+    document.getElementById('guide-popup').classList.add('hidden');
+}
+
+// 405行目付近（修正前）
+
     updateUI(1);
 
     document.getElementById('height-range').oninput({ target: { value: 170 }});
     document.getElementById('weight-range').oninput({ target: { value: 60 }});
   </script>
+<button onclick="openGuide()" class="fixed bottom-32 right-6 w-12 h-12 bg-white text-[#8707ff] rounded-full shadow-lg border border-purple-50 flex items-center justify-center z-[100] font-black text-xl btn-pulse cursor-pointer">
+  ?
+</button>
+
+<div id="guide-popup" class="fixed inset-0 z-[110] hidden flex items-center justify-center px-4">
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeGuide()"></div>
+  
+  <div class="bg-white rounded-[32px] p-8 w-full max-w-sm shadow-2xl relative z-20 modal-animate">
+    <button onclick="closeGuide()" class="absolute top-5 right-5 text-gray-400 hover:text-gray-600">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+
+    <div class="text-center mb-6">
+      <div class="inline-block px-3 py-1 bg-purple-100 text-[#8707ff] text-[10px] font-bold rounded-full mb-2 uppercase tracking-widest">How to use</div>
+      <h3 class="text-xl font-black text-slate-800">使い方ガイド</h3>
+    </div>
+
+    <div class="space-y-4 text-left">
+      <div class="guide-step-box pl-4 py-1">
+        <p class="text-[10px] font-bold text-[#8707ff]">STEP 01</p>
+        <p class="text-sm font-bold text-slate-700">アイテムを選ぶ</p>
+        <p class="text-[11px] text-gray-500">診断したいアイテムをタップして選択します。</p>
+      </div>
+      <div class="guide-step-box pl-4 py-1">
+        <p class="text-[10px] font-bold text-[#8707ff]">STEP 02</p>
+        <p class="text-sm font-bold text-slate-700">フィット感を決める</p>
+        <p class="text-[11px] text-gray-500">タイトめ〜ゆったり等、お好みの着心地を選びます。</p>
+      </div>
+      <div class="guide-step-box pl-4 py-1">
+        <p class="text-[10px] font-bold text-[#8707ff]">STEP 03</p>
+        <p class="text-sm font-bold text-slate-700">体型データを入力</p>
+        <p class="text-[11px] text-gray-500">身長・体重のスライダーを自分の数値に合わせます。</p>
+      </div>
+      <div class="guide-step-box pl-4 py-1">
+        <p class="text-[10px] font-bold text-[#8707ff]">STEP 04</p>
+        <p class="text-sm font-bold text-slate-700">AIが3Dで提案</p>
+        <p class="text-[11px] text-gray-500">最適なサイズと、着用イメージが3Dで表示されます。</p>
+      </div>
+    </div>
+
+    <button onclick="closeGuide()" class="w-full mt-8 py-4 rounded-full bg-[#8707ff] text-white font-bold text-sm shadow-lg shadow-purple-200">
+      Bet
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
+
+
