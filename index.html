@@ -405,13 +405,24 @@
               setTimeout(() => loadingDiv.remove(), 500); 
             }
         }, 
-        (xhr) => {
-            const percent = (xhr.loaded / xhr.total) * 100;
-            const progressBarFill = document.getElementById('progressBarFill');
-            const progressPercentage = document.getElementById('progressPercentage'); 
-            if (progressBarFill) progressBarFill.style.width = percent.toFixed(0) + '%';
-            if (progressPercentage) progressPercentage.textContent = percent.toFixed(0) + '%';
-        }, 
+(xhr) => {
+    // xhr.totalが0または取得できない場合の対策を含め、最大値を100に制限
+    let percent = 0;
+    if (xhr.total > 0) {
+        percent = Math.min((xhr.loaded / xhr.total) * 100, 100);
+    } else {
+        // totalが不明な場合は、読み込み済みの量に応じて少しずつ進めるか、
+        // 100%を超えないように制御します
+        percent = 99; 
+    }
+    
+    const displayPercent = percent.toFixed(0) + '%';
+    const progressBarFill = document.getElementById('progressBarFill');
+    const progressPercentage = document.getElementById('progressPercentage'); 
+
+    if (progressBarFill) progressBarFill.style.width = displayPercent;
+    if (progressPercentage) progressPercentage.textContent = displayPercent;
+},
         (error) => {
             console.error('An error happened while loading the model', error);
             clearInterval(tipInterval);
