@@ -206,9 +206,18 @@
       pointer-events: none;
     }
     .tip-fade { transition: opacity 0.5s ease-in-out; }
-    .progress-bar-fill {
-      background: #34d399; 
-      box-shadow: 0 0 5px #34d399, 0 0 10px #34d399, 0 0 15px #34d399;
+
+    /* ローディングロゴ パルスアニメーション */
+    #loadingLogo {
+      width: 135px;
+      height: auto;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%   { opacity: 0.3; transform: scale(0.95); }
+      50%  { opacity: 1.0; transform: scale(1.0);  }
+      100% { opacity: 0.3; transform: scale(0.95); }
     }
   </style>
 </head>
@@ -226,11 +235,7 @@
 
   <div id="loadingScreen" class="fixed inset-0 flex flex-col items-center justify-center bg-black text-white z-[100] transition-opacity duration-500 opacity-100">
     <div class="flex flex-col items-center">
-      <p class="text-xl font-light mb-4">fvvynを起動中...</p>
-      <div class="progress-bar-container w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
-        <div id="progressBarFill" class="progress-bar-fill h-full rounded-full transition-all duration-100 ease-linear" style="width: 0%;"></div>
-      </div>
-      <p id="progressPercentage" class="text-sm mt-2 text-gray-400">0%</p>
+      <img id="loadingLogo" src="fry.png" alt="fvvyn" />
     </div>
     <p id="loadingTip" class="text-sm text-gray-400 max-w-xs text-center px-4 tip-fade absolute bottom-12" style="opacity: 0;"></p>
   </div>
@@ -369,8 +374,22 @@
       }
     );
 
+    // ローディング画面の最低表示時間（1.9秒）
+    const minDisplayTime = new Promise(resolve => setTimeout(resolve, 1900));
+
+    // ローディング画面を消す共通関数
+    function dismissLoading() {
+      clearInterval(tipInterval);
+      const loadingDiv = document.getElementById('loadingScreen');
+      if (loadingDiv) {
+        loadingDiv.classList.add('fade-out');
+        setTimeout(() => loadingDiv.remove(), 500);
+      }
+    }
+
     function loadGltfModel() {
-        loader.load('fvvynmetal.glb', gltf => {
+        const modelReady = new Promise((resolve, reject) => {
+          loader.load('fvvynmetal.glb', gltf => {
             const model = gltf.scene;
             model.traverse(c => {
               if (c.isMesh) {
@@ -393,46 +412,21 @@
             pivot.add(model);
             scene.add(pivot);
 
-            // ロード完了処理
-            clearInterval(tipInterval); 
-            const loadingDiv = document.getElementById('loadingScreen');
-            if (loadingDiv) {
-              const progressBarFill = document.getElementById('progressBarFill');
-              const progressPercentage = document.getElementById('progressPercentage');
-              if (progressBarFill) progressBarFill.style.width = '100%';
-              if (progressPercentage) progressPercentage.textContent = '100%';
-
-              loadingDiv.classList.add('fade-out');
-              setTimeout(() => loadingDiv.remove(), 500); 
-            }
-        }, 
-(xhr) => {
-    // xhr.totalが0または取得できない場合の対策を含め、最大値を100に制限
-    let percent = 0;
-    if (xhr.total > 0) {
-        percent = Math.min((xhr.loaded / xhr.total) * 100, 100);
-    } else {
-        // totalが不明な場合は、読み込み済みの量に応じて少しずつ進めるか、
-        // 100%を超えないように制御します
-        percent = 99; 
-    }
-    
-    const displayPercent = percent.toFixed(0) + '%';
-    const progressBarFill = document.getElementById('progressBarFill');
-    const progressPercentage = document.getElementById('progressPercentage'); 
-
-    if (progressBarFill) progressBarFill.style.width = displayPercent;
-    if (progressPercentage) progressPercentage.textContent = displayPercent;
-},
-        (error) => {
+            resolve();
+          },
+          (xhr) => {
+            // 進捗バー削除のため、進捗処理はスキップ
+          },
+          (error) => {
             console.error('An error happened while loading the model', error);
-            clearInterval(tipInterval);
-            const loadingDiv = document.getElementById('loadingScreen');
-            if (loadingDiv) {
-              loadingDiv.classList.add('fade-out');
-              setTimeout(() => loadingDiv.remove(), 500);
-            }
+            reject(error);
+          });
         });
+
+        // モデル完了 & 最低表示時間、両方揃ったら画面を消す
+        Promise.all([modelReady, minDisplayTime])
+          .then(() => dismissLoading())
+          .catch(() => dismissLoading()); // エラー時も必ず消す
     }
 
     const dom = renderer.domElement;
