@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fvvyn — Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f8f7f5;
+      --mid: #6b6b6b;
+      --light: #d8d5cf;
+      --lighter: #eeece8;
+      --accent: #1a1a1a;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Jost', sans-serif;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background-color: var(--white);
+      color: var(--black);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 3rem;
+      border-bottom: 0.5px solid var(--light);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: lowercase;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    /* ── LANG SWITCHER ── */
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.16em;
+      color: var(--mid);
+      padding: 0.25rem 0;
+      text-transform: uppercase;
+      transition: color 0.2s var(--ease);
+      text-decoration: none;
+    }
+
+    .lang-btn.active {
+      color: var(--black);
+    }
+
+    .lang-btn:hover { color: var(--black); }
+
+    .lang-sep {
+      width: 0.5px;
+      height: 12px;
+      background: var(--light);
+    }
+
+    .flag-svg {
+      width: 16px;
+      height: 11px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 1.5rem 4rem;
+    }
+
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 1.4rem;
+    }
+
+    .title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-align: center;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      color: var(--mid);
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── FORM ── */
+    .form-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--white);
+      border: 0.5px solid var(--light);
+      padding: 2.5rem 2.5rem 2rem;
+      position: relative;
+    }
+
+    /* corner accents */
+    .form-card::before,
+    .form-card::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--black);
+      border-style: solid;
+    }
+
+    .form-card::before {
+      top: -1px; left: -1px;
+      border-width: 1px 0 0 1px;
+    }
+
+    .form-card::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 1px 1px 0;
+    }
+
+    .field {
+      margin-bottom: 1.4rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 0.55rem;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 0.5px solid var(--light);
+      padding: 0.7rem 0;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--black);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.25s var(--ease);
+    }
+
+    .field input::placeholder {
+      color: var(--light);
+      letter-spacing: 0.08em;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-bottom-color: var(--black);
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-right: 0.5px solid var(--mid);
+      border-bottom: 0.5px solid var(--mid);
+      transform: translateY(-65%) rotate(45deg);
+      pointer-events: none;
+    }
+
+    .field select option {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    /* ── TRACK BUTTON ── */
+    .track-btn {
+      width: 100%;
+      margin-top: 0.6rem;
+      padding: 0.95rem 1rem;
+      background: var(--black);
+      color: var(--white);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s var(--ease), color 0.25s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .track-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--white);
+      transform: translateX(-101%);
+      transition: transform 0.35s var(--ease);
+      mix-blend-mode: difference;
+    }
+
+    .track-btn:hover::after { transform: translateX(0); }
+
+    .track-btn:active { transform: scale(0.99); }
+
+    /* ── ERROR ── */
+    .error-msg {
+      display: none;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: #8b0000;
+      margin-top: 0.9rem;
+      text-align: center;
+    }
+
+    .error-msg.show { display: block; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 0.5px solid var(--lighter);
+      padding: 1.6rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s var(--ease);
+    }
+
+    .footer-links a:hover { color: var(--black); }
+
+    .footer-copy {
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: var(--light);
+      text-transform: uppercase;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header { padding: 1.4rem 1.2rem; }
+      main { padding: 3.5rem 1rem 3rem; }
+      .form-card { padding: 2rem 1.4rem 1.8rem; }
+      footer { padding: 1.4rem 1.2rem; }
+      .footer-links { gap: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ HEADER ══ -->
+  <header>
+    <a href="https://fvvyn.com" class="logo">fvvyn</a>
+
+    <div class="lang-switch">
+      <button class="lang-btn active" id="btn-jp" onclick="setLang('ja')" aria-label="日本語">
+        <!-- JP flag -->
+        <svg class="flag-svg" viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="16" height="11" fill="#fff"/>
+          <circle cx="8" cy="5.5" r="2.9" fill="#BC002D"/>
+        </svg>
+        JP
+      </button>
+      <div class="lang-sep"></div>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')" aria-label="English">
+        <!-- GB/EN flag – Union Jack simplified -->
+        <svg class="flag-svg" viewBox="0 0 16 11" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="16" height="11" fill="#012169"/>
+          <path d="M0,0 L16,11 M16,0 L0,11" stroke="#fff" stroke-width="2.2"/>
+          <path d="M0,0 L16,11 M16,0 L0,11" stroke="#C8102E" stroke-width="1.2"/>
+          <path d="M8,0 V11 M0,5.5 H16" stroke="#fff" stroke-width="3.2"/>
+          <path d="M8,0 V11 M0,5.5 H16" stroke="#C8102E" stroke-width="2"/>
+        </svg>
+        EN
+      </button>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══ -->
+  <main>
+    <p class="section-label" id="lbl-section">Order Tracking</p>
+    <h1 class="title" id="lbl-title">Traking...</h1>
+    <p class="subtitle" id="lbl-subtitle">追跡番号と配送業者を入力してください</p>
+
+    <div class="form-card" role="form" aria-label="Tracking form">
+      <div class="field">
+        <label for="tracking-number" id="lbl-number">追跡番号</label>
+        <input
+          type="text"
+          id="tracking-number"
+          name="tracking-number"
+          placeholder="例：1234-5678-9012"
+          autocomplete="off"
+          inputmode="numeric"
+        />
+      </div>
+
+      <div class="field">
+        <label for="carrier" id="lbl-carrier">配送業者</label>
+        <div class="select-wrap">
+          <select id="carrier" name="carrier">
+            <option value="" id="opt-placeholder">選択してください</option>
+            <option value="yamato" id="opt-yamato">ヤマト運輸</option>
+            <option value="sagawa" id="opt-sagawa">佐川急便</option>
+            <option value="japanpost" id="opt-japanpost">日本郵便</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="track-btn" id="track-btn" onclick="handleTrack()">
+        <span id="lbl-btn">TRACK</span>
+      </button>
+
+      <p class="error-msg" id="error-msg" role="alert"></p>
+    </div>
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://fvvyn.com/privacy.html" id="lnk-privacy">プライバシーポリシー</a>
+      <a href="https://fvvyn.com/terms.html" id="lnk-terms">利用規約</a>
+      <a href="https://fvvyn.com/faq.html" id="lnk-faq">よくある質問</a>
+    </nav>
+    <p class="footer-copy">©2025 fvvyn</p>
+  </footer>
+
+  <script>
+    /* ── I18N ── */
+    const i18n = {
+      ja: {
+        section:   'Order Tracking',
+        title:     '配送状況の確認',
+        subtitle:  '追跡番号と配送業者を入力してください',
+        number:    '追跡番号',
+        placeholder: '例：1234-5678-9012',
+        carrier:   '配送業者',
+        optPlaceholder: '選択してください',
+        optYamato:     'ヤマト運輸',
+        optSagawa:     '佐川急便',
+        optJapanpost:  '日本郵便',
+        btn:       'TRACK',
+        errNumber:  '追跡番号を入力してください。',
+        errCarrier: '配送業者を選択してください。',
+        privacy:   'プライバシーポリシー',
+        terms:     '利用規約',
+        faq:       'よくある質問',
+      },
+      en: {
+        section:   'Order Tracking',
+        title:     'Track Your Order',
+        subtitle:  'Enter your tracking number and carrier',
+        number:    'Tracking Number',
+        placeholder: 'e.g. 1234-5678-9012',
+        carrier:   'Carrier',
+        optPlaceholder: 'Select a carrier',
+        optYamato:     'Yamato Transport',
+        optSagawa:     'Sagawa Express',
+        optJapanpost:  'Japan Post',
+        btn:       'TRACK',
+        errNumber:  'Please enter your tracking number.',
+        errCarrier: 'Please select a carrier.',
+        privacy:   'Privacy Policy',
+        terms:     'Terms of Use',
+        faq:       'FAQ',
+      }
+    };
+
+    let currentLang = 'ja';
+
+    function setLang(lang) {
+      currentLang = lang;
+      const t = i18n[lang];
+      const $ = (id) => document.getElementById(id);
+
+      $('lbl-section').textContent      = t.section;
+      $('lbl-title').textContent        = t.title;
+      $('lbl-subtitle').textContent     = t.subtitle;
+      $('lbl-number').textContent       = t.number;
+      $('tracking-number').placeholder  = t.placeholder;
+      $('lbl-carrier').textContent      = t.carrier;
+      $('opt-placeholder').textContent  = t.optPlaceholder;
+      $('opt-yamato').textContent       = t.optYamato;
+      $('opt-sagawa').textContent       = t.optSagawa;
+      $('opt-japanpost').textContent    = t.optJapanpost;
+      $('lbl-btn').textContent          = t.btn;
+      $('lnk-privacy').textContent      = t.privacy;
+      $('lnk-terms').textContent        = t.terms;
+      $('lnk-faq').textContent          = t.faq;
+
+      document.documentElement.lang    = lang;
+      document.getElementById('error-msg').classList.remove('show');
+
+      $('btn-jp').classList.toggle('active', lang === 'ja');
+      $('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    /* ── URLS ── */
+    const urls = {
+      yamato:    (n) => `https://toi.kuronekoyamato.co.jp/cgi-bin/tneko?number1=${encodeURIComponent(n)}`,
+      sagawa:    (n) => `https://k2k.sagawa-exp.co.jp/p/web/okurijosearch.do?okurijoNo=${encodeURIComponent(n)}`,
+      japanpost: (n) => `https://trackings.post.japanpost.jp/services/srv/search/direct?reqCodeNo1=${encodeURIComponent(n)}`,
+    };
+
+    /* ── TRACK ── */
+    function handleTrack() {
+      const num     = document.getElementById('tracking-number').value.trim();
+      const carrier = document.getElementById('carrier').value;
+      const errEl   = document.getElementById('error-msg');
+      const t       = i18n[currentLang];
+
+      errEl.classList.remove('show');
+
+      if (!num) {
+        errEl.textContent = t.errNumber;
+        errEl.classList.add('show');
+        document.getElementById('tracking-number').focus();
+        return;
+      }
+      if (!carrier) {
+        errEl.textContent = t.errCarrier;
+        errEl.classList.add('show');
+        document.getElementById('carrier').focus();
+        return;
+      }
+
+      window.open(urls[carrier](num), '_blank', 'noopener,noreferrer');
+    }
+
+    /* Enter key support */
+    document.getElementById('tracking-number').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleTrack();
+    });
+  </script>
+</body>
+</html>
