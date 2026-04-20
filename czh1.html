@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FVVYN©︎ | LIFETIME VIP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: #080808;
+      color: #f0f0f0;
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #c8ff00;
+      opacity: 0.4;
+      animation: scan 5s linear infinite;
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    @keyframes scan {
+      0%   { top: 0vh; opacity: 0; }
+      5%   { opacity: 0.4; }
+      95%  { opacity: 0.4; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    .fade {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 56px;
+      animation-delay: 0s;
+    }
+
+    .hero {
+      margin-bottom: 48px;
+      animation-delay: 0.15s;
+    }
+
+    .hero-eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.5em;
+      color: #c8ff00;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 10vw, 48px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: #f0f0f0;
+    }
+
+    .hero-title .accent {
+      color: #c8ff00;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: #1e1e1e;
+      margin: 40px 0;
+    }
+
+    .label {
+      font-size: 9px;
+      letter-spacing: 0.5em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .body-text {
+      font-size: 13px;
+      line-height: 2;
+      color: #999;
+    }
+
+    .body-text strong {
+      color: #f0f0f0;
+      font-weight: normal;
+    }
+
+    .apology {
+      animation-delay: 0.3s;
+    }
+
+    .vip-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      margin: 40px 0;
+      animation-delay: 0.45s;
+    }
+
+    .vip-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: #c8ff00;
+    }
+
+    .vip-card::after {
+      content: 'VIP';
+      position: absolute;
+      right: -16px;
+      top: 50%;
+      transform: translateY(-50%) rotate(90deg);
+      font-size: 72px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.025);
+      letter-spacing: 0.1em;
+      pointer-events: none;
+    }
+
+    .vip-badge {
+      display: inline-block;
+      background: #c8ff00;
+      color: #080808;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      padding: 4px 10px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .vip-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 28px;
+      color: #f0f0f0;
+    }
+
+    .vip-benefits {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .vip-benefits li {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    .vip-benefits li::before {
+      content: '→';
+      color: #c8ff00;
+      flex-shrink: 0;
+    }
+
+    .vip-benefits li strong {
+      color: #f0f0f0;
+      font-weight: normal;
+    }
+
+    .coupon-section {
+      animation-delay: 0.6s;
+    }
+
+    .coupon-box {
+      border: 1px dashed #2a2a2a;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .coupon-box:hover {
+      border-color: #c8ff00;
+    }
+
+    .coupon-box:hover .coupon-hint {
+      color: #c8ff00;
+    }
+
+    .coupon-label {
+      font-size: 9px;
+      letter-spacing: 0.5em;
+      color: #555;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .coupon-code {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #c8ff00;
+      margin-bottom: 10px;
+      user-select: all;
+    }
+
+    .coupon-discount {
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+    }
+
+    .coupon-hint {
+      font-size: 10px;
+      color: #333;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .contact-section {
+      animation-delay: 0.75s;
+    }
+
+    .contact-link {
+      display: inline-block;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: #f0f0f0;
+      text-decoration: none;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 4px;
+      transition: color 0.2s, border-color 0.2s;
+      margin-top: 16px;
+    }
+
+    .contact-link:hover {
+      color: #c8ff00;
+      border-color: #c8ff00;
+    }
+
+    .footer {
+      margin-top: 64px;
+      animation-delay: 0.9s;
+    }
+
+    .footer-quote {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: #333;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .footer-copy {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: #252525;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #c8ff00;
+      color: #080808;
+      font-size: 10px;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.3em;
+      padding: 10px 24px;
+      opacity: 0;
+      transition: all 0.25s ease;
+      pointer-events: none;
+      z-index: 200;
+      text-transform: uppercase;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scanline"></div>
+  <div class="toast" id="toast">COPIED</div>
+
+  <div class="container">
+
+    <div class="logo fade">FVVYN©︎ — OFFICIAL</div>
+
+    <div class="hero fade">
+      <div class="hero-eyebrow">// A MESSAGE FROM FVVYN</div>
+      <h1 class="hero-title">
+        AN APOLOGY<br>
+        &amp; <span class="accent">AN UPGRADE.</span>
+      </h1>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="apology fade">
+      <div class="label">// 01 — WHAT HAPPENED</div>
+      <p class="body-text">
+        お届けしたアイテムのタグに、<strong>製造工程でのボンド汚れ</strong>がございました。<br><br>
+        fvvynが追求する品質基準を満たせず、大変申し訳ありません。<br><br>
+        このアイテムを手にしてくださったあなたへ、お詫びとして<strong>特別な招待状</strong>をお送りします。
+      </p>
+    </div>
+
+    <div class="vip-card fade">
+      <div class="vip-badge">LIFETIME MEMBERSHIP</div>
+      <div class="vip-title">FVVYN©︎<br>LIFETIME VIP</div>
+      <ul class="vip-benefits">
+        <li><strong>永久20% OFF</strong> — 次回以降すべての購入に適用</li>
+        <li><strong>先行アクセス</strong> — 新コレクションの最速情報をお届け</li>
+        <li><strong>限定イベント招待</strong> — VIP限定POPUPへのご招待</li>
+        <li><strong>クローズドコミュニティ</strong> — fvvynのコアメンバーとして</li>
+      </ul>
+    </div>
+
+    <div class="coupon-section fade">
+      <div class="label">// 02 — YOUR CODE</div>
+      <div class="coupon-box" onclick="copyCode()">
+        <div class="coupon-label">LIFETIME VIP COUPON</div>
+        <div class="coupon-code" id="couponCode">LIFETIME20</div>
+        <div class="coupon-discount">永久 20% OFF</div>
+        <div class="coupon-hint">TAP TO COPY</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="contact-section fade">
+      <div class="label">// 03 — CONTACT</div>
+      <p class="body-text">ご不明な点はこちらまでご連絡ください。</p>
+      <a href="mailto:info@fvvyn.com" class="contact-link">→ info@fvvyn.com</a>
+    </div>
+
+    <div class="footer fade">
+      <div class="footer-quote">* Every piece tells a story.</div>
+      <div class="footer-copy">© 2026 FVVYN©︎ ALL RIGHTS RESERVED</div>
+    </div>
+
+  </div>
+
+  <script>
+    function copyCode() {
+      const code = document.getElementById('couponCode').textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(showToast);
+      } else {
+        const el = document.getElementById('couponCode');
+        const range = document.createRange();
+        range.selectNode(el);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        showToast();
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  </script>
+
+</body>
+</html>
