@@ -241,7 +241,7 @@
     <div class="flex flex-col items-center">
       <img id="loadingLogo" src="fry.png" alt="fvvyn" />
     </div>
-    <p id="loadingTip" class="text-sm text-gray-400 max-w-xs text-center px-4 tip-fade absolute bottom-12" style="opacity: 0;"></p>
+  <p id="loadingTip" class="text-sm text-gray-400 w-full max-w-xs text-center px-4 tip-fade absolute bottom-12 left-1/2 -translate-x-1/2" style="opacity: 0;"></p>
   </div>
 
   <div id="pwaAnnounce" class="fixed top-4 right-4 flex flex-col gap-2 w-60 sm:w-72 text-[10px] sm:text-xs z-50 animate-slide-in rounded-lg bg-[#232531] px-[10px] shadow-lg">
@@ -514,7 +514,7 @@
       }
       return null;
     }
-
+　
     dom.addEventListener('pointerdown', e => {
       const p = getXY(e);
       startX = p.x;
