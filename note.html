@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fvvyn | NOTE | 作る過程と、決めた理由を記録する</title>
+<meta name="description" content="fvvyn（フヴィン）の公式ノート。ニュース、裏側（制作の記録）、Bodylinkz・Verify・fvvyn | VIPの仕組み、POPUPの記録。作り手本人が書く、決定の記録。">
+<style>
+:root{
+  --ink:#111;
+  --ink-soft:#444;
+  --ink-faint:#8a8a8a;
+  --line:#e4e4e4;
+  --bg:#fff;
+  --accent:#111;
+  --todo-bg:#fff6d8;
+  --todo-line:#e3c94f;
+  --max:1080px;
+  --read:700px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.8;
+}
+a{color:var(--ink)}
+img{max-width:100%}
+
+/* 読書プログレスバー */
+#progress{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:var(--ink);z-index:60;transition:width .1s linear;
+}
+
+/* ヘッダー */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo{height:24px;width:auto;display:block}
+.brand-sub{
+  font-size:11px;letter-spacing:.35em;color:var(--ink-soft);
+  border-left:1px solid var(--line);padding-left:10px;
+}
+.site-nav{display:flex;gap:18px;align-items:center}
+.site-nav a{
+  font-size:12px;letter-spacing:.12em;text-decoration:none;color:var(--ink-soft);
+}
+.site-nav a:hover{color:var(--ink)}
+.nav-vip{
+  border:1px solid var(--ink);padding:5px 12px;color:var(--ink)!important;
+}
+.nav-vip:hover{background:var(--ink);color:#fff!important}
+
+main{max-width:var(--max);margin:0 auto;padding:0 20px 80px}
+
+/* ヒーロー */
+.hero{padding:72px 0 40px;border-bottom:1px solid var(--line)}
+.hero h1{
+  font-size:clamp(34px,6vw,56px);letter-spacing:.08em;font-weight:700;
+}
+.hero-lead{margin-top:16px;color:var(--ink-soft);font-size:15px}
+
+/* フィルタ */
+.filters{display:flex;flex-wrap:wrap;gap:8px;padding:26px 0 6px}
+.filter-btn{
+  font:inherit;font-size:13px;letter-spacing:.08em;cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:999px;
+  padding:6px 16px;color:var(--ink-soft);
+}
+.filter-btn:hover{border-color:var(--ink);color:var(--ink)}
+.filter-btn.is-active{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* カード */
+.card-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:22px;padding-top:26px;
+}
+.card{
+  border:1px solid var(--line);padding:26px 24px;display:flex;flex-direction:column;
+  gap:12px;background:#fff;transition:border-color .2s,transform .2s;
+}
+.card.is-open{cursor:pointer}
+.card.is-open:hover{border-color:var(--ink);transform:translateY(-2px)}
+.card.is-soon{opacity:.55}
+.card-meta{display:flex;gap:12px;font-size:11px;letter-spacing:.15em;color:var(--ink-faint)}
+.card-cat{color:var(--ink);border:1px solid var(--line);padding:1px 8px}
+.card h2{font-size:19px;line-height:1.5;font-weight:700}
+.card p{font-size:13.5px;color:var(--ink-soft)}
+.card-foot{margin-top:auto;font-size:12px;letter-spacing:.1em;color:var(--ink-faint)}
+.card.is-open .card-foot{color:var(--ink)}
+.empty-note{padding:40px 0;color:var(--ink-faint);font-size:14px}
+
+/* 記事 */
+.back-btn{
+  font:inherit;font-size:13px;letter-spacing:.08em;cursor:pointer;
+  background:none;border:none;color:var(--ink-soft);padding:28px 0 0;
+}
+.back-btn:hover{color:var(--ink)}
+.back-btn-bottom{padding:40px 0 0}
+.article{max-width:var(--read);margin:0 auto;padding-top:28px}
+.article-meta{display:flex;gap:12px;font-size:11px;letter-spacing:.15em;color:var(--ink-faint);margin-bottom:18px}
+.article-cat{color:var(--ink);border:1px solid var(--line);padding:1px 8px}
+.article h1{font-size:clamp(26px,4.5vw,36px);line-height:1.45;margin-bottom:14px}
+.article .lead{font-size:16.5px;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:30px}
+.article h2{
+  font-size:20px;margin:42px 0 14px;padding-left:12px;border-left:3px solid var(--ink);
+}
+.article p{font-size:15.5px;color:#222;margin-bottom:18px}
+.article ul{margin:0 0 18px 1.2em;font-size:15.5px;color:#222}
+.article li{margin-bottom:6px}
+.article .rules{
+  border:1px solid var(--line);padding:22px 24px;margin:24px 0;background:#fafafa;
+}
+.article .rules p{margin-bottom:8px}
+.article .rules p:last-child{margin-bottom:0}
+.article .cta{
+  border:1px solid var(--ink);padding:26px 24px;margin:44px 0 10px;text-align:center;
+}
+.article .cta p{font-size:14px;color:var(--ink-soft);margin-bottom:14px}
+.article .cta a{
+  display:inline-block;background:var(--ink);color:#fff;text-decoration:none;
+  padding:12px 30px;font-size:14px;letter-spacing:.12em;
+}
+.article .cta a:hover{opacity:.85}
+.article .sign{
+  margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-faint);letter-spacing:.08em;
+}
+.todo{
+  background:var(--todo-bg);border:1px dashed var(--todo-line);
+  padding:2px 8px;border-radius:3px;font-size:.92em;color:#6b5d10;
+}
+
+/* フッター */
+.site-footer{
+  border-top:1px solid var(--line);padding:44px 20px 36px;text-align:center;
+}
+.logo-footer{height:20px;margin:0 auto 14px}
+.footer-note{font-size:12.5px;color:var(--ink-faint)}
+.footer-nav{display:flex;gap:20px;justify-content:center;margin:16px 0 8px;flex-wrap:wrap}
+.footer-nav a{font-size:12px;letter-spacing:.1em;color:var(--ink-soft);text-decoration:none}
+.footer-nav a:hover{color:var(--ink)}
+.copyright{font-size:11px;color:var(--ink-faint);letter-spacing:.15em}
+
+@media (max-width:640px){
+  .site-nav a:not(.nav-vip){display:none}
+  .hero{padding:48px 0 30px}
+  .card-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="site-header">
+  <a class="brand" href="#" id="homeLink" aria-label="fvvyn | NOTE トップ">
+    <img src="logo.png" alt="fvvyn" class="logo">
+    <span class="brand-sub">NOTE</span>
+  </a>
+  <nav class="site-nav">
+    <a href="https://fvvyn.com" target="_blank" rel="noopener">fvvyn.com</a>
+    <a href="https://fvvyn.stores.jp" target="_blank" rel="noopener">STORE</a>
+    <a class="nav-vip" href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP</a>
+  </nav>
+</header>
+
+<main>
+  <!-- ===== 一覧ビュー ===== -->
+  <section id="listView">
+    <div class="hero">
+      <h1>fvvyn | NOTE</h1>
+      <p class="hero-lead">ニュースと、作る過程と決めた理由の記録。<br>企画から工場とのやり取り、価格の決め方まで、作り手本人が書く公式ノート。</p>
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="カテゴリで絞り込む">
+      <button class="filter-btn is-active" data-filter="all">すべて</button>
+      <button class="filter-btn" data-filter="news">ニュース</button>
+      <button class="filter-btn" data-filter="process">裏側</button>
+      <button class="filter-btn" data-filter="system">仕組み</button>
+      <button class="filter-btn" data-filter="record">記録</button>
+      <button class="filter-btn" data-filter="worn">着用</button>
+    </div>
+
+    <div class="card-grid" id="cardGrid"></div>
+    <p class="empty-note" id="emptyNote" hidden>このカテゴリの記事はこれから公開します。</p>
+  </section>
+
+  <!-- ===== 記事ビュー ===== -->
+  <section id="articleView" hidden>
+    <button class="back-btn" id="backBtn">← NOTE 一覧へ</button>
+    <article class="article" id="articleBody"></article>
+    <button class="back-btn back-btn-bottom" id="backBtn2">← NOTE 一覧へ</button>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <img src="logo.png" alt="fvvyn" class="logo logo-footer">
+  <p class="footer-note">fvvyn | NOTE — 作り手本人が書く、決定の記録。</p>
+  <nav class="footer-nav">
+    <a href="https://fvvyn.com" target="_blank" rel="noopener">fvvyn.com</a>
+    <a href="https://fvvyn.stores.jp" target="_blank" rel="noopener">STORE</a>
+    <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP（先行販売の登録）</a>
+  </nav>
+  <p class="copyright">© fvvyn</p>
+</footer>
+
+<script>
+// fvvyn | NOTE - 記事データと表示制御
+// 記事を増やすときは ARTICLES に1件追加するだけ（status:"open" で本文表示、"soon" で近日公開）
+
+const ARTICLES = [
+  {
+    id: "news-odd-form",
+    cat: "news",
+    catLabel: "ニュース",
+    date: "2026.10.28",
+    title: "AWコレクション「ODD FORM」が発表されました",
+    excerpt: "fvvyn の AW コレクション「ODD FORM」を発表しました。第1弾アイテムのサンプルは工場で完成し、現在は実物の到着を待っています。",
+    status: "open",
+    body: `
+      <p class="lead">fvvyn の AW コレクション「ODD FORM」を発表しました。</p>
+      <p>第1弾となるアイテムは、ウォッシュ加工のワイドスウェットショーツです。350 GSM のテリー（裏毛）生地に、ロングドローコード、蜘蛛の巣のチャーム、裾のダメージ加工を組み合わせています。サンプルは工場で完成し、現在は実物の到着と検品を待っているところです。</p>
+      <p>制作の過程と仕様の決定については、この NOTE の「裏側」で順に公開していきます。</p>
+      <div class="cta">
+        <p>先行販売は、fvvyn | VIP の登録者から案内します。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+      <p class="sign">2026.10.28 ／ ニュース ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "news-cloud-zip-hoodie-restock",
+    cat: "news",
+    catLabel: "ニュース",
+    date: "2026.03.06",
+    title: "Cloud Zip Hoodie が再販されました",
+    excerpt: "3月6日、Cloud Zip Hoodie の再販を行いました。少ロットでの再販分も完売しています。",
+    status: "open",
+    body: `
+      <p class="lead">3月6日、Cloud Zip Hoodie の再販を行いました。</p>
+      <p>Cloud Zip Hoodie は fvvyn の代表作です。今回も少ロットでの再販となり、再販分は完売しています。購入してくださった皆さま、ありがとうございました。</p>
+      <p>現在の販売状況と今後の入荷については、STORE と fvvyn | VIP からの案内をご確認ください。</p>
+      <div class="cta">
+        <p>再販・新作の案内は、fvvyn | VIP の登録者へ先行してお届けします。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+      <p class="sign">2026.03.06 ／ ニュース ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "about",
+    cat: "record",
+    catLabel: "記録",
+    date: "2026.10.28",
+    title: "fvvyn とは — 作り方と、守っているルール",
+    excerpt: "fvvyn（フヴィン）は、大量生産をしない小さなアパレルブランド。作り方、守っているルール、Bodylinkz と Verify という仕組みについて。NOTE の最初の記事。",
+    status: "open",
+    body: `
+      <p class="lead">fvvyn（フヴィン）は、大量生産をしない小さなアパレルブランドです。企画、仕様の設計、工場とのやり取り、ウェブサイトの構築までを、代表の恒正が一人で運営しています。NOTE の最初の記事として、fvvyn がどういう作り方をしていて、何を守っているのかを記録します。</p>
+
+      <h2>作り方</h2>
+      <p>fvvyn の服は、海外の工場と直接やり取りをして、寸法と仕様を指定するオリジナル制作で作っています。既製品に手を加える形から始めて、今はサンプルを作り、気になるところを直して、納得したものだけを出す形に移行しました。</p>
+      <p>一度にたくさんは作りません。まず少ロットで作って、売り切る。その繰り返しで、少しずつ精度を上げていく作り方です。</p>
+
+      <h2>立ち上げた理由</h2>
+      <p>既製品を仕入れて手を加える形では、寸法も生地も仕様も、最後のところは自分で決められません。作るものの全部を自分の判断で決めて、少量でもいいから「作って、売り切る」ところまでを自分の責任で回したかった。それが fvvyn を立ち上げた理由です。</p>
+      <p>ウェブサイトも、Bodylinkz も Verify も外注せず自分で作っているのは、ブランドに関わるものをできるだけ自分の手の中に置いておきたいからです。遠回りでも、その分だけ全部が自分の判断の記録になります。</p>
+
+      <h2>世界観</h2>
+      <p>fvvyn の世界観の中心にあるのは、黒と、歪みです。公式サイトの背景でワープする星空、液体のように歪んだグラフィック、ウォッシュで色の抜けた黒。整いすぎたものより、少し歪んだ形にこそ個性が出ると思っています。AW コレクションに「ODD FORM（変な形）」と名付けたのも、その考えからです。</p>
+      <p>もう1つは、クラブカルチャーの空気です。大阪のクラブで POPUP を開いてきたように、服は着る場所の空気まで含めて完成すると考えています。静かなのに、どこか歪んでいる。その緊張感が fvvyn の立ち位置です。</p>
+      <h2>守っているルール</h2>
+      <div class="rules">
+        <p>・流行を追いすぎない</p>
+        <p>・他ブランドのコピーをしない</p>
+        <p>・売上を優先して、世界観を捨てない</p>
+        <p>・大量生産をしない</p>
+        <p>・安売りをしない</p>
+      </div>
+      <p>新しい商品や企画を始めるかどうかは、「顧客にとって意味があるか」「今の資金と規模で実行できるか」「翌年も、やってよかったと思えるか」「自己満になっていないか」「ルールに反していないか」の5つで判断します。どれか1つでも引っかかれば、やりません。</p>
+
+      <h2>服の外側の仕組み</h2>
+      <p>fvvyn は、服そのもの以外も自分で作っています。</p>
+      <ul>
+        <li><strong>Bodylinkz</strong> — 身長・体重・好みのフィットを入力するとサイズを提案する仕組み。入力されたデータは蓄積して、次のサイズ設計と生産判断に使います。</li>
+        <li><strong>Verify</strong> — NFCで、その商品が正規品かどうかを確認できる仕組み。小さいブランドでも「本物であること」を証明する責任はあると思っています。</li>
+        <li><strong>fvvyn | VIP</strong> — メール登録で先行販売の案内を受け取れる仕組み。少ロットだからこそ、欲しい人に先に届く形にしています。</li>
+      </ul>
+
+      <h2>これまでの記録</h2>
+      <p>2025年7月に開業しました。2026年3月には Cloud Zip Hoodie を10着だけ作って販売し、完売しています。金額にすれば小さい出来事ですが、「作って、売り切る」を一周できたことが、今の土台になっています。大阪のクラブでの POPUP 開催や、セレクトショップにブランドカードを置いてもらう活動も続けています。</p>
+
+      <h2>これから</h2>
+      <p>反響の大きいアイテムは、受注生産を含む drop の形で出していきます。現在は新作のスウェットショーツのサンプルが工場で完成し、実物の到着を待っているところです。その制作の過程は、この NOTE の「裏側」で順に記録していきます。</p>
+
+      <div class="cta">
+        <p>新作の先行販売は、fvvyn | VIP の登録者から案内します。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 記録 ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "process-01-fabric",
+    cat: "process",
+    catLabel: "裏側",
+    date: "2026.10.28",
+    title: "裏側 #1 — 生地とウォッシュ、350 GSMを選んだ理由",
+    excerpt: "新作スウェットショーツの生地とウォッシュ加工について。なぜ 350 GSM のテリー（裏毛）なのか、工場でサンプルが上がるまでの記録。",
+    status: "open",
+    body: `
+      <p class="lead">AW コレクション「ODD FORM」第1弾、スウェットショーツの生地とウォッシュについての記録です。サンプルは工場で完成し、実物の到着を待っている段階の話になります。</p>
+
+      <h2>生地：350 GSM のテリー（裏毛）</h2>
+      <p>生地は 350 GSM のテリー（裏毛）を選びました。候補は裏起毛（フリース）もありましたが、ショーツは春から秋まで穿くアイテムなので、暖かさより通気と落ち感を優先して裏毛にしています。</p>
+      <p>厚みの判断はこうです。300 GSM 前後の薄手だと、ウォッシュ加工をかけたときに生地がヨレて安っぽく見える。逆に 400 GSM を超えると、ワイドシルエットでもゴワついて重い。350 GSM は、ウォッシュの表情を受け止める厚みと、ショーツとしての軽さの、ちょうど境目でした。</p>
+
+      <h2>ウォッシュ：真っ黒にしない</h2>
+      <p>色はブラックのウォッシュ加工です。染め上げたままの真っ黒にはしませんでした。理由は2つあって、1つは色落ちのムラが蜘蛛の巣のチャームや腿のアップリケの立体感を引き立てること。もう1つは、裾のダメージ加工と合わせて「最初から穿き込んだ表情」を作るためです。新品の硬さではなく、少し時間が経ったもののような顔つきを目指しています。</p>
+
+      <h2>現在の状態</h2>
+      <p>サンプルは工場で完成しています。実物が届いたら、ウォッシュの均一さ、アップリケの端の処理、仕様書との実寸の差を検品して、本生産の判断をします。その結果は「裏側」の続編で記録します。</p>
+
+      <div class="cta">
+        <p>先行販売は、fvvyn | VIP の登録者から案内します。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 裏側 ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "process-02-drawcord",
+    cat: "process",
+    catLabel: "裏側",
+    date: "2026.10.28",
+    title: "裏側 #2 — ドローコードを180cmにした理由",
+    excerpt: "ドローコードの垂れ具合へのこだわりと、160cm との比較検証。長さひとつで印象がどう変わるかの記録。",
+    status: "open",
+    body: `
+      <p class="lead">スウェットショーツのドローコードを、全長 180cm 前後のロング仕様にしました。紐の長さひとつについての記録です。</p>
+
+      <h2>標準の長さでは足りなかった</h2>
+      <p>一般的なドローコードは全長 130cm 前後で、結んだときの垂れは片側 20cm 程度です。今回のショーツはワイドで丈感のあるシルエットなので、その長さだと紐だけが大人しくなって、全体のバランスが締まらない。目指したのは、垂れが片側 45cm 前後まで落ちるロングドローコードの表情です。</p>
+
+      <h2>180cm という決定</h2>
+      <p>逆算すると、ウエスト分と結び目を差し引いて片側 45cm の垂れを確保するには、全長 180cm 前後が必要でした。上限も決めていて、190cm を超えると歩くたびに脚に当たって邪魔になるし、実用面でも扱いづらい。長いことが目的ではなく、シルエットに対して「ちょうど長く見える」ところが 180cm でした。サイズごとの調整は、1サイズにつき +5cm を目安にしています。</p>
+
+      <h2>色は白</h2>
+      <p>紐の色は白です。ウォッシュで色の抜けたブラックの生地に対して、白い紐が一番コントラストが出る。蜘蛛の巣のチャームを通すリングもウエストに付くので、視線が集まる場所の色は潔く白にしました。</p>
+
+      <h2>残っている検証</h2>
+      <p>実物のサンプルが届いたら、160cm の紐に付け替えて垂れ具合を比較し、180cm で確定かどうかを最終判断します。結果はこの記事に追記します。</p>
+
+      <div class="cta">
+        <p>先行販売は、fvvyn | VIP の登録者から案内します。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 裏側 ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "system-verify",
+    cat: "system",
+    catLabel: "仕組み",
+    date: "2026.10.28",
+    title: "Verify — NFCで本物を証明する",
+    excerpt: "個人ブランドが正規品認証を自作した理由と、その仕組みについて。",
+    status: "open",
+    body: `
+      <p class="lead">fvvyn の商品には、NFC による正規品認証「Verify」を入れています。スマートフォンをかざすだけで、その商品が本物かどうか確認できる仕組みです。なぜ個人ブランドがここまでやるのかを書きます。</p>
+
+      <h2>買った人の不安は、ブランドの責任</h2>
+      <p>少ロットで作って、完売して、市場に出回らなくなる。そういう売り方をするブランドほど、後から「これは本物なのか」と不安になる場面が増えます。中古で買う人、譲り受ける人にとって、真贋が分からないことはそのままブランドへの不信になります。だから、買った人が自分で確認できる手段を用意するのは、作った側の責任だと思っています。</p>
+
+      <h2>仕組み</h2>
+      <p>商品には NFC が埋め込まれていて、スマートフォンを近づけると認証ページが開き、正規品かどうかが表示されます。確認のためのアプリは不要です。認証の仕組みも、fvvyn のサイト側で自作しています。</p>
+
+      <h2>少ロットだからできること</h2>
+      <p>NFC には1点ごとにコストがかかります。大量生産のブランドには負担でも、fvvyn くらいの数なら全ての商品に入れられる。大量生産しないことは、こういう部分では弱みではなく強みになります。コストをかけてでも入れる価値があると判断しました。</p>
+
+      <div class="cta">
+        <p>Verify 対応の商品は STORE から確認できます。</p>
+        <a href="https://fvvyn.stores.jp" target="_blank" rel="noopener">STORE を見る</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 仕組み ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "system-bodylinkz",
+    cat: "system",
+    catLabel: "仕組み",
+    date: "2026.10.28",
+    title: "Bodylinkz — サイズはデータで決める",
+    excerpt: "サイズ提案の仕組みと、集めたデータを次の生産にどう活かしているか。",
+    status: "open",
+    body: `
+      <p class="lead">Bodylinkz は、身長・体重・好みのフィット感を入力すると、おすすめのサイズを提案する fvvyn の仕組みです。ただのサイズ表ではなく、入力されたデータを次の生産に活かすところまでがセットになっています。</p>
+
+      <h2>通販の一番の不安はサイズ</h2>
+      <p>服の通販で一番多い不安は「サイズが合うかどうか」です。試着できない以上、サイズ表とにらめっこするしかない。その不安を、データで少しでも小さくしたくて作りました。少ロット生産の fvvyn にとっては、サイズ違いによる返品や、在庫のサイズ偏りは、そのまま次の生産ができなくなる問題でもあります。</p>
+
+      <h2>仕組み：提案して、貯めて、活かす</h2>
+      <ul>
+        <li><strong>提案</strong> — 身長・体重・好みのフィット（タイト／標準／オーバーサイズ）から、推奨サイズを提示します。</li>
+        <li><strong>蓄積</strong> — 入力されたデータは自動でスプレッドシートに貯まっていきます。</li>
+        <li><strong>活用</strong> — 貯まったデータは、次のアイテムのサイズ設計と、どのサイズを何着作るかの生産判断に使います。</li>
+      </ul>
+      <p>サイズ表を貼るだけなら、データは1件も残りません。「測る → 貯める → 次の生産に活かす」という循環を作ることが、Bodylinkz の目的です。なお、入力されたデータはサイズ設計と生産判断の目的にのみ使用します。</p>
+
+      <div class="cta">
+        <p>サイズ選びに迷ったら、購入前に Bodylinkz で確認できます。</p>
+        <a href="https://fvvyn.com/bodylinkz.html" target="_blank" rel="noopener">Bodylinkz を使う</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 仕組み ／ 恒正（fvvyn）</p>
+    `
+  },
+  {
+    id: "system-vip",
+    cat: "system",
+    catLabel: "仕組み",
+    date: "2026.10.28",
+    title: "fvvyn | VIP — 先に届けるための仕組み",
+    excerpt: "メール登録で先行販売の案内を受け取れる fvvyn | VIP について。少ロット生産のブランドが、なぜ先行案内の仕組みを持つのか。",
+    status: "open",
+    body: `
+      <p class="lead">fvvyn | VIP は、メールアドレスを登録すると、新作の先行販売や再販の案内が届く仕組みです。なぜこの形にしたのかを説明します。</p>
+
+      <h2>少ロットだと「知らなかった」が起きる</h2>
+      <p>fvvyn は一度にたくさん作らないので、完売も早くなります。その分、「気づいたときには売り切れていた」ということが起きやすい。本当に欲しい人にそういう状態を作るのは違うと思い、登録してくれた人に先に知らせる形にしました。一般販売の前に、まず VIP に案内を出します。</p>
+
+      <h2>VIP に届くもの</h2>
+      <ul>
+        <li>新作の先行販売の案内</li>
+        <li>再販と、受注生産（drop）の開始案内</li>
+        <li>POPUP などイベントのお知らせ</li>
+      </ul>
+      <p>送るのは、販売とイベントに関わる案内だけです。</p>
+
+      <h2>登録について</h2>
+      <p>登録はメールアドレスだけで、費用はかかりません。登録された情報は、案内の送信以外の目的には使いません。</p>
+
+      <div class="cta">
+        <p>次の先行販売から案内を受け取れます。</p>
+        <a href="https://fvvyn.com/vip.html" target="_blank" rel="noopener">fvvyn | VIP に登録する</a>
+      </div>
+
+      <p class="sign">2026.10.28 ／ 仕組み ／ 恒正（fvvyn）</p>
+    `
+  }
+];
+
+// ===== 表示制御 =====
+const listView = document.getElementById("listView");
+const articleView = document.getElementById("articleView");
+const cardGrid = document.getElementById("cardGrid");
+const emptyNote = document.getElementById("emptyNote");
+const articleBody = document.getElementById("articleBody");
+const progress = document.getElementById("progress");
+
+function renderCards(filter = "all") {
+  const items = ARTICLES.filter(a => filter === "all" || a.cat === filter);
+  cardGrid.innerHTML = items.map(a => `
+    <article class="card ${a.status === "open" ? "is-open" : "is-soon"}" ${a.status === "open" ? `data-open="${a.id}" tabindex="0" role="button"` : ""}>
+      <div class="card-meta"><span class="card-cat">${a.catLabel}</span><span>${a.date}</span></div>
+      <h2>${a.title}</h2>
+      <p>${a.excerpt}</p>
+      <div class="card-foot">${a.status === "open" ? "読む →" : "近日公開"}</div>
+    </article>
+  `).join("");
+  emptyNote.hidden = items.length > 0;
+  cardGrid.querySelectorAll("[data-open]").forEach(el => {
+    el.addEventListener("click", () => openArticle(el.dataset.open));
+    el.addEventListener("keydown", e => { if (e.key === "Enter") openArticle(el.dataset.open); });
+  });
+}
+
+function openArticle(id) {
+  const a = ARTICLES.find(x => x.id === id && x.status === "open");
+  if (!a) return;
+  articleBody.innerHTML = `
+    <div class="article-meta"><span class="article-cat">${a.catLabel}</span><span>${a.date}</span><span>fvvyn | NOTE</span></div>
+    <h1>${a.title}</h1>
+    ${a.body}
+  `;
+  listView.hidden = true;
+  articleView.hidden = false;
+  if (location.hash !== "#" + id) history.pushState(null, "", "#" + id);
+  window.scrollTo({ top: 0 });
+}
+
+function showList() {
+  articleView.hidden = true;
+  listView.hidden = false;
+  if (location.hash) history.pushState(null, "", location.pathname);
+  window.scrollTo({ top: 0 });
+  progress.style.width = "0";
+}
+
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-btn");
+  if (!btn) return;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("is-active", b === btn));
+  renderCards(btn.dataset.filter);
+});
+document.getElementById("backBtn").addEventListener("click", showList);
+document.getElementById("backBtn2").addEventListener("click", showList);
+document.getElementById("homeLink").addEventListener("click", e => { e.preventDefault(); showList(); });
+
+window.addEventListener("popstate", () => {
+  const id = location.hash.replace("#", "");
+  if (id) openArticle(id); else showList();
+});
+window.addEventListener("scroll", () => {
+  if (articleView.hidden) return;
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  progress.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+}, { passive: true });
+
+// 初期表示（#id 直リンク対応）
+renderCards();
+const initial = location.hash.replace("#", "");
+if (initial) openArticle(initial);
+</script>
+</body>
+</html>
