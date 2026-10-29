@@ -424,6 +424,13 @@
             </div>
             <span class="text-xs font-bold text-center">Cloud pants</span>
           </div>
+
+          <div class="card-select bg-slate-50 p-4 rounded-2xl flex flex-col items-center justify-center gap-1 h-44" onclick="selectProduct('odd-night-pants', this)">
+            <div class="product-img-wrapper">
+              <img src="https://imagedelivery.net/QondspN4HIUvB_R16-ddAQ/production/67dd6b6ac7a8724e2295d4ff/45c73679-d165-43d5-b96e-44b5adf43295/fit=cover,w=920,h=920" class="product-img">
+            </div>
+            <span class="text-xs font-bold text-center">odd night pants</span>
+          </div>
         </div>
         <input type="hidden" id="product">
       </div>
@@ -654,447 +661,458 @@
     </div>
   </div>
 
-  <script>
-    // --- GAS Settings ---
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyK1jV7VGrsFoIWqSHAifR9N35EVtpFu9AwptDWsjUbVr9Xq7LFZ9WJdwRk1OKmV3hf/exec";
 
-    // --- Data Definition ---
-    const PRODUCT_SIZES = {
-      'slash-tshirt': {
-        name: "Slash Tshirts",
-        S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19 },
-        M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20 },
-        L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22 },
-        XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24 },
-        XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26 },
-        XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26 }
-      },
-      'logo-tshirt': {
-        name: "Logo Tshirts",
-        S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19 },
-        M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20 },
-        L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22 },
-        XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24 },
-        XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26 },
-        XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26 }
-      },
-      'beg-zip-hoodie': {
-        name: "Beg Zip Hoodie",
-        S: { height:[155,165], weight:[45,60], length:55, chest:102, shoulder:60, sleeve:56.5 },
-        M: { height:[165,175], weight:[55,70], length:57.5, chest:107, shoulder:62.5, sleeve:59 },
-        L: { height:[175,185], weight:[65,80], length:60, chest:112, shoulder:65, sleeve:61.5 }
-      },
-      'lamp-zip-hoodie': {
-        name: "Lamp Zip Hoodie",
-        XS: { height:[150,160], weight:[40,55], length:52.5, chest:91, shoulder:70, sleeve:51 },
-        S: { height:[160,170], weight:[50,65], length:55.5, chest:94, shoulder:72, sleeve:52 },
-        M: { height:[170,180], weight:[60,75], length:58.5, chest:97, shoulder:74, sleeve:53 },
-        L: { height:[180,190], weight:[70,85], length:61.5, chest:100, shoulder:76, sleeve:54 },
-        XL: { height:[185,195], weight:[80,95], length:64.5, chest:103, shoulder:78, sleeve:55 }
-      },
-      'cloudy-zip-hoodie': {
-        name: "CLOUDY ZIP HOODIE",
-        XS: { height:[145,155], weight:[35,45], length:53.0, chest:97, shoulder:57.5, sleeve:54.0 }, 
-        S: { height:[155,165], weight:[45,55], length:55.5, chest:102, shoulder:60.0, sleeve:56.5 },
-        M: { height:[165,175], weight:[55,65], length:58.0, chest:107, shoulder:62.5, sleeve:59.0 },
-        L: { height:[175,185], weight:[65,75], length:60.5, chest:112, shoulder:65.0, sleeve:61.5 }
-      },
-    
-        'cloud-pants': {
-    name: "Cloud pants",
-    XS: { height:[150,160], weight:[45,55], waist:65, length:100, inseam:73 },
-    S:  { height:[160,170], weight:[50,60], waist:70, length:103, inseam:75 },
-    M:  { height:[170,180], weight:[60,75], waist:75, length:106, inseam:77 },
-    L:  { height:[180,190], weight:[70,85], waist:80, length:109, inseam:79 },
-    XL: { height:[185,195], weight:[80,95], waist:85, length:112, inseam:81 }
-  }
+<script>
+// --- GAS Settings ---
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyK1jV7VGrsFoIWqSHAifR9N35EVtpFu9AwptDWsjUbVr9Xq7LFZ9WJdwRk1OKmV3hf/exec";
+
+// --- Data Definition ---
+const PRODUCT_SIZES = {
+'slash-tshirt': {
+name: "Slash Tshirts",
+S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19},
+M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20},
+L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22},
+XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24},
+XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26},
+XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26}
+},
+'logo-tshirt': {
+name: "Logo Tshirts",
+S: { height:[150,160], weight:[40,55], length:66, chest:98, shoulder:44, sleeve:19},
+M: { height:[160,170], weight:[50,65], length:70, chest:104, shoulder:47, sleeve:20},
+L: { height:[170,180], weight:[60,75], length:74, chest:110, shoulder:50, sleeve:22},
+XL: { height:[180,190], weight:[70,85], length:78, chest:116, shoulder:53, sleeve:24},
+XXL: { height:[185,195], weight:[80,95], length:82, chest:122, shoulder:56, sleeve:26},
+XXXL: { height:[190,200], weight:[90,105], length:84, chest:128, shoulder:59, sleeve:26}
+},
+'beg-zip-hoodie': {
+name: "Beg Zip Hoodie",
+S: { height:[155,165], weight:[45,60], length:55, chest:102, shoulder:60, sleeve:56.5},
+M: { height:[165,175], weight:[55,70], length:57.5, chest:107, shoulder:62.5, sleeve:59},
+L: { height:[175,185], weight:[65,80], length:60, chest:112, shoulder:65, sleeve:61.5}
+},
+'lamp-zip-hoodie': {
+name: "Lamp Zip Hoodie",
+XS: { height:[150,160], weight:[40,55], length:52.5, chest:91, shoulder:70, sleeve:51},
+S: { height:[160,170], weight:[50,65], length:55.5, chest:94, shoulder:72, sleeve:52},
+M: { height:[170,180], weight:[60,75], length:58.5, chest:97, shoulder:74, sleeve:53},
+L: { height:[180,190], weight:[70,85], length:61.5, chest:100, shoulder:76, sleeve:54},
+XL: { height:[185,195], weight:[80,95], length:64.5, chest:103, shoulder:78, sleeve:55}
+},
+'cloudy-zip-hoodie': {
+name: "CLOUDY ZIP HOODIE",
+XS: { height:[145,155], weight:[35,45], length:53.0, chest:97, shoulder:57.5, sleeve:54.0},
+S: { height:[155,165], weight:[45,55], length:55.5, chest:102, shoulder:60.0, sleeve:56.5},
+M: { height:[165,175], weight:[55,65], length:58.0, chest:107, shoulder:62.5, sleeve:59.0},
+L: { height:[175,185], weight:[65,75], length:60.5, chest:112, shoulder:65.0, sleeve:61.5}
+},
+
+'cloud-pants': {
+name: "Cloud pants",
+XS: { height:[150,160], weight:[45,55], waist:65, length:100, inseam:73},
+S: { height:[160,170], weight:[50,60], waist:70, length:103, inseam:75},
+M: { height:[170,180], weight:[60,75], waist:75, length:106, inseam:77},
+L: { height:[180,190], weight:[70,85], waist:80, length:109, inseam:79},
+XL: { height:[185,195], weight:[80,95], waist:85, length:112, inseam:81}
+},
+
+'odd-night-pants': {
+name: "odd night pants",
+XS: { height:[150,160], weight:[45,55], waist:65, length:100, inseam:73},
+S: { height:[160,170], weight:[50,60], waist:70, length:103, inseam:75},
+M: { height:[170,180], weight:[60,75], waist:75, length:106, inseam:77},
+L: { height:[180,190], weight:[70,85], waist:80, length:109, inseam:79},
+XL: { height:[185,195], weight:[80,95], waist:85, length:112, inseam:81}
+}
 };
-      
- 
 
-    const FIT_PRESETS = {
-        'slim': { offset: -1, text: 'タイトなシルエットをご提案します。' },
-        'standard': { offset: 0, text: 'スタンダードなサイズ感です。' },
-        'oversized': { offset: 1, text: 'ゆとりあるサイズをご提案します。' }
-    };
+
+
+const FIT_PRESETS = {
+'slim': { offset: -1, text: 'タイトなシルエットをご提案します。'},
+'standard': { offset: 0, text: 'スタンダードなサイズ感です。'},
+'oversized': { offset: 1, text: 'ゆとりあるサイズをご提案します。'}
+};
 
 // 修正後
 // --- State Management ---
 const state = {
-    step: 1,
-    product: null,
-    fit: null,
-    height: 170,
-    weight: 60,
-    heightTouched: false, // 追加：身長を操作したか
-    weightTouched: false  // 追加：体重を操作したか
+step: 1,
+product: null,
+fit: null,
+height: 170,
+weight: 60,
+heightTouched: false, // 追加：身長を操作したか
+weightTouched: false // 追加：体重を操作したか
 };
 
-    // --- UI Logic ---
-    const steps = document.querySelectorAll('.step-content');
-    const nextBtn = document.getElementById('next-button');
-    const backBtn = document.getElementById('back-button');
-    const navControls = document.getElementById('nav-controls');
-    const progressBar = document.getElementById('progress-bar');
-    const stepIndicator = document.getElementById('step-indicator');
+// --- UI Logic ---
+const steps = document.querySelectorAll('.step-content');
+const nextBtn = document.getElementById('next-button');
+const backBtn = document.getElementById('back-button');
+const navControls = document.getElementById('nav-controls');
+const progressBar = document.getElementById('progress-bar');
+const stepIndicator = document.getElementById('step-indicator');
 
-    function updateUI(step) {
-      state.step = step;
-      steps.forEach(s => {
-        s.classList.add('hidden');
-        s.classList.remove('fade-in');
-      });
-      
-      const targetStep = document.querySelector(`[data-step="${step}"]`);
-      targetStep.classList.remove('hidden');
-      void targetStep.offsetWidth; // Trigger reflow
-      targetStep.classList.add('fade-in');
+function updateUI(step) {
+state.step = step;
+steps.forEach(s => {
+s.classList.add('hidden');
+s.classList.remove('fade-in');
+});
 
-      const percentage = (step / 4) * 100;
-      progressBar.style.width = percentage + '%';
-      
-      stepIndicator.textContent = step === 4 ? "RESULT" : `Step ${step} / 3`;
+const targetStep = document.querySelector(`[data-step="${step}"]`);
+targetStep.classList.remove('hidden');
+void targetStep.offsetWidth; // Trigger reflow
+targetStep.classList.add('fade-in');
 
-      backBtn.classList.toggle('hidden', step === 1);
-      
-      if (step === 4) {
-        navControls.classList.add('hidden');
-      } else {
-        navControls.classList.remove('hidden');
-      }
-    }
+const percentage = (step / 4) * 100;
+progressBar.style.width = percentage + '%';
 
-    nextBtn.onclick = () => {
-      if (!validateStep()) return;
-      if (state.step < 3) {
-        updateUI(state.step + 1);
-      } else {
-        calculateAndShowResult();
-      }
-    };
+stepIndicator.textContent = step === 4? "RESULT": `Step ${step} / 3`;
 
-    backBtn.onclick = () => {
-        if (state.step > 1) {
-            if (state.step === 4) {
-                cleanup3DScene();
-            }
-            updateUI(state.step - 1);
-        }
-    };
+backBtn.classList.toggle('hidden', step === 1);
+
+if (step === 4) {
+navControls.classList.add('hidden');
+} else {
+navControls.classList.remove('hidden');
+}
+}
+
+nextBtn.onclick = () => {
+if (!validateStep()) return;
+if (state.step < 3) {
+updateUI(state.step + 1);
+} else {
+calculateAndShowResult();
+}
+};
+
+backBtn.onclick = () => {
+if (state.step > 1) {
+if (state.step === 4) {
+cleanup3DScene();
+}
+updateUI(state.step - 1);
+}
+};
 function validateStep() {
-    const errorMsg = document.getElementById('step3-error-msg');
-    
-    if (state.step === 1 && !state.product) { showToast('アイテムを選択してください'); return false; }
-    if (state.step === 2 && !state.fit) { showToast('フィット感を選択してください'); return false; }
-    
-    if (state.step === 3) {
-        // 未操作（身長か体重のどちらかが一度も動かされていない）
-        if (!state.heightTouched || !state.weightTouched) {
-            errorMsg.classList.remove('hidden'); // メッセージを表示
-            showToast('ご自身の数値を入力してください');
-            return false;
-        }
-        
-        // 異常値チェック（前の条件も維持）
-        if (state.height < 145 || state.height > 205 || state.weight < 35 || state.weight > 125) {
-            errorMsg.textContent = '正しい値を入力してください'; // 文言を切り替え
-            errorMsg.classList.remove('hidden');
-            showToast('正しい値を入力してください');
-            return false;
-        }
-    }
-    
-    // エラーがなければ隠す
-    if (errorMsg) errorMsg.classList.add('hidden');
-    return true;
+const errorMsg = document.getElementById('step3-error-msg');
+
+if (state.step === 1 &&!state.product) { showToast('アイテムを選択してください'); return false;}
+if (state.step === 2 &&!state.fit) { showToast('フィット感を選択してください'); return false;}
+
+if (state.step === 3) {
+// 未操作（身長か体重のどちらかが一度も動かされていない）
+if (!state.heightTouched ||!state.weightTouched) {
+errorMsg.classList.remove('hidden'); // メッセージを表示
+showToast('ご自身の数値を入力してください');
+return false;
+}
+
+// 異常値チェック（前の条件も維持）
+if (state.height < 145 || state.height > 205 || state.weight < 35 || state.weight > 125) {
+errorMsg.textContent = '正しい値を入力してください'; // 文言を切り替え
+errorMsg.classList.remove('hidden');
+showToast('正しい値を入力してください');
+return false;
+}
+}
+
+// エラーがなければ隠す
+if (errorMsg) errorMsg.classList.add('hidden');
+return true;
 }
 
 function selectProduct(product, element) {
-    state.product = product;
-    document.getElementById('product').value = product;
+state.product = product;
+document.getElementById('product').value = product;
 
-    // 1. すべてのカードから選択状態（selectedクラス）を消す
-    document.querySelectorAll('#product-grid .card-select').forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    // 2. クリックしたカードだけに紫の枠（selectedクラス）を付ける
-    element.classList.add('selected');
+// 1. すべてのカードから選択状態（selectedクラス）を消す
+document.querySelectorAll('#product-grid.card-select').forEach(card => {
+card.classList.remove('selected');
+});
 
-    // 3. 「次へ進む」ボタンをふわっと表示させる
-    const nextBtn1 = document.getElementById('next-btn-step1');
-    if (nextBtn1) {
-        nextBtn1.classList.remove('opacity-0', 'pointer-events-none');
-        nextBtn1.classList.add('opacity-100', 'pointer-events-auto');
-        // 少し上に浮き上がるアニメーションを加える場合（CSSに合わせて）
-        nextBtn1.style.transform = "translateY(0)";
-    }
-    
-    // 【修正】ここにあった nextStep(); を削除しました
+// 2. クリックしたカードだけに紫の枠（selectedクラス）を付ける
+element.classList.add('selected');
+
+// 3. 「次へ進む」ボタンをふわっと表示させる
+const nextBtn1 = document.getElementById('next-btn-step1');
+if (nextBtn1) {
+nextBtn1.classList.remove('opacity-0', 'pointer-events-none');
+nextBtn1.classList.add('opacity-100', 'pointer-events-auto');
+// 少し上に浮き上がるアニメーションを加える場合（CSSに合わせて）
+nextBtn1.style.transform = "translateY(0)";
 }
 
-    window.selectFit = (id, el) => {
-      state.fit = id;
-      document.querySelectorAll('#fit-grid .card-select').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-       setTimeout(() => nextBtn.click(), 300);
-    };
+// ここにあった nextStep(); を削除しました
+}
 
-window.syncInput = (key, val) => {
-    const value = parseInt(val);
-    state[key] = value;
-    document.getElementById(`${key}-val`).textContent = val;
-    
-    state[`${key}Touched`] = true;
-
-    // ↓ここを追加：操作されたらエラー文を隠す
-    const errorMsg = document.getElementById('step3-error-msg');
-    if (state.heightTouched && state.weightTouched) {
-        if (errorMsg) errorMsg.classList.add('hidden');
-    }
-
-    if (key === 'height') {
-        const totalInches = value / 2.54;
-        const feet = Math.floor(totalInches / 12);
-        const inches = Math.round(totalInches % 12);
-        document.getElementById('height-imperial').textContent = `(${feet}'${inches}")`;
-    }
+window.selectFit = (id, el) => {
+state.fit = id;
+document.querySelectorAll('#fit-grid.card-select').forEach(c => c.classList.remove('selected'));
+el.classList.add('selected');
+setTimeout(() => nextBtn.click(), 300);
 };
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.innerText = msg; t.className = "toast show";
-        setTimeout(() => t.className = "toast", 3000);
-    }
+window.syncInput = (key, val) => {
+const value = parseInt(val);
+state[key] = value;
+document.getElementById(`${key}-val`).textContent = val;
 
-    window.resetForm = () => {
-        state.product = null; state.fit = null; state.step = 1;
-        document.querySelectorAll('.card-select').forEach(c => c.classList.remove('selected'));
-        cleanup3DScene();
-        updateUI(1);
-    }
+state[`${key}Touched`] = true;
 
-    function sendDataToGAS(data) {
-        fetch(GAS_API_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            console.log("Data sent to spreadsheet.");
-        })
-        .catch(error => {
-            console.error("Error sending data:", error);
-        });
-    }
+// ↓ここを追加：操作されたらエラー文を隠す
+const errorMsg = document.getElementById('step3-error-msg');
+if (state.heightTouched && state.weightTouched) {
+if (errorMsg) errorMsg.classList.add('hidden');
+}
 
-    // --- Core Calculation & 3D Logic ---
+if (key === 'height') {
+const totalInches = value / 2.54;
+const feet = Math.floor(totalInches / 12);
+const inches = Math.round(totalInches % 12);
+document.getElementById('height-imperial').textContent = `(${feet}'${inches}")`;
+}
+};
+
+function showToast(msg) {
+const t = document.getElementById('toast');
+t.innerText = msg; t.className = "toast show";
+setTimeout(() => t.className = "toast", 3000);
+}
+
+window.resetForm = () => {
+state.product = null; state.fit = null; state.step = 1;
+document.querySelectorAll('.card-select').forEach(c => c.classList.remove('selected'));
+cleanup3DScene();
+updateUI(1);
+}
+
+function sendDataToGAS(data) {
+fetch(GAS_API_URL, {
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/json'},
+body: JSON.stringify(data)
+})
+.then(() => {
+console.log("Data sent to spreadsheet.");
+})
+.catch(error => {
+console.error("Error sending data:", error);
+});
+}
+
+// --- Core Calculation & 3D Logic ---
 
 function calculateAndShowResult() {
-    const loading = document.getElementById('loading-view');
-    updateUI(4);
-    loading.classList.remove('hidden');
+const loading = document.getElementById('loading-view');
+updateUI(4);
+loading.classList.remove('hidden');
 
-    setTimeout(() => {
-        const result = performCalculation();
-        // renderResult(result); // ← ここでエラーが出ていたので削除
-        init3DScene(result);
-        
-        const trackingData = {
-            type: 'tracking',
-            productId: state.product,
-            productName: result.productName,
-            height: state.height,
-            weight: state.weight,
-            fitPreference: state.fit,
-            recommendedSize: result.recSize
-        };
-        sendDataToGAS(trackingData);
+setTimeout(() => {
+const result = performCalculation();
+// renderResult(result); // ← ここでエラーが出ていたので削除
+init3DScene(result);
 
-        loading.classList.add('hidden');
-        
-        setTimeout(() => {
-            const hasRegistered = localStorage.getItem('fvvyn_email_registered');
-            if (!hasRegistered) {
-                document.getElementById('email-popup').classList.remove('hidden');
-                document.getElementById('email-popup').classList.add('fade-in');
-            }
-        }, 3500);
+const trackingData = {
+type: 'tracking',
+productId: state.product,
+productName: result.productName,
+height: state.height,
+weight: state.weight,
+fitPreference: state.fit,
+recommendedSize: result.recSize
+};
+sendDataToGAS(trackingData);
 
-    }, 1500);
+loading.classList.add('hidden');
 
-    
+setTimeout(() => {
+const hasRegistered = localStorage.getItem('fvvyn_email_registered');
+if (!hasRegistered) {
+document.getElementById('email-popup').classList.remove('hidden');
+document.getElementById('email-popup').classList.add('fade-in');
+}
+}, 3500);
+
+}, 1500);
+
+
 }
 
 function performCalculation() {
-    const data = PRODUCT_SIZES[state.product];
-    const adjustment = FIT_PRESETS[state.fit];
-    const h = state.height;
-    const w = state.weight;
-    const sizeKeys = Object.keys(data).filter(k => k !== 'name');
+const data = PRODUCT_SIZES[state.product];
+const adjustment = FIT_PRESETS[state.fit];
+const h = state.height;
+const w = state.weight;
+const sizeKeys = Object.keys(data).filter(k => k!== 'name');
 
-    let bestDist = Infinity;
-    let baseIdx = 0;
+let bestDist = Infinity;
+let baseIdx = 0;
 
-    sizeKeys.forEach((size, idx) => {
-        const sData = data[size];
-        const avgH = (sData.height[0] + sData.height[1]) / 2;
-        const avgW = (sData.weight[0] + sData.weight[1]) / 2;
-        const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
-        if (dist < bestDist) { bestDist = dist; baseIdx = idx; }
-    });
+sizeKeys.forEach((size, idx) => {
+const sData = data[size];
+const avgH = (sData.height[0] + sData.height[1]) / 2;
+const avgW = (sData.weight[0] + sData.weight[1]) / 2;
+const dist = Math.abs(h - avgH) + (Math.abs(w - avgW) * 2.0);
+if (dist < bestDist) { bestDist = dist; baseIdx = idx;}
+});
 
-    let finalIdx = baseIdx + adjustment.offset;
-    finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
-    const recSize = sizeKeys[finalIdx];
-    const prod = data[recSize];
+let finalIdx = baseIdx + adjustment.offset;
+finalIdx = Math.max(0, Math.min(finalIdx, sizeKeys.length - 1));
+const recSize = sizeKeys[finalIdx];
+const prod = data[recSize];
 
-    // 体型推定
-    const est = {
-        shoulder: (h * 0.23) + (w * 0.1),
-        chest: (h * 0.48) + (w * 0.25),
-        sleeve: (h * 0.35) + (w * 0.05),
-        waist: (w * 1.2), // 簡易計算
-        length: (h * 0.55),
-        inseam: (h * 0.42)
-    };
+// 体型推定
+const est = {
+shoulder: (h * 0.23) + (w * 0.1),
+chest: (h * 0.48) + (w * 0.25),
+sleeve: (h * 0.35) + (w * 0.05),
+waist: (w * 1.2), // 簡易計算
+length: (h * 0.55),
+inseam: (h * 0.42)
+};
 
-    const analyze = (body, garment, type) => {
-        let diff = garment - body;
-        // アイテム特性に合わせた閾値設定
-        const looseThreshold = state.product.includes('hoodie') || state.product.includes('pants') ? 12 : 8;
-        const tightThreshold = state.product.includes('hoodie') || state.product.includes('pants') ? 5 : 3;
-        
-        if (diff < tightThreshold) return { status: 'Tight', class: 'status-tight', text: 'タイト' };
-        if (diff > looseThreshold) return { status: 'Loose', class: 'status-loose', text: 'ゆったり' };
-        return { status: 'Just Right', class: 'status-just', text: '標準' };
-    };
+const analyze = (body, garment, type) => {
+let diff = garment - body;
+// アイテム特性に合わせた閾値設定
+const looseThreshold = state.product.includes('hoodie') || state.product.includes('pants')? 12: 8;
+const tightThreshold = state.product.includes('hoodie') || state.product.includes('pants')? 5: 3;
 
-    // 全てのキーに対して解析を実行
-    const analysis = {};
-    Object.keys(est).forEach(key => {
-        if (prod[key]) {
-            analysis[key] = analyze(est[key], prod[key], key);
-        }
-    });
+if (diff < tightThreshold) return { status: 'Tight', class: 'status-tight', text: 'タイト'};
+if (diff > looseThreshold) return { status: 'Loose', class: 'status-loose', text: 'ゆったり'};
+return { status: 'Just Right', class: 'status-just', text: '標準'};
+};
 
-    return {
-        recSize,
-        productName: data.name,
-        spec: prod,
-        analysis: analysis,
-        message: adjustment.text
-    };
+// 全てのキーに対して解析を実行
+const analysis = {};
+Object.keys(est).forEach(key => {
+if (prod[key]) {
+analysis[key] = analyze(est[key], prod[key], key);
+}
+});
+
+return {
+recSize,
+productName: data.name,
+spec: prod,
+analysis: analysis,
+message: adjustment.text
+};
 }
 
 function renderResult(res) {
-    const recSizeEl = document.getElementById('recommended-size');
-    const prodNameEl = document.getElementById('product-name-display');
-    const msgEl = document.getElementById('result-message');
-    const specList = document.getElementById('size-spec');
+const recSizeEl = document.getElementById('recommended-size');
+const prodNameEl = document.getElementById('product-name-display');
+const msgEl = document.getElementById('result-message');
+const specList = document.getElementById('size-spec');
 
-    if (recSizeEl) recSizeEl.textContent = res.recSize;
-    if (prodNameEl) prodNameEl.textContent = res.productName;
-    if (msgEl) msgEl.textContent = res.message;
+if (recSizeEl) recSizeEl.textContent = res.recSize;
+if (prodNameEl) prodNameEl.textContent = res.productName;
+if (msgEl) msgEl.textContent = res.message;
 
-    const isPants = state.product === 'cloud-pants';
+const isPants = state.product === 'cloud-pants' || state.product === 'odd-night-pants';
 
-    // スペックリスト（表）の更新
-    if (specList) {
-        const specs = isPants ? 
-            [['ウエスト', 'waist'], ['総丈', 'length'], ['股下', 'inseam']] : 
-            [['着丈', 'length'], ['身幅', 'chest'], ['肩幅', 'shoulder'], ['袖丈', 'sleeve']];
-        
-        specList.innerHTML = specs.map(s => `
-            <li class="flex justify-between border-b border-gray-100 pb-2">
-                <span>${s[0]}</span> 
-                <span class="font-bold text-slate-800">${res.spec[s[1]]} cm</span>
-            </li>
-        `).join('');
-    }
+// スペックリスト（表）の更新
+if (specList) {
+const specs = isPants?
+[['ウエスト', 'waist'], ['総丈', 'length'], ['股下', 'inseam']]:
+[['着丈', 'length'], ['身幅', 'chest'], ['肩幅', 'shoulder'], ['袖丈', 'sleeve']];
+
+specList.innerHTML = specs.map(s => `
+<li class="flex justify-between border-b border-gray-100 pb-2">
+<span>${s[0]}</span>
+<span class="font-bold text-slate-800">${res.spec[s[1]]} cm</span>
+</li>
+`).join('');
+}
 
 for (const key in trackers) {
-        const el = trackers[key].el;
-        if (el && res.spec[key]) {
-            const statusData = res.analysis[key] || { text: '標準', class: 'status-just' };
-            
-            // 数値（cm）の書き換え
-            const valueEl = el.querySelector('.value-text');
-            if (valueEl) valueEl.textContent = `${res.spec[key]}cm`;
-            
-            // フィット感（タイト/標準/ゆったり）の書き換え
-            const fitEl = el.querySelector('.fit-text');
-            if (fitEl) {
-                fitEl.textContent = statusData.text;
-                fitEl.className = `fit-text text-[9px] ${statusData.class}`;
-            }
-        }
-    }
+const el = trackers[key].el;
+if (el && res.spec[key]) {
+const statusData = res.analysis[key] || { text: '標準', class: 'status-just'};
+
+// 数値（cm）の書き換え
+const valueEl = el.querySelector('.value-text');
+if (valueEl) valueEl.textContent = `${res.spec[key]}cm`;
+
+// フィット感（タイト/標準/ゆったり）の書き換え
+const fitEl = el.querySelector('.fit-text');
+if (fitEl) {
+fitEl.textContent = statusData.text;
+fitEl.className = `fit-text text-[9px] ${statusData.class}`;
+}
+}
+}
 }
 
 function updateAnnotationDOM(id, value) {
-    const el = document.getElementById(`annotation-${id}`);
-    if (!el) return;
-    const statusEl = el.querySelector('.status');
-    // 数値を表示（例: 75cm）
-    statusEl.textContent = `${value}cm`;
-    statusEl.className = 'status font-bold text-[#8707ff]'; // 数値を目立たせる色に変更
-    el.style.display = 'flex';
+const el = document.getElementById(`annotation-${id}`);
+if (!el) return;
+const statusEl = el.querySelector('.status');
+// 数値を表示（例: 75cm）
+statusEl.textContent = `${value}cm`;
+statusEl.className = 'status font-bold text-[#8707ff]'; // 数値を目立たせる色に変更
+el.style.display = 'flex';
 }
 
-    // --- POPUP Logic ---
-    function closePopup() {
-        document.getElementById('email-popup').classList.add('hidden');
-    }
+// --- POPUP Logic ---
+function closePopup() {
+document.getElementById('email-popup').classList.add('hidden');
+}
 
-    function handleEmailSubmit(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('email-input').value;
-        const consent = document.getElementById('consent-check').checked;
-        const btn = document.getElementById('email-submit-btn');
-        
-        if(!consent) {
-            showToast("利用規約への同意が必要です");
-            return;
-        }
+function handleEmailSubmit(e) {
+e.preventDefault();
 
-        const originalText = btn.innerText;
-        btn.innerHTML = '<div class="loader" style="width:16px; height:16px; border-width:2px;"></div>';
-        btn.disabled = true;
+const email = document.getElementById('email-input').value;
+const consent = document.getElementById('consent-check').checked;
+const btn = document.getElementById('email-submit-btn');
 
-        const postData = {
-            type: 'email_signup',
-            email: email,
-            consent: consent
-        };
+if(!consent) {
+showToast("利用規約への同意が必要です");
+return;
+}
 
-        fetch(GAS_API_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(postData)
-        })
-        .then(() => {
-            // ★ MARK AS REGISTERED (Save to LocalStorage "Cookie")
-            localStorage.setItem('fvvyn_email_registered', 'true');
+const originalText = btn.innerText;
+btn.innerHTML = '<div class="loader" style="width:16px; height:16px; border-width:2px;"></div>';
+btn.disabled = true;
 
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> 送信完了';
-            showToast("クーポンコードをメールで送信しました。");
-            
-            setTimeout(() => {
-                closePopup();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 2000);
-        })
-        .catch(err => {
-            console.error(err);
-            btn.innerText = "エラーが発生しました";
-            btn.disabled = false;
-        });
-    }
+const postData = {
+type: 'email_signup',
+email: email,
+consent: consent
+};
+
+fetch(GAS_API_URL, {
+method: 'POST',
+mode: 'no-cors',
+headers: { 'Content-Type': 'application/json'},
+body: JSON.stringify(postData)
+})
+.then(() => {
+// ★ MARK AS REGISTERED (Save to LocalStorage "Cookie")
+localStorage.setItem('fvvyn_email_registered', 'true');
+
+btn.innerHTML = '<i class="fa-solid fa-check"></i> 送信完了';
+showToast("クーポンコードをメールで送信しました。");
+
+setTimeout(() => {
+closePopup();
+btn.innerHTML = originalText;
+btn.disabled = false;
+}, 2000);
+})
+.catch(err => {
+console.error(err);
+btn.innerText = "エラーが発生しました";
+btn.disabled = false;
+});
+}
+
 
     // --- THREE.JS Implementation ---
 // --- THREE.JS Implementation ---
@@ -1207,7 +1225,7 @@ container.innerHTML = `
         camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
         
         // ★ アイテム種別によるカメラ初期位置の分岐
-        if (state.product === 'cloud-pants') {
+        if (state.product === 'cloud-pants' || state.product === 'odd-night-pants') {
             camera.position.set(1.2, 0.5, 1.5);   // パンツ用 低い位置から
 
 
@@ -1283,7 +1301,7 @@ container.innerHTML = `
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         
         // ★ アイテム種別による注視点（ターゲット）の分岐
-        if (state.product === 'cloud-pants') {
+        if (state.product === 'cloud-pants' || state.product === 'odd-night-pants') {
             controls.target.set(0, 0.6, 0); // 下半身を画面中央に
         } else {
             controls.target.set(0, 1.2, 0); // 上半身を画面中央に
@@ -1313,7 +1331,7 @@ function onModelReady(resultData) {
     addGarmentLayer(resultData);
     if (mannequin) {
         // アイテムに応じてターゲット（注視点）を再設定
-        if (state.product === 'cloud-pants') {
+        if (state.product === 'cloud-pants' || state.product === 'odd-night-pants') {
             controls.target.set(0, 0.6, 0); // 下半身に固定
         } else {
             controls.target.set(0, 1.2, 0); // 上半身に固定
@@ -1327,7 +1345,7 @@ function addGarmentLayer(result) {
     if (!mannequin) return;
     
     // パンツの場合は一旦レイヤー追加をスキップ（トップス用の計算でNaNになるのを防ぐ）
-    if (state.product === 'cloud-pants') return;
+    if (state.product === 'cloud-pants' || state.product === 'odd-night-pants') return;
 
     const garmentColor = 0; 
     const garmentOpacity = 0; 
@@ -1426,7 +1444,7 @@ function updateAnnotations() {
     const widthHalf = width / 2;
     const heightHalf = height / 2;
 
-    const isPants = state.product === 'cloud-pants';
+    const isPants = state.product === 'cloud-pants' || state.product === 'odd-night-pants';
     const pantsKeys = ['waist', 'length', 'inseam'];
     const topKeys = ['shoulder', 'chest', 'sleeve'];
 
@@ -1532,5 +1550,3 @@ function closeGuide() {
 
 </body>
 </html>
-
-
