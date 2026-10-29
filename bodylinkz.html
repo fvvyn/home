@@ -476,7 +476,7 @@
   <span id="height-imperial" class="text-xs text-gray-400 font-medium ml-1">(5'7")</span>
 </span>
           </div>
-         <input type="range" min="140" max="210" value="170" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#8707ff]" oninput="syncInput('height', this.value)">
+         <input type="range" id="height-range" min="140" max="210" value="170" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#8707ff]" oninput="syncInput('height', this.value)">
 
 <div id="step3-error-msg" class="hidden text-red-500 text-xs text-center mt-4 font-bold">
     ご自身の数値を入力してください
@@ -830,10 +830,13 @@ function selectProduct(product, element) {
 state.product = product;
 document.getElementById('product').value = product;
 
-// 1. すべてのカードから選択状態（selectedクラス）を消す
-document.querySelectorAll('#product-grid.card-select').forEach(card => {
+// 1. 商品グリッド内のすべてのカードから選択状態（selectedクラス）を消す（単一選択を保証）
+const productGrid = document.getElementById('product-grid');
+if (productGrid) {
+productGrid.querySelectorAll('.card-select').forEach(card => {
 card.classList.remove('selected');
 });
+}
 
 // 2. クリックしたカードだけに紫の枠（selectedクラス）を付ける
 element.classList.add('selected');
@@ -852,7 +855,13 @@ nextBtn1.style.transform = "translateY(0)";
 
 window.selectFit = (id, el) => {
 state.fit = id;
-document.querySelectorAll('#fit-grid.card-select').forEach(c => c.classList.remove('selected'));
+const fitInput = document.getElementById('fit');
+if (fitInput) fitInput.value = id;
+// フィット感も単一選択：グリッド内のすべてのカードから選択状態を消してから付ける
+const fitGrid = document.getElementById('fit-grid');
+if (fitGrid) {
+fitGrid.querySelectorAll('.card-select').forEach(c => c.classList.remove('selected'));
+}
 el.classList.add('selected');
 setTimeout(() => nextBtn.click(), 300);
 };
